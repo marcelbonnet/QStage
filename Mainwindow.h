@@ -29,6 +29,8 @@ private slots:
 
     void on_actionSalvar_SYSEX_triggered();
 
+    void on_actionAbrir_SYSEX_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString configMusicasDir;

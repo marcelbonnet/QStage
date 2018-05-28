@@ -19,6 +19,21 @@ public:
     explicit PartTab(int parte, MidiControl *jack, QWidget *parent = 0);
     ~PartTab();
 
+    Patch *getPatch();
+    int getRegiaoMin();
+    int getRegiaoMax();
+    int getOitava();
+    int getCanalMidi();
+    int getSaida();
+    int getAfinacaoBruta();
+    int getAfinacaoFina();
+    int getVolume();
+    int getPan();
+    int getMixEfxLevel();
+    int getChorusLevel();
+    int getReverbLevel();
+    int isLocalOn();
+
 private slots:
     void on_patch_currentIndexChanged(int index);
 
@@ -65,21 +80,6 @@ private slots:
     void on_btn_8_clicked();
 
     void on_btn_7_clicked();
-
-    Patch *getPatch();
-    int getRegiaoMin();
-    int getRegiaoMax();
-    int getOitava();
-    int getCanalMidi();
-    int getSaida();
-    int getAfinacaoBruta();
-    int getAfinacaoFina();
-    int getVolume();
-    int getPan();
-    int getMixEfxLevel();
-    int getChorusLevel();
-    int getReverbLevel();
-    int isLocalOn();
 
 protected:
     MidiControl *jack;

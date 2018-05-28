@@ -173,22 +173,11 @@ void MainWindow::on_actionConectar_triggered()
 
 void MainWindow::on_actionSalvar_SYSEX_triggered()
 {
-    /*
-    settings = new QSettings("config.ini",QSettings::IniFormat);
-    settings->beginGroup("user");
-    QStringList player_number = settings->childGroups(); // returns 0, 1, 2 - OK !
-    const QStringList childKeys = settings->childKeys(); // should return name, wins, ... right ?
-    foreach(const QString &childKey, childKeys)
-        {
-            ui->choosePlayerBox->addItem(settings->value(childKey).toString());  // should add lukasz, 3, 3, pawel...., but it doesn`t work
 
-        }
-    settings->endGroup();
-     */
     QString diretorio = QFileDialog::getExistingDirectory();
     QSettings *conf = new QSettings(diretorio.append("/teste.ini"), QSettings::IniFormat);
     conf->beginGroup("PerformanceCommon");
-    conf->setValue("nome",ui->perfName);
+    conf->setValue("nome",ui->perfName->text());
     conf->setValue("origem",ui->perfOrigem->currentIndex());
     conf->setValue("efeito",ui->perfEfeito->currentIndex() );
     conf->setValue("param1",ui->perfParam->value());
@@ -231,6 +220,112 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
         PartTab *tab = tabParts[i];
         conf->beginGroup(QString("Parte%1").arg(i));
 
+        conf->setValue("nome", tab->getPatch()->getNome() );
+        conf->setValue("categoria", tab->getPatch()->getCategoria() );
+        conf->setValue("categoriaPai", tab->getPatch()->getCategoriaPai() );
+        conf->setValue("groupId", tab->getPatch()->getGroupId() );
+        conf->setValue("groupType", tab->getPatch()->getGroupType() );
+        conf->setValue("number", tab->getPatch()->getNumber() );
+
+        conf->setValue("afinacaoBruta", tab->getAfinacaoBruta() );
+        conf->setValue("afinacaoFina", tab->getAfinacaoFina() );
+        conf->setValue("canalMidi", tab->getCanalMidi() );
+        conf->setValue("chorusLevel", tab->getChorusLevel() );
+        conf->setValue("mixEfxSendLevel", tab->getMixEfxLevel() );
+        conf->setValue("oitava", tab->getOitava() );
+        conf->setValue("pan", tab->getPan() );
+        conf->setValue("regiaoMax", tab->getRegiaoMax() );
+        conf->setValue("regiaoMin", tab->getRegiaoMin() );
+        conf->setValue("reverbLevel", tab->getReverbLevel() );
+        conf->setValue("saida", tab->getSaida() );
+        conf->setValue("volume", tab->getVolume() );
+
         conf->endGroup();
     }
+}
+
+void MainWindow::on_actionAbrir_SYSEX_triggered()
+{
+//    settings = new QSettings("/tmp/teste.ini",QSettings::IniFormat);
+//    settings->beginGroup("user");
+//    QStringList player_number = settings->childGroups(); // returns 0, 1, 2 - OK !
+//    const QStringList childKeys = settings->childKeys(); // should return name, wins, ... right ?
+//    foreach(const QString &childKey, childKeys)
+//        {
+//            ui->choosePlayerBox->addItem(settings->value(childKey).toString());  // should add lukasz, 3, 3, pawel...., but it doesn`t work
+
+//        }
+//    settings->endGroup();
+
+    QSettings *conf = new QSettings("/tmp/teste.ini", QSettings::IniFormat);
+    conf->beginGroup("PerformanceCommon");
+
+    ui->perfName->setText(conf->value("nome").toString());
+    ui->perfOrigem->setCurrentIndex(conf->value("origem").toInt());
+    ui->perfEfeito->setCurrentIndex(conf->value("efeito").toInt());
+    ui->perfParam->setValue(conf->value("param1").toInt());
+    ui->perfParam_2->setValue(conf->value("param2").toInt());
+    ui->perfParam_3->setValue(conf->value("param3").toInt());
+    ui->perfParam_4->setValue(conf->value("param4").toInt());
+    ui->perfParam_5->setValue(conf->value("param5").toInt());
+    ui->perfParam_6->setValue(conf->value("param6").toInt());
+    ui->perfParam_7->setValue(conf->value("param7").toInt());
+    ui->perfParam_8->setValue(conf->value("param8").toInt());
+    ui->perfParam_9->setValue(conf->value("param9").toInt());
+    ui->perfParam_10->setValue(conf->value("param10").toInt());
+    ui->perfParam_11->setValue(conf->value("param11").toInt());
+    ui->perfParam_12->setValue(conf->value("param12").toInt());
+
+    ui->perfOA->setCurrentIndex(conf->value("oa").toInt());
+    ui->perfMSL->setValue(conf->value("msl").toInt());
+    ui->perfCSL->setValue(conf->value("csl").toInt());
+    ui->perfperfRSL->setValue(conf->value("rsl").toInt());
+    ui->perfCtrlSrc1->setCurrentIndex(conf->value("ctrlSrc1").toInt());
+    ui->perfCtrlDepth1->setValue(conf->value("ctrlDepth1").toInt());
+    ui->perfCtrlSrc2->setCurrentIndex(conf->value("ctrlSrc2").toInt());
+    ui->perfCtrlDepth2->setValue(conf->value("ctrlDepth2").toInt());
+
+
+//    conf->setValue("chorusLevel",ui->perfChorusLevel->value());
+//    conf->setValue("chorusRate",ui->perfChorusRate->value());
+//    conf->setValue("chorusDepth",ui->perfChorusDepth->value());
+//    conf->setValue("chorusPreDelay",ui->perfChorusPreDelay->value());
+//    conf->setValue("chorusFeedback",ui->perfChorusFeedback->value());
+//    conf->setValue("chorusOut",ui->perfChorusOut->currentIndex());
+//    conf->setValue("reverbType",ui->perfReverbType->currentIndex());
+//    conf->setValue("reverbLevel",ui->perfReverbLevel->value());
+//    conf->setValue("reverbTime",ui->perfReverbTime->value());
+//    conf->setValue("reverbHFDamp",ui->perfReverbHFDamp->currentIndex());
+//    conf->setValue("reverbDelayFeedback",ui->perfReverbDelayFeedback->value());
+//    conf->setValue("tempo",ui->perfTempo->value());
+//    conf->setValue("intervaloNotas",ui->perfIntervaloNotas->isChecked() ? 1 : 0);
+//    conf->setValue("modo",ui->perfMode->currentIndex());
+    conf->endGroup();
+//fazer setters:
+//    for(int i=0 ; i<=15; i++){
+//        PartTab *tab = tabParts[i];
+//        conf->beginGroup(QString("Parte%1").arg(i));
+
+//        conf->setValue("nome", tab->getPatch()->getNome() );
+//        conf->setValue("categoria", tab->getPatch()->getCategoria() );
+//        conf->setValue("categoriaPai", tab->getPatch()->getCategoriaPai() );
+//        conf->setValue("groupId", tab->getPatch()->getGroupId() );
+//        conf->setValue("groupType", tab->getPatch()->getGroupType() );
+//        conf->setValue("number", tab->getPatch()->getNumber() );
+
+//        conf->setValue("afinacaoBruta", tab->getAfinacaoBruta() );
+//        conf->setValue("afinacaoFina", tab->getAfinacaoFina() );
+//        conf->setValue("canalMidi", tab->getCanalMidi() );
+//        conf->setValue("chorusLevel", tab->getChorusLevel() );
+//        conf->setValue("mixEfxSendLevel", tab->getMixEfxLevel() );
+//        conf->setValue("oitava", tab->getOitava() );
+//        conf->setValue("pan", tab->getPan() );
+//        conf->setValue("regiaoMax", tab->getRegiaoMax() );
+//        conf->setValue("regiaoMin", tab->getRegiaoMin() );
+//        conf->setValue("reverbLevel", tab->getReverbLevel() );
+//        conf->setValue("saida", tab->getSaida() );
+//        conf->setValue("volume", tab->getVolume() );
+
+//        conf->endGroup();
+//    }
 }
