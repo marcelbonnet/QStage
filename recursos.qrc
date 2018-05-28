@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icones/qjackctl.png</file>
+        <file>icones/QStage.png</file>
+    </qresource>
+</RCC>

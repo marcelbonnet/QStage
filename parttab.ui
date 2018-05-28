@@ -1,0 +1,1276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PartTab</class>
+ <widget class="QWidget" name="PartTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1140</width>
+    <height>438</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget { 
+background-color: rgb(51, 51, 51);
+}
+QComboBox:selected{
+background-color: rgb(0, 62, 0)
+}
+QLabel {
+color: rgb(255, 255, 255);
+}
+
+#grupoDial{
+
+}
+
+QPushButton[accessibleName=btn-categoria]{
+color: rgb(0, 43, 0);
+background-color: qlineargradient(spread:pad, x1:0.251, y1:0.358136, x2:0.257, y2:1, stop:0 rgba(140, 255, 148, 206), stop:0.358289 rgba(188, 255, 201, 80), stop:0.4 rgba(162, 255, 179, 80), stop:0.425 rgba(132, 255, 155, 156), stop:0.44 rgba(128, 252, 151, 80), stop:1 rgba(255, 255, 255, 0));
+}
+</string>
+  </property>
+  <widget class="QComboBox" name="patch">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>170</y>
+     <width>241</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>180</y>
+     <width>58</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Patch</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>270</y>
+     <width>321</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Região</string>
+   </property>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mín</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="minimo">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>40</y>
+      <width>61</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>40</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Máx</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="maximo">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>40</y>
+      <width>61</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>40</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Oitava</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="oitava">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>40</y>
+      <width>48</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-3</number>
+    </property>
+    <property name="maximum">
+     <number>3</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="grupoDial">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>220</y>
+     <width>381</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Volume, Pan e Nível de Envio</string>
+   </property>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>21</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Vol</string>
+    </property>
+   </widget>
+   <widget class="QDial" name="level">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+</string>
+    </property>
+    <property name="maximum">
+     <number>127</number>
+    </property>
+    <property name="value">
+     <number>127</number>
+    </property>
+   </widget>
+   <widget class="QDial" name="pan">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>120</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+</string>
+    </property>
+    <property name="maximum">
+     <number>127</number>
+    </property>
+    <property name="value">
+     <number>64</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>100</y>
+      <width>21</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pan</string>
+    </property>
+   </widget>
+   <widget class="QDial" name="chorus">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>40</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+</string>
+    </property>
+    <property name="maximum">
+     <number>127</number>
+    </property>
+    <property name="value">
+     <number>20</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>20</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chorus</string>
+    </property>
+   </widget>
+   <widget class="QDial" name="reverb">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>40</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+</string>
+    </property>
+    <property name="maximum">
+     <number>127</number>
+    </property>
+    <property name="value">
+     <number>40</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reverb</string>
+    </property>
+   </widget>
+   <widget class="QDial" name="sendLevel">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>40</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+</string>
+    </property>
+    <property name="maximum">
+     <number>127</number>
+    </property>
+    <property name="value">
+     <number>127</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>20</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>MIX/EFX</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnLocal">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>130</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+background-color: rgb(0, 39, 0);
+	color: rgb(182, 182, 182);
+}
+
+QPushButton:checked {
+background-color: rgb(0, 255, 0);
+	color: rgb(47, 141, 69);
+}</string>
+    </property>
+    <property name="text">
+     <string>LIGADO</string>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+Shift+S</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>140</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Local</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>111</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>PIANO</string>
+   </property>
+   <widget class="QPushButton" name="btn">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>PNO</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_2">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>EP</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>10</y>
+     <width>311</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>KEYS &amp;&amp; ORGAN</string>
+   </property>
+   <widget class="QPushButton" name="btn_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>KEY</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_4">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>BEL</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_5">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>MLT</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_6">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>ORG</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_7">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>HRM</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_8">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>ACD</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>10</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>GUITAR</string>
+   </property>
+   <widget class="QPushButton" name="btn_9">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>AGT</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_10">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>EGT</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_11">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>DGT</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_5">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>10</y>
+     <width>111</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>BASS</string>
+   </property>
+   <widget class="QPushButton" name="btn_12">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>BS</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_13">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SBS</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_6">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>10</y>
+     <width>261</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>ORCHESTRAL</string>
+   </property>
+   <widget class="QPushButton" name="btn_14">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>STR</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_15">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>ORC</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_16">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>HIT</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_17">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>WND</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_19">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>FLT</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_7">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>BRASS</string>
+   </property>
+   <widget class="QPushButton" name="btn_18">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>BRS</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_20">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SBR</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_21">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SAX</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_8">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>90</y>
+     <width>311</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>SYNTH</string>
+   </property>
+   <widget class="QPushButton" name="btn_22">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>HLD</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_23">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SLD</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_24">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>TEK</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_25">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>PLS</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_26">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SYN</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_27">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>FX</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_9">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>90</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>PAD</string>
+   </property>
+   <widget class="QPushButton" name="btn_28">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>BPD</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_29">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SPD</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_30">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>VOX</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_10">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>90</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>ETHNIC</string>
+   </property>
+   <widget class="QPushButton" name="btn_31">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>PLK</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_32">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>ETH</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_33">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>FRT</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_11">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>90</y>
+     <width>261</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>RHYTHM &amp;&amp; SFX</string>
+   </property>
+   <widget class="QPushButton" name="btn_34">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>PRC</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_35">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>SFX</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_36">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>BTS</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_37">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>DRM</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_38">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>btn-categoria</string>
+    </property>
+    <property name="text">
+     <string>CMB</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_12">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>170</y>
+     <width>191</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Outros Parâmetros</string>
+   </property>
+   <widget class="QSpinBox" name="afinacaoBruta">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>190</y>
+      <width>48</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-48</number>
+    </property>
+    <property name="maximum">
+     <number>48</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Afinação Bruta</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="afinacaoFina">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>220</y>
+      <width>48</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-50</number>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Afinação Fina</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Canal MIDI</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="canal">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>30</y>
+      <width>48</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>16</number>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="saida">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>70</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>MIX</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>EFX</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>DIRECT-1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>DIRECT-2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PATCH</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Saída</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
