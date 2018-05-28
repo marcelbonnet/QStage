@@ -131,6 +131,64 @@ void PartTab::on_btnLocal_clicked()
 
 }
 
+Patch *PartTab::getPatch(){
+    Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
+    return patch;
+}
+
+int PartTab::getRegiaoMin(){
+    return ui->minimo->currentIndex();
+}
+
+int PartTab::getRegiaoMax(){
+    return ui->maximo->currentIndex();
+}
+
+int PartTab::getOitava(){
+    return ui->oitava->value();
+}
+
+int PartTab::getCanalMidi(){
+    return ui->canal->value();
+}
+
+int PartTab::getSaida(){
+    return ui->saida->currentIndex();
+}
+
+int PartTab::getAfinacaoBruta(){
+    return ui->afinacaoBruta->value();
+}
+
+int PartTab::getAfinacaoFina(){
+    return ui->afinacaoFina->value();
+}
+
+int PartTab::getVolume(){
+    return ui->level->value();
+}
+
+int PartTab::getPan(){
+    return ui->pan->value();
+}
+
+int PartTab::getMixEfxLevel(){
+    return ui->sendLevel->value();
+}
+
+int PartTab::getChorusLevel(){
+    return ui->chorus->value();
+}
+
+int PartTab::getReverbLevel(){
+    return ui->reverb->value();
+}
+
+int PartTab::isLocalOn(){
+    return ui->btnLocal->isChecked() ? 1 : 0;
+}
+
+
 
 void PartTab::on_level_valueChanged(int value)
 {

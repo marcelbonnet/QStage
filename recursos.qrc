@@ -2,5 +2,11 @@
     <qresource prefix="/">
         <file>icones/qjackctl.png</file>
         <file>icones/QStage.png</file>
+        <file>icones/synthv1.png</file>
+        <file>icones/audio-midi-1.png</file>
+        <file>icones/audio-midi.png</file>
+        <file>icones/document-open.png</file>
+        <file>icones/document-save.png</file>
+        <file>icones/mixer-midi.png</file>
     </qresource>
 </RCC>

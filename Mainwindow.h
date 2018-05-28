@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSpinBox>
 #include "MidiControl.h"
+#include "parttab.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,13 +27,15 @@ private slots:
 
     void on_actionConectar_triggered();
 
+    void on_actionSalvar_SYSEX_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString configMusicasDir;
     void loadTextFile(QString file);
 
 
-    QWidget *tabParts[16];    //Tab
+    PartTab *tabParts[16];    //Tab
                             //TODO Receive Switch
     QSpinBox *partMidiCh[16]; //MIDI CHANNEL
 

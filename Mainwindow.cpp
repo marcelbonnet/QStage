@@ -6,7 +6,9 @@
 #include "parttab.h"
 #include <QDebug>
 #include "dialogjack.h"
-
+#include <QSettings>
+#include <QStringList>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -168,3 +170,67 @@ void MainWindow::on_actionConectar_triggered()
 }
 
 
+
+void MainWindow::on_actionSalvar_SYSEX_triggered()
+{
+    /*
+    settings = new QSettings("config.ini",QSettings::IniFormat);
+    settings->beginGroup("user");
+    QStringList player_number = settings->childGroups(); // returns 0, 1, 2 - OK !
+    const QStringList childKeys = settings->childKeys(); // should return name, wins, ... right ?
+    foreach(const QString &childKey, childKeys)
+        {
+            ui->choosePlayerBox->addItem(settings->value(childKey).toString());  // should add lukasz, 3, 3, pawel...., but it doesn`t work
+
+        }
+    settings->endGroup();
+     */
+    QString diretorio = QFileDialog::getExistingDirectory();
+    QSettings *conf = new QSettings(diretorio.append("/teste.ini"), QSettings::IniFormat);
+    conf->beginGroup("PerformanceCommon");
+    conf->setValue("nome",ui->perfName);
+    conf->setValue("origem",ui->perfOrigem->currentIndex());
+    conf->setValue("efeito",ui->perfEfeito->currentIndex() );
+    conf->setValue("param1",ui->perfParam->value());
+    conf->setValue("param2",ui->perfParam_2->value());
+    conf->setValue("param3",ui->perfParam_3->value());
+    conf->setValue("param4",ui->perfParam_4->value());
+    conf->setValue("param5",ui->perfParam_5->value());
+    conf->setValue("param6",ui->perfParam_6->value());
+    conf->setValue("param7",ui->perfParam_7->value());
+    conf->setValue("param8",ui->perfParam_8->value());
+    conf->setValue("param9",ui->perfParam_9->value());
+    conf->setValue("param10",ui->perfParam_10->value());
+    conf->setValue("param11",ui->perfParam_11->value());
+    conf->setValue("param12",ui->perfParam_12->value());
+    conf->setValue("oa",ui->perfOA->currentIndex());
+    conf->setValue("msl",ui->perfMSL->value());
+    conf->setValue("csl",ui->perfCSL->value());
+    conf->setValue("rsl",ui->perfperfRSL->value());
+    conf->setValue("ctrlSrc1",ui->perfCtrlSrc1->currentIndex());
+    conf->setValue("ctrlDepth1",ui->perfCtrlDepth1->value());
+    conf->setValue("ctrlSrc2",ui->perfCtrlSrc2->currentIndex());
+    conf->setValue("ctrlDepth2",ui->perfCtrlDepth2->value());
+    conf->setValue("chorusLevel",ui->perfChorusLevel->value());
+    conf->setValue("chorusRate",ui->perfChorusRate->value());
+    conf->setValue("chorusDepth",ui->perfChorusDepth->value());
+    conf->setValue("chorusPreDelay",ui->perfChorusPreDelay->value());
+    conf->setValue("chorusFeedback",ui->perfChorusFeedback->value());
+    conf->setValue("chorusOut",ui->perfChorusOut->currentIndex());
+    conf->setValue("reverbType",ui->perfReverbType->currentIndex());
+    conf->setValue("reverbLevel",ui->perfReverbLevel->value());
+    conf->setValue("reverbTime",ui->perfReverbTime->value());
+    conf->setValue("reverbHFDamp",ui->perfReverbHFDamp->currentIndex());
+    conf->setValue("reverbDelayFeedback",ui->perfReverbDelayFeedback->value());
+    conf->setValue("tempo",ui->perfTempo->value());
+    conf->setValue("intervaloNotas",ui->perfIntervaloNotas->isChecked() ? 1 : 0);
+    conf->setValue("modo",ui->perfMode->currentIndex());
+    conf->endGroup();
+
+    for(int i=0 ; i<=15; i++){
+        PartTab *tab = tabParts[i];
+        conf->beginGroup(QString("Parte%1").arg(i));
+
+        conf->endGroup();
+    }
+}

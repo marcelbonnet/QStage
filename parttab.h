@@ -66,6 +66,21 @@ private slots:
 
     void on_btn_7_clicked();
 
+    Patch *getPatch();
+    int getRegiaoMin();
+    int getRegiaoMax();
+    int getOitava();
+    int getCanalMidi();
+    int getSaida();
+    int getAfinacaoBruta();
+    int getAfinacaoFina();
+    int getVolume();
+    int getPan();
+    int getMixEfxLevel();
+    int getChorusLevel();
+    int getReverbLevel();
+    int isLocalOn();
+
 protected:
     MidiControl *jack;
     int parte;//parte que essa aba representa no perform, de 1 a 16
