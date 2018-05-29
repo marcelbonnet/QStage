@@ -35,7 +35,7 @@ extern "C" {
 
 #define OUTPUT_PORT_NAME	"midi_out"
 #define INPUT_PORT_NAME		"midi_in"
-#define PACKAGE_NAME		"SetList"
+#define PACKAGE_NAME		"QStage"
 #define PACKAGE_VERSION		"0.0.0"
 
 

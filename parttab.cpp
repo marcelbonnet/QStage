@@ -74,13 +74,23 @@ PartTab::~PartTab()
     delete ui;
 }
 
+int PartTab::getIndexFromPatches(QString nome){
+    for(int i=0; i<1406; i++){
+        if( QString::compare(patches[i], nome) == 0 ){
+            return i;
+        }
+    }
+    qDebug() << "Nao achei o nome na lista de patches: " << nome;
+    return -1;
+}
+
 void PartTab::enviar(){
     //intervalo mínimo de tempo entre envios para não estourar o ringbuffer
     QDateTime agora = QDateTime::currentDateTime();
     qint64 intervaloMinimo = 50;
+
     if(tempoUltimoEnvio.msecsTo(agora) <= intervaloMinimo)
         return;
-
 
     QList<int> *dados = new QList<int>();
     dados->append(ui->canal->value());
@@ -122,10 +132,10 @@ void PartTab::on_patch_currentIndexChanged(int index)
 
 void PartTab::on_btnLocal_clicked()
 {
-    if(ui->btnLocal->isChecked())
-        ui->btnLocal->setText("LIGADO");
-    else
-        ui->btnLocal->setText("DESLIGADO");
+//    if(ui->btnLocal->isChecked())
+//        ui->btnLocal->setText("LIGADO");
+//    else
+//        ui->btnLocal->setText("DESLIGADO");
 
     enviar();
 
@@ -187,8 +197,63 @@ int PartTab::getReverbLevel(){
 int PartTab::isLocalOn(){
     return ui->btnLocal->isChecked() ? 1 : 0;
 }
+/*
+void PartTab::setPatch(Patch *p){
+    for(int i=0; i<1406; i++){
+        Patch *corrente = ui->patch->itemData(i).value<Patch*>();
+        if(p->groupId == corrente->groupId &&
+                p->groupType == corrente->groupType &&
+                p->number == corrente->number &&
+                QString::compare(p->nome, corrente->nome) == 0){
+            ui->patch->setCurrentIndex(i);
+            break;
+        }
+    }
+}
+*/
+void PartTab::setPatch(int i){
+    ui->patch->setCurrentIndex(i);
+}
 
-
+void PartTab::setRegiaoMin(int i){
+    ui->minimo->setCurrentIndex(i);
+}
+void PartTab::setRegiaoMax(int i){
+    ui->maximo->setCurrentIndex(i);
+}
+void PartTab::setOitava(int i){
+    ui->oitava->setValue(i);
+}
+void PartTab::setCanalMidi(int i){
+    ui->canal->setValue(i);
+}
+void PartTab::setSaida(int i){
+    ui->saida->setCurrentIndex(i);
+}
+void PartTab::setAfinacaoBruta(int i){
+    ui->afinacaoBruta->setValue(i);
+}
+void PartTab::setAfinacaoFina(int i){
+    ui->afinacaoFina->setValue(i);
+}
+void PartTab::setVolume(int i){
+    ui->level->setValue(i);
+}
+void PartTab::setPan(int i){
+    ui->pan->setValue(i);
+}
+void PartTab::setMixEfxLevel(int i){
+    ui->sendLevel->setValue(i);
+}
+void PartTab::setChorusLevel(int i){
+    ui->chorus->setValue(i);
+}
+void PartTab::setReverbLevel(int i){
+    ui->reverb->setValue(i);
+}
+void PartTab::setLocalOn(int i){
+    ui->btnLocal->setChecked( i == 1 ? true : false);
+}
 
 void PartTab::on_level_valueChanged(int value)
 {

@@ -19,6 +19,7 @@ public:
     explicit PartTab(int parte, MidiControl *jack, QWidget *parent = 0);
     ~PartTab();
 
+    int getIndexFromPatches(QString nome);
     Patch *getPatch();
     int getRegiaoMin();
     int getRegiaoMax();
@@ -33,6 +34,24 @@ public:
     int getChorusLevel();
     int getReverbLevel();
     int isLocalOn();
+
+    //void     setPatch(Patch *p);
+    void     setPatch(int i);
+    void     setRegiaoMin(int i);
+    void     setRegiaoMax(int i);
+    void     setOitava(int i);
+    void     setCanalMidi(int i);
+    void     setSaida(int i);
+    void     setAfinacaoBruta(int i);
+    void     setAfinacaoFina(int i);
+    void     setVolume(int i);
+    void     setPan(int i);
+    void     setMixEfxLevel(int i);
+    void     setChorusLevel(int i);
+    void     setReverbLevel(int i);
+    void     setLocalOn(int i);
+
+    void enviar();
 
 private slots:
     void on_patch_currentIndexChanged(int index);
@@ -84,7 +103,6 @@ private slots:
 protected:
     MidiControl *jack;
     int parte;//parte que essa aba representa no perform, de 1 a 16
-    void enviar();
     QDateTime tempoUltimoEnvio;
 
 private:

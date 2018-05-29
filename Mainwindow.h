@@ -42,7 +42,7 @@ private:
     QSpinBox *partMidiCh[16]; //MIDI CHANNEL
 
  protected:
-    MidiControl *jack;
+    MidiControl *jack = NULL;
 
 
 };
