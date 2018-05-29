@@ -34,6 +34,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QString configMusicasDir;
+    QString configSysExDir;
     void loadTextFile(QString file);
 
 

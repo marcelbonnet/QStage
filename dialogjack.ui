@@ -13,6 +13,13 @@
   <property name="windowTitle">
    <string>Jack</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#labelAviso{
+background-color: rgb(213, 213, 0);
+	color: rgb(0, 0, 0);
+
+}</string>
+  </property>
   <widget class="QComboBox" name="portas">
    <property name="geometry">
     <rect>
@@ -27,7 +34,7 @@
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>210</y>
+     <y>220</y>
      <width>166</width>
      <height>22</height>
     </rect>
@@ -57,6 +64,19 @@
      <width>411</width>
      <height>161</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelAviso">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>200</y>
+     <width>381</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dev /dev/umidi* deve ser RW: service devfs restart</string>
    </property>
   </widget>
  </widget>

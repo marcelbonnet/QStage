@@ -1,0 +1,11 @@
+Falta:
+
+- Editor de Patche e Rhythm
+	- carregar lista de sons internos
+- Carregar nomes dos parâmetros e valores máximos dos Efeitos do PERFORM COMMON. Bloquear widgets que não serão usados.
+- criar nova Apresentação
+- salvar set list da Apresentação
+- criar sequência SYSEX de uma mesma música
+- adicionar teclado virtual para fazer efeitos (teclas, sustain)
+- vincular tecla(s) do teclado virtual a uma Parte
+

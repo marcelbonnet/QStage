@@ -10,6 +10,7 @@
 #include <QStringList>
 #include <QFileDialog>
 #include <unistd.h>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     on_actionConectar_triggered();
 
 
-    configMusicasDir = QDir::homePath() + "/.config/setlist/songs";// QStandardPaths::locate(QStandardPaths::HomeLocation, "songs", QStandardPaths::LocateFile);
+    configMusicasDir = QDir::homePath() + "/.config/QStage/songs"; // QStandardPaths::locate(QStandardPaths::HomeLocation, "songs", QStandardPaths::LocateFile);
+    configSysExDir = QDir::homePath() + "/.config/QStage/XP-30";
 
     QDir *musicasDir = new QDir( configMusicasDir );
 
@@ -179,9 +181,18 @@ void MainWindow::on_actionConectar_triggered()
 
 void MainWindow::on_actionSalvar_SYSEX_triggered()
 {
+    if(ui->listWidget->selectedItems().length() <= 0){
+        //esse workflow está ruim. nem deveria mexer nas partes sem uma música selecionada
+        //ao selecionar vai apagar as mudanças
+        QMessageBox msg;
+        msg.setText("Selecione uma música da lista");
+        msg.exec();
+        return;
+    }
 
-    QString diretorio = QFileDialog::getExistingDirectory();
-    QSettings *conf = new QSettings(diretorio.append("/teste.ini"), QSettings::IniFormat);
+    //QString diretorio = QFileDialog::getExistingDirectory();
+    //QSettings *conf = new QSettings(diretorio.append("/teste.ini"), QSettings::IniFormat);
+    QSettings *conf = new QSettings(QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini"), QSettings::IniFormat);
     conf->beginGroup("PerformanceCommon");
     conf->setValue("nome",ui->perfName->text());
     conf->setValue("origem",ui->perfOrigem->currentIndex());
@@ -254,9 +265,11 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
 void MainWindow::on_actionAbrir_SYSEX_triggered()
 {
 
+    qDebug() << QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini");
 
-    QSettings *conf = new QSettings("/tmp/teste.ini", QSettings::IniFormat);
-    conf->beginGroup("PerformanceCommon");
+    //QSettings *conf = new QSettings("/tmp/teste.ini", QSettings::IniFormat);
+    QSettings *conf = new QSettings(QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini"), QSettings::IniFormat);
+    conf->beginGroup("PerformanceCommon");    
 
     ui->perfName->setText(conf->value("nome").toString());
     ui->perfOrigem->setCurrentIndex(conf->value("origem").toInt());
@@ -306,9 +319,17 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         PartTab *tab = tabParts[i];
         conf->beginGroup(QString("Parte%1").arg(i));
 
+
         usleep(50000);//evitar sobrecarregar o ringbuffer
         tab->setLocalOn(conf->value("localOn").toInt());
-        tab->setPatch(tab->getIndexFromPatches(conf->value("nome").toString()));
+
+        QString nomePatch = conf->value("nome").toString();
+        if(QString::compare(nomePatch,"") != 0){
+            tab->carregarPatches();
+            tab->setPatch(tab->getIndexFromPatches(nomePatch));
+            usleep(50000);
+        }
+
         tab->setAfinacaoBruta(conf->value("afinacaoBruta").toInt());
         tab->setAfinacaoFina(conf->value("afinacaoFina").toInt());
         tab->setCanalMidi(conf->value("canalMidi").toInt());

@@ -62,8 +62,10 @@ void PartTab::carregarPatches(QString categoria){
 //        patchObjects[i]->groupId = groupId[i];
 //        patchObjects[i]->number = number[i];
 
-        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0 || QString::compare(categoria, patchObjects[i]->categoria, Qt::CaseInsensitive ) == 0 )
+        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0 || QString::compare(categoria, patchObjects[i]->categoria, Qt::CaseInsensitive ) == 0 ){
             patch->addItem(patches[i], QVariant::fromValue(patchObjects[i]));
+            qDebug() << patches[i];
+        }
     }
     connect(patch,SIGNAL(currentIndexChanged(int)), this
                , SLOT(on_patch_currentIndexChanged(int)));
@@ -332,7 +334,7 @@ void PartTab::on_btn_3_clicked()
 
 void PartTab::on_btn_4_clicked()
 {
-    carregarPatches("BEL");
+    carregarPatches("BELL");
 }
 
 void PartTab::on_btn_5_clicked()
@@ -353,4 +355,154 @@ void PartTab::on_btn_8_clicked()
 void PartTab::on_btn_7_clicked()
 {
     carregarPatches("HRM");
+}
+
+void PartTab::on_btn_9_clicked()
+{
+    carregarPatches("AGT");
+}
+
+void PartTab::on_btn_10_clicked()
+{
+    carregarPatches("EGT");
+}
+
+void PartTab::on_btn_11_clicked()
+{
+    carregarPatches("DGT");
+}
+
+void PartTab::on_btn_12_clicked()
+{
+    carregarPatches("BS");
+}
+
+void PartTab::on_btn_13_clicked()
+{
+    carregarPatches("SBS");
+}
+
+void PartTab::on_btn_14_clicked()
+{
+    carregarPatches("STR");
+}
+
+void PartTab::on_btn_15_clicked()
+{
+    carregarPatches("ORC");
+}
+
+void PartTab::on_btn_16_clicked()
+{
+    carregarPatches("HIT");
+}
+
+void PartTab::on_btn_17_clicked()
+{
+    carregarPatches("WND");
+}
+
+void PartTab::on_btn_19_clicked()
+{
+    carregarPatches("FLT");
+}
+
+void PartTab::on_btn_18_clicked()
+{
+    carregarPatches("BRS");
+}
+
+void PartTab::on_btn_20_clicked()
+{
+    carregarPatches("SBR");
+}
+
+void PartTab::on_btn_21_clicked()
+{
+    carregarPatches("SAX");
+}
+
+void PartTab::on_btn_22_clicked()
+{
+    carregarPatches("HLD");
+}
+
+void PartTab::on_btn_23_clicked()
+{
+    carregarPatches("SLD");
+}
+
+void PartTab::on_btn_24_clicked()
+{
+    carregarPatches("TEK");
+}
+
+void PartTab::on_btn_25_clicked()
+{
+    carregarPatches("PLS");
+}
+
+void PartTab::on_btn_27_clicked()
+{
+    carregarPatches("FX");
+}
+
+void PartTab::on_btn_26_clicked()
+{
+    carregarPatches("SYN");
+}
+
+void PartTab::on_btn_28_clicked()
+{
+    carregarPatches("BPD");
+}
+
+void PartTab::on_btn_29_clicked()
+{
+    carregarPatches("SPD");
+}
+
+void PartTab::on_btn_30_clicked()
+{
+    carregarPatches("VOX");
+}
+
+void PartTab::on_btn_31_clicked()
+{
+    carregarPatches("PLK");
+}
+
+void PartTab::on_btn_32_clicked()
+{
+    carregarPatches("ETH");
+}
+
+void PartTab::on_btn_33_clicked()
+{
+    carregarPatches("FRT");
+}
+
+void PartTab::on_btn_34_clicked()
+{
+    carregarPatches("PRC");
+}
+
+void PartTab::on_btn_35_clicked()
+{
+    carregarPatches("SFX");
+}
+
+void PartTab::on_btn_36_clicked()
+{
+    carregarPatches("BTS");
+}
+
+void PartTab::on_btn_37_clicked()
+{
+    carregarPatches("DRM");
+}
+
+void PartTab::on_btn_38_clicked()
+{
+    carregarPatches("CMB");
 }

@@ -19,6 +19,9 @@ public:
     explicit PartTab(int parte, MidiControl *jack, QWidget *parent = 0);
     ~PartTab();
 
+    void enviar();
+    void carregarPatches(QString categoria="");
+
     int getIndexFromPatches(QString nome);
     Patch *getPatch();
     int getRegiaoMin();
@@ -51,7 +54,7 @@ public:
     void     setReverbLevel(int i);
     void     setLocalOn(int i);
 
-    void enviar();
+
 
 private slots:
     void on_patch_currentIndexChanged(int index);
@@ -100,6 +103,66 @@ private slots:
 
     void on_btn_7_clicked();
 
+    void on_btn_9_clicked();
+
+    void on_btn_10_clicked();
+
+    void on_btn_11_clicked();
+
+    void on_btn_12_clicked();
+
+    void on_btn_13_clicked();
+
+    void on_btn_14_clicked();
+
+    void on_btn_15_clicked();
+
+    void on_btn_16_clicked();
+
+    void on_btn_17_clicked();
+
+    void on_btn_19_clicked();
+
+    void on_btn_18_clicked();
+
+    void on_btn_20_clicked();
+
+    void on_btn_21_clicked();
+
+    void on_btn_22_clicked();
+
+    void on_btn_23_clicked();
+
+    void on_btn_24_clicked();
+
+    void on_btn_25_clicked();
+
+    void on_btn_27_clicked();
+
+    void on_btn_26_clicked();
+
+    void on_btn_28_clicked();
+
+    void on_btn_29_clicked();
+
+    void on_btn_30_clicked();
+
+    void on_btn_31_clicked();
+
+    void on_btn_32_clicked();
+
+    void on_btn_33_clicked();
+
+    void on_btn_34_clicked();
+
+    void on_btn_35_clicked();
+
+    void on_btn_36_clicked();
+
+    void on_btn_37_clicked();
+
+    void on_btn_38_clicked();
+
 protected:
     MidiControl *jack;
     int parte;//parte que essa aba representa no perform, de 1 a 16
@@ -107,7 +170,6 @@ protected:
 
 private:
     Ui::PartTab *ui;
-    void carregarPatches(QString categoria="");
     Patch * patchObjects[1406];
 
 
