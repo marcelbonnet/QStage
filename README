@@ -9,3 +9,5 @@ Falta:
 - adicionar teclado virtual para fazer efeitos (teclas, sustain)
 - vincular tecla(s) do teclado virtual a uma Parte
 
+- avisar se o jack estiver desconectado , ou conectar sob demanda ou automaticamente
+- perguntar qual o device, testar se está com perm de RW
