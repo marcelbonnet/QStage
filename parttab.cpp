@@ -27,6 +27,11 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
             ui->maximo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
         }
     }
+    ui->maximo->removeItem(131);
+    ui->maximo->removeItem(130);
+    ui->maximo->removeItem(129);
+    ui->maximo->removeItem(128);
+
     ui->minimo->setCurrentIndex(0);
     ui->maximo->setCurrentIndex(127);
 
