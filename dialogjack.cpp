@@ -7,6 +7,7 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QImage>
+#include <QMessageBox>
 
 DialogJack::DialogJack(MidiControl *jack, QWidget *parent) :
     QDialog(parent),
@@ -17,8 +18,13 @@ DialogJack::DialogJack(MidiControl *jack, QWidget *parent) :
     this->jack = jack;
     QList<QString> * portas = jack->listarPortas();
 
-    for(int i=0; i < portas->length(); i++)
-        ui->portas->addItem(portas->at(i));
+    if(portas == NULL){
+        QMessageBox::warning(this, "Jack Server","O servidor jack não está ativo.");
+        this->close();
+    } else {
+        for(int i=0; i < portas->length(); i++)
+            ui->portas->addItem(portas->at(i));
+    }
 
     QGraphicsScene *scene =  new QGraphicsScene();
     QPixmap pixmap(":/icones/QStage.png");

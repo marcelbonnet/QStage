@@ -95,7 +95,7 @@ public:
 
     static int processCallback(jack_nframes_t nframes, void *arg);
     int (MidiControl::*func)(jack_nframes_t nframes, void *notused);// <- declare by saying what class it is a pointer to
-    void connect();
+    int connect();
     void desconectar(QString nomePortaDestino);
     void conectarNaPorta(QString nomePortaDestino);
     struct MidiControl::MidiMessage * midi_message_from_midi_event(jack_midi_event_t event);

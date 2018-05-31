@@ -472,6 +472,10 @@ QStringList* Efeito::getLabels(int index){
     for(int i=0; i<getQtdeParametros(index); i++ ){
         labels->append(paramsLabel[index][i]);
     }
+    //complementa com vazio
+    for(int i=getQtdeParametros(index); i<12; i++ ){
+        labels->append("");
+    }
     return labels;
 }
 
@@ -480,11 +484,17 @@ int Efeito::getQtdeParametros(int index){
 }
 
 QList<int> *Efeito::getParametrosMaxVal(int index){
-    QList<int> params;
+    QList<int> *params = new QList<int>();
 
     for(int i=1; i<=getQtdeParametros(index); i++ ){
-        params.append(paramsMax[index][i]);
+        params->append(paramsMax[index][i]);
+
     }
 
-    return &params;
+    //complementa com vazio
+    for(int i=getQtdeParametros(index); i<12; i++ ){
+        params->append(0);
+    }
+
+    return params;
 }

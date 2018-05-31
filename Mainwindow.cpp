@@ -349,3 +349,35 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         conf->endGroup();
     }
 }
+
+void MainWindow::on_perfEfeito_currentIndexChanged(int index)
+{
+    QStringList *labels = Efeito::getLabels(index);
+    QList<int> *max = Efeito::getParametrosMaxVal(index);
+
+    ui->perfParamLbl->setText(labels->at(0));
+    ui->perfParamLbl_2->setText(labels->at(1));
+    ui->perfParamLbl_3->setText(labels->at(2));
+    ui->perfParamLbl_4->setText(labels->at(3));
+    ui->perfParamLbl_5->setText(labels->at(4));
+    ui->perfParamLbl_6->setText(labels->at(5));
+    ui->perfParamLbl_7->setText(labels->at(6));
+    ui->perfParamLbl_8->setText(labels->at(7));
+    ui->perfParamLbl_9->setText(labels->at(8));
+    ui->perfParamLbl_10->setText(labels->at(9));
+    ui->perfParamLbl_11->setText(labels->at(10));
+    ui->perfParamLbl_12->setText(labels->at(11));
+
+    ui->perfParam->setMaximum(max->at(0));
+    ui->perfParam_2->setMaximum(max->at(1));
+    ui->perfParam_3->setMaximum(max->at(2));
+    ui->perfParam_4->setMaximum(max->at(3));
+    ui->perfParam_5->setMaximum(max->at(4));
+    ui->perfParam_6->setMaximum(max->at(5));
+    ui->perfParam_7->setMaximum(max->at(6));
+    ui->perfParam_8->setMaximum(max->at(7));
+    ui->perfParam_9->setMaximum(max->at(8));
+    ui->perfParam_10->setMaximum(max->at(9));
+    ui->perfParam_11->setMaximum(max->at(10));
+
+}

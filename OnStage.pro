@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QStage
 TEMPLATE = app
+CONFIG += debug_and_release
 
 QMAKE_CXXFLAGS += `pkgconf -cflags jack`
 #QMAKE_LFLAGS += `pkgconf -libs jack` -l/usr/local/lib/libjackcpp.a

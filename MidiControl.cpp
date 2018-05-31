@@ -227,21 +227,21 @@ int MidiControl::processCallback(jack_nframes_t nframes, void *arg)
     return (0);
 }
 
-void MidiControl::connect(){
+int MidiControl::connect(){
     int err;
 
     jack_client = jack_client_open(PACKAGE_NAME, JackNoStartServer, NULL);
 
     if (jack_client == NULL) {
         printf("Is jackd running? Could not connect to JACK.");
-        exit(EX_UNAVAILABLE);
+        return EX_UNAVAILABLE;
     }
 
     ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE);
 
     if (ringbuffer == NULL) {
         printf("Cannot create JACK ringbuffer.");
-        exit(EX_SOFTWARE);
+        return EX_SOFTWARE;
     }
 
     jack_ringbuffer_mlock(ringbuffer);
@@ -250,7 +250,7 @@ void MidiControl::connect(){
 
     if (err) {
         printf("Could not register JACK process callback.");
-        exit(EX_UNAVAILABLE);
+        return EX_UNAVAILABLE;
     }
 
     output_port = jack_port_register(jack_client, OUTPUT_PORT_NAME, JACK_DEFAULT_MIDI_TYPE,
@@ -258,7 +258,7 @@ void MidiControl::connect(){
 
     if (output_port == NULL) {
         printf("Could not register JACK output port.");
-        exit(EX_UNAVAILABLE);
+        return EX_UNAVAILABLE;
     }
 
     input_port = jack_port_register(jack_client, INPUT_PORT_NAME, JACK_DEFAULT_MIDI_TYPE,
@@ -266,12 +266,12 @@ void MidiControl::connect(){
 
     if (input_port == NULL) {
         printf("Could not register JACK input port.");
-        exit(EX_UNAVAILABLE);
+        return EX_UNAVAILABLE;
     }
 
     if (jack_activate(jack_client)) {
         printf("Cannot activate JACK client.");
-        exit(EX_UNAVAILABLE);
+        return EX_UNAVAILABLE;
     }
 
 //    QString nomePorta =  QString("%1:%2").arg(PACKAGE_NAME).arg(OUTPUT_PORT_NAME);
@@ -279,6 +279,7 @@ void MidiControl::connect(){
 //    jack_connect(jack_client, nomePorta.toLatin1().data() , nomePortaDestino.toLatin1().data());
 
     printf("Running as JACK client.\n");
+    return 0;
 }
 
 void MidiControl::desconectar(QString nomePortaDestino){
@@ -538,9 +539,10 @@ void MidiControl::conectarNaPorta(QString nomePortaDestino){
 }
 
 QList<QString> *MidiControl::listarPortas(){
-    if(jack_client == NULL){
-        connect();
 
+    if(jack_client == NULL){
+        if( connect() > 0)
+            return NULL;
     }
 
     QList<QString> * portas = new QList<QString>();

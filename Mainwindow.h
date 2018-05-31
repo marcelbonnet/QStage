@@ -31,6 +31,8 @@ private slots:
 
     void on_actionAbrir_SYSEX_triggered();
 
+    void on_perfEfeito_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     QString configMusicasDir;

@@ -13,9 +13,9 @@ public:
     static const int paramsMax[40][13];
     static const QString paramsLabel[40][12];
 
-    QStringList *getLabels(int index);
-    int getQtdeParametros(int index);
-    QList<int>* getParametrosMaxVal(int index);
+    static QStringList *getLabels(int index);
+    static int getQtdeParametros(int index);
+    static QList<int>* getParametrosMaxVal(int index);
 };
 
 #endif // EFEITO_H
