@@ -99,7 +99,7 @@ background-color: rgb(0, 62, 0)
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabLista">
        <property name="styleSheet">
@@ -119,18 +119,6 @@ background-color: rgb(0, 62, 0)
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="font">
-             <font>
-              <pointsize>14</pointsize>
-             </font>
-            </property>
-            <property name="tabKeyNavigation">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QListWidget" name="listSequencia">
             <property name="font">
              <font>
               <pointsize>14</pointsize>
@@ -1531,8 +1519,12 @@ background-color: rgb(0, 62, 0)
     <bool>false</bool>
    </attribute>
    <addaction name="actionConectar"/>
+   <addaction name="separator"/>
    <addaction name="actionAbrir_SYSEX"/>
    <addaction name="actionSalvar_SYSEX"/>
+   <addaction name="separator"/>
+   <addaction name="actionCarregar_Proxima"/>
+   <addaction name="actionCarregar_Anterior"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConectar">
@@ -1552,6 +1544,9 @@ background-color: rgb(0, 62, 0)
    <property name="text">
     <string>Abrir SYSEX</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="actionSalvar_SYSEX">
    <property name="icon">
@@ -1560,6 +1555,36 @@ background-color: rgb(0, 62, 0)
    </property>
    <property name="text">
     <string>Salvar SYSEX</string>
+   </property>
+  </action>
+  <action name="actionCarregar_Proxima">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/arrow-down.png</normaloff>:/icones/arrow-down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Carregar Próxima</string>
+   </property>
+   <property name="toolTip">
+    <string>Abre a próxima cifra e carrega o SYSX no Teclado</string>
+   </property>
+   <property name="shortcut">
+    <string>A</string>
+   </property>
+  </action>
+  <action name="actionCarregar_Anterior">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/arrow-up.png</normaloff>:/icones/arrow-up.png</iconset>
+   </property>
+   <property name="text">
+    <string>Carregar Anterior</string>
+   </property>
+   <property name="toolTip">
+    <string>Abre a cifra anterior e carrega o SYSX no Teclado</string>
+   </property>
+   <property name="shortcut">
+    <string>Q</string>
    </property>
   </action>
  </widget>

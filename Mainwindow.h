@@ -33,6 +33,10 @@ private slots:
 
     void on_perfEfeito_currentIndexChanged(int index);
 
+    void on_actionCarregar_Proxima_triggered();
+
+    void on_actionCarregar_Anterior_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString configMusicasDir;

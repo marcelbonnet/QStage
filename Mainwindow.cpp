@@ -192,7 +192,15 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
 
     //QString diretorio = QFileDialog::getExistingDirectory();
     //QSettings *conf = new QSettings(diretorio.append("/teste.ini"), QSettings::IniFormat);
-    QSettings *conf = new QSettings(QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini"), QSettings::IniFormat);
+    QString arquivoSysx = QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini");
+
+    if(QFile(arquivoSysx).exists()){
+        QMessageBox::StandardButton resposta = QMessageBox::question(this, "Sobrescrever SYSX", "O arquivo SYSX já existe.\nSobrescrever?", QMessageBox::Yes | QMessageBox::No);
+        if(resposta != QMessageBox::Yes)
+            return;
+    }
+
+    QSettings *conf = new QSettings(arquivoSysx, QSettings::IniFormat);
     conf->beginGroup("PerformanceCommon");
     conf->setValue("nome",ui->perfName->text());
     conf->setValue("origem",ui->perfOrigem->currentIndex());
@@ -380,4 +388,24 @@ void MainWindow::on_perfEfeito_currentIndexChanged(int index)
     ui->perfParam_10->setMaximum(max->at(9));
     ui->perfParam_11->setMaximum(max->at(10));
 
+}
+
+void MainWindow::on_actionCarregar_Proxima_triggered()
+{
+    if(ui->listWidget->currentRow() < 0)
+        ui->listWidget->setCurrentRow(0);//->setSelected(true);
+    else if(ui->listWidget->currentRow() == ui->listWidget->count() - 1)
+        return;
+    else
+        ui->listWidget->setCurrentRow(ui->listWidget->currentRow()+1);//->setSelected(true);
+}
+
+void MainWindow::on_actionCarregar_Anterior_triggered()
+{
+    if(ui->listWidget->currentRow() < 0)
+        ui->listWidget->setCurrentRow(ui->listWidget->count()-1);
+    else if(ui->listWidget->currentRow() == 0)
+        return;
+    else
+        ui->listWidget->setCurrentRow(ui->listWidget->currentRow()-1);
 }

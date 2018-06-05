@@ -349,7 +349,7 @@ background-color: rgb(0, 255, 0);
      <string>LOCAL</string>
     </property>
     <property name="shortcut">
-     <string>Ctrl+Shift+S</string>
+     <string>Ctrl+L</string>
     </property>
     <property name="checkable">
      <bool>true</bool>

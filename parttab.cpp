@@ -69,7 +69,7 @@ void PartTab::carregarPatches(QString categoria){
 
         if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0 || QString::compare(categoria, patchObjects[i]->categoria, Qt::CaseInsensitive ) == 0 ){
             patch->addItem(patches[i], QVariant::fromValue(patchObjects[i]));
-            qDebug() << patches[i];
+            //qDebug() << patches[i];
         }
     }
     connect(patch,SIGNAL(currentIndexChanged(int)), this

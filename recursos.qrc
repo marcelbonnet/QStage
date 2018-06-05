@@ -8,5 +8,7 @@
         <file>icones/document-open.png</file>
         <file>icones/document-save.png</file>
         <file>icones/mixer-midi.png</file>
+        <file>icones/arrow-up.png</file>
+        <file>icones/arrow-down.png</file>
     </qresource>
 </RCC>
