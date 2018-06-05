@@ -341,7 +341,7 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
 }
 
 int MidiControl::calcularChecksum(int endereco, int dado){
-    int a,b,c,d, e, f = 0;
+    int a,b,c,d, e, f, soma = 0;
     //endereço
     a = endereco & 0xFF;
     b = (endereco >> 8) & 0xFF;
@@ -355,9 +355,18 @@ int MidiControl::calcularChecksum(int endereco, int dado){
         f = (dado >> 8) & 0xFF;
     }
 
-    //printf("%X %X %X %X\n", a, b, c, d);
+    soma = 128 - ( (a+b+c+d+e+f)%128 );
+    /*
+    soma = a+b+c+d+e+f;
+    if(soma < 128)
+        soma = 128 - soma;
+    if(soma > 128)
+        soma = 128 - (soma - 128);
+    printf("%X %X %X %X %X %X %X\n", a, b, c, d, e, f, soma);
+    */
+    //printf("CKSUM\tendereco %X\tdado %X\tsum %X\n", endereco, dado, soma);
 
-    return 128 - ( (a+b+c+d+e+f)%128 );
+    return soma;
 }
 
 void MidiControl::adicionarEndereco(int endereco){
@@ -374,7 +383,7 @@ void MidiControl::adicionarEndereco(int endereco){
     mensagens->append(a);
 }
 
-void MidiControl::adicionarDados(int dados, bool usarDuasMsg){
+int MidiControl::adicionarDados(int dados, bool usarDuasMsg){
     int e, f = 0;
 
     if(usarDuasMsg) /*nos endereços que usam valores maiores que 127*/ {
@@ -383,8 +392,11 @@ void MidiControl::adicionarDados(int dados, bool usarDuasMsg){
         //qDebug() << dados << QString("%1 %2").arg(f,0,16).arg(e,0,16);
         mensagens->append(f);
         mensagens->append(e);
+
+        return f+e;
     } else {
         mensagens->append(dados);
+        return dados;
     }
 
 }
@@ -442,7 +454,7 @@ void MidiControl::setPerformanceCommon(QList<int> *dados){
 
         adicionarEndereco(endereco + offset);
 
-        adicionarDados(valor);
+        valor = adicionarDados(valor);
         mensagens->append(calcularChecksum(endereco+ offset, valor));
 
         encerrarMensagem();
@@ -467,7 +479,7 @@ void MidiControl::setPerformanceCommon(QList<int> *dados){
         iniciarMensagem();
         valor = dados->at(i);
         adicionarEndereco(endereco + offset);
-        adicionarDados(valor, usarDuasMsg);
+        valor = adicionarDados(valor, usarDuasMsg);
         mensagens->append(calcularChecksum(endereco+ offset, valor));
         encerrarMensagem();
 
@@ -485,7 +497,7 @@ void MidiControl::setPerformanceCommon(QList<int> *dados){
     offset = 0x00000040;
     valor = dados->at(47);
     adicionarEndereco(endereco + offset);
-    adicionarDados(valor);
+    valor = adicionarDados(valor);
     mensagens->append(calcularChecksum(endereco+ offset, valor));
     encerrarMensagem();
 
@@ -495,7 +507,7 @@ void MidiControl::setPerformanceCommon(QList<int> *dados){
     offset = 0x00000041;
     valor = 0;
     adicionarEndereco(endereco + offset);
-    adicionarDados(valor);
+    valor = adicionarDados(valor);
     mensagens->append(calcularChecksum(endereco+ offset, valor));
     encerrarMensagem();
 
@@ -521,7 +533,7 @@ void MidiControl::setPerformancePart(int parte, QList<int> *dados){
         valor = dados->at(i);
         iniciarMensagem();
         adicionarEndereco(endereco+offset);
-        adicionarDados(valor, usarDuasMsg);
+        valor = adicionarDados(valor, usarDuasMsg);
         mensagens->append(calcularChecksum(endereco+offset, valor));
         //qDebug() << QString("%1 %2 %3").arg(endereco, 0,16).arg(valor,0,16).arg(calcularChecksum(endereco+offset, valor),0,16);
 

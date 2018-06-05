@@ -151,7 +151,7 @@ private:
      * @param dados
      * @param usarDuasMsg nos endereços que usam valores maiores que 127 (marcados com # no manual)
      */
-    void adicionarDados(int dados, bool usarDuasMsg=false);
+    int adicionarDados(int dados, bool usarDuasMsg=false);
 
 };
 
