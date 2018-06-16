@@ -328,31 +328,32 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         conf->beginGroup(QString("Parte%1").arg(i));
 
 
-        usleep(50000);//evitar sobrecarregar o ringbuffer
+//        usleep(50000);//evitar sobrecarregar o ringbuffer
         tab->setLocalOn(conf->value("localOn").toInt());
 
         QString nomePatch = conf->value("nome").toString();
         if(QString::compare(nomePatch,"") != 0){
             tab->carregarPatches();
             tab->setPatch(tab->getIndexFromPatches(nomePatch));
-            usleep(50000);
+            //tab->enviar(); usleep(20000);
+//            usleep(50000);
         }
 
-        tab->setAfinacaoBruta(conf->value("afinacaoBruta").toInt());
-        tab->setAfinacaoFina(conf->value("afinacaoFina").toInt());
-        tab->setCanalMidi(conf->value("canalMidi").toInt());
-        tab->setChorusLevel(conf->value("chorusLevel").toInt());
-        tab->setMixEfxLevel(conf->value("mixEfxSendLevel").toInt());
-        tab->setOitava(conf->value("oitava").toInt());
+        tab->setAfinacaoBruta(conf->value("afinacaoBruta").toInt());//tab->enviar(); usleep(20000);
+        tab->setAfinacaoFina(conf->value("afinacaoFina").toInt());//tab->enviar(); usleep(20000);
+        tab->setCanalMidi(conf->value("canalMidi").toInt());//tab->enviar(); usleep(20000);
+        tab->setChorusLevel(conf->value("chorusLevel").toInt());//tab->enviar(); usleep(20000);
+        tab->setMixEfxLevel(conf->value("mixEfxSendLevel").toInt());//tab->enviar(); usleep(20000);
+        tab->setOitava(conf->value("oitava").toInt());//tab->enviar(); usleep(20000);
         //envio fracionado e com intervalos de tempo. foi assim que funcionou. as combos estavam ficando perdidas nos envios de SYSEX sem isso.
-        tab->enviar();
-        usleep(50000);
-        tab->setPan(conf->value("pan").toInt());
-        tab->setRegiaoMax(conf->value("regiaoMax").toInt());
-        tab->setRegiaoMin(conf->value("regiaoMin").toInt());
-        tab->setReverbLevel(conf->value("reverbLevel").toInt());
-        tab->setSaida(conf->value("saida").toInt());
-        tab->setVolume(conf->value("volume").toInt());
+//        //tab->enviar();
+//        usleep(50000);
+        tab->setPan(conf->value("pan").toInt());//tab->enviar(); usleep(20000);
+        tab->setRegiaoMax(conf->value("regiaoMax").toInt());//tab->enviar(); usleep(20000);
+        tab->setRegiaoMin(conf->value("regiaoMin").toInt());//tab->enviar(); usleep(20000);
+        tab->setReverbLevel(conf->value("reverbLevel").toInt());//tab->enviar(); usleep(20000);
+        tab->setSaida(conf->value("saida").toInt());//tab->enviar(); usleep(20000);
+        tab->setVolume(conf->value("volume").toInt());//tab->enviar(); usleep(20000);
         tab->enviar();
         conf->endGroup();
     }

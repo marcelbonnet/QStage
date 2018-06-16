@@ -93,11 +93,13 @@ int PartTab::getIndexFromPatches(QString nome){
 
 void PartTab::enviar(){
     //intervalo mínimo de tempo entre envios para não estourar o ringbuffer
+    //é necessário por causa dos controles da GUI, como o dial.
     QDateTime agora = QDateTime::currentDateTime();
-    qint64 intervaloMinimo = 50;
+    qint64 intervaloMinimo = 20;
 
-    if(tempoUltimoEnvio.msecsTo(agora) <= intervaloMinimo)
+    if(tempoUltimoEnvio.msecsTo(agora) <= intervaloMinimo){
         return;
+    }
 
     QList<int> *dados = new QList<int>();
     dados->append(ui->canal->value());
@@ -127,6 +129,7 @@ void PartTab::enviar(){
     dados->append(ui->btnLocal->isChecked()? 1 : 0);
 
     jack->setPerformancePart(parte, dados);
+
     tempoUltimoEnvio = QDateTime::currentDateTime();
 }
 

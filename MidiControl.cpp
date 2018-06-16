@@ -3,7 +3,7 @@
 
 #include <QDebug>
 #include <stdio.h>
-
+#include <unistd.h>
 
 MidiControl::MidiControl()
 {
@@ -293,8 +293,13 @@ void MidiControl::queue_message(struct MidiControl::MidiMessage *ev)
     int written;
 
     if (jack_ringbuffer_write_space(ringbuffer) < sizeof(*ev)) {
-        printf("Not enough space in the ringbuffer, NOTE LOST.");
+        printf("Not enough space in the ringbuffer, NOTE LOST.\n");
         return;
+        // parece que começa a dar checksum error: talvez o teclado dê timeout na mensagem sysex truncada?
+//        qDebug() << "Not enough space in the ringbuffer, NOTE LOST.";
+//        usleep(300000);
+//        qDebug() << "Tentando de novo.";
+//        queue_message(ev);
     }
 
     written = jack_ringbuffer_write(ringbuffer, (char *)ev, sizeof(*ev));
@@ -339,10 +344,17 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
 
     queue_message(&ev);
 
-//    if(ev.data[0] == 0xF7 || ev.data[1] == 0xF7 || ev.data[2] == 0xF7){
-//        qDebug() << QString("Mensagem Enviada. ");
-//        sleep(4);
-//    }
+    /* *****************************************************
+     *  É o que está evitando que o jack ring buffer encha
+     * *****************************************************
+     */
+    if(ev.data[0] == 0xF7 || ev.data[1] == 0xF7 || ev.data[2] == 0xF7){
+        // para carregar um arquivo SYSEX vão 353 mensagens exclusivas. Em eventos MIDI será maior.
+        // não usar isso em produção para não estourar ao chegar em MAX INTEGER
+//        qtdeMensagensExclusivas++;
+//        qDebug() << QString("Mensagem Enviada. #%1").arg(qtdeMensagensExclusivas);
+        usleep(22000);
+    }
 }
 
 int MidiControl::calcularChecksum(int endereco, int dado){
@@ -362,15 +374,6 @@ int MidiControl::calcularChecksum(int endereco, int dado){
     }
 
     soma = 128 - ( (a+b+c+d+e+f)%128 );
-    /*
-    soma = a+b+c+d+e+f;
-    if(soma < 128)
-        soma = 128 - soma;
-    if(soma > 128)
-        soma = 128 - (soma - 128);
-    printf("%X %X %X %X %X %X %X\n", a, b, c, d, e, f, soma);
-    */
-    //printf("CKSUM\tendereco %X\tdado %X\tsum %X\n", endereco, dado, soma);
 
     return soma;
 }

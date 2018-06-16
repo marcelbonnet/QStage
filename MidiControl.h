@@ -25,6 +25,7 @@ extern "C" {
 
 #include <QString>
 #include <QList>
+#include <QDateTime>
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )			/*inotify event*/
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )		/*inotify events buffer size*/
@@ -135,6 +136,8 @@ public:
 
 protected:
     QList<int> *mensagens = new QList<int>();
+    QDateTime tempoUltimoEnvio;
+    int qtdeMensagensExclusivas = 0;
 
 private:
 
