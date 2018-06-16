@@ -338,10 +338,16 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
     ev.time = jack_frame_time(jack_client);
 
     queue_message(&ev);
+
+//    if(ev.data[0] == 0xF7 || ev.data[1] == 0xF7 || ev.data[2] == 0xF7){
+//        qDebug() << QString("Mensagem Enviada. ");
+//        sleep(4);
+//    }
 }
 
 int MidiControl::calcularChecksum(int endereco, int dado){
     int a,b,c,d, e, f, soma = 0;
+    a = b = c = d = e = f = soma = 0; //faltava inicializar as variáveis corretamente para o checksum ser correto
     //endereço
     a = endereco & 0xFF;
     b = (endereco >> 8) & 0xFF;

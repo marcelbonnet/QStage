@@ -3,6 +3,7 @@
 # Project created by QtCreator 2018-05-28T10:07:48
 #
 #-------------------------------------------------
+#PRE_TARGETDEPS += /home/marcelbonnet/devel/workspace-audio/libsmf
 
 QT       += core gui webkitwidgets webkit
 
@@ -10,11 +11,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QStage
 TEMPLATE = app
-CONFIG += debug_and_release
+#CONFIG += debug_and_release
+CONFIG += release
+
 
 QMAKE_CXXFLAGS += `pkgconf -cflags jack`
+#QMAKE_CXXFLAGS += `pkgconf --cflags glib-2.0`
 #QMAKE_LFLAGS += `pkgconf -libs jack` -l/usr/local/lib/libjackcpp.a
 QMAKE_LFLAGS += `pkgconf -libs jack` -v
+#QMAKE_LFLAGS += `pkgconf --libs "glib-2.0 >= 2.2"`
+QMAKE_LFLAGS += -L/usr/local/lib -lglib-2.0 -lintl
+QMAKE_LIBS += -L/home/marcelbonnet/devel/workspace-audio/libsmf -lsmf
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -34,7 +42,8 @@ SOURCES += main.cpp\
     MidiControl.cpp \
     parttab.cpp \
     patch.cpp \
-    dialogjack.cpp
+    dialogjack.cpp \
+    WidgetPrincipal.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -42,7 +51,9 @@ HEADERS  += Mainwindow.h \
     MidiControl.h \
     parttab.h \
     patch.h \
-    dialogjack.h
+    dialogjack.h \
+    ijack.h \
+    WidgetPrincipal.h
 
 
 FORMS    += Mainwindow.ui \
@@ -56,7 +67,9 @@ DISTFILES += \
     map_de_enderecos.txt \
     icones/qjackctl.png
 
-INCLUDEPATH+= /usr/local/include
+INCLUDEPATH += /usr/local/include
+INCLUDEPATH += /home/marcelbonnet/devel/workspace-audio/libsmf
+INCLUDEPATH += /usr/local/include/glib-2.0 /usr/local/lib/glib-2.0/include /usr/local/include
 
 RESOURCES += \
     recursos.qrc
