@@ -43,6 +43,8 @@ private slots:
 
     void on_playlist_currentIndexChanged(int index);
 
+    void on_actionEditar_HTML_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString qstageDir;

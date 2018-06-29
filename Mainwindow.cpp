@@ -11,6 +11,10 @@
 #include <QFileDialog>
 #include <unistd.h>
 #include <QMessageBox>
+#include <QTemporaryFile>
+#include <QFile>
+#include <QTextStream>
+#include <cstdlib>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -515,6 +519,30 @@ void MainWindow::on_playlist_currentIndexChanged(int index)
     {
         qDebug() << "exception: " << e.what();
     }
+
+
+}
+
+void MainWindow::on_actionEditar_HTML_triggered()
+{
+    if(ui->listWidget->selectedItems().length() == 0){
+        QMessageBox::warning(this, "Editar Música","Selecione uma música para editar.");
+        return;
+    }
+
+    QTemporaryFile file;
+    if(file.open()){
+        QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+        Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+        QTextStream fluxo(&file);
+        fluxo << musica->html << endl;
+        fluxo.flush();
+        qDebug() << file.fileName();
+        const char * tmp =  + file.fileName().toLatin1().data();
+        std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+        system( str.c_str() );
+    }
+
 
 
 }

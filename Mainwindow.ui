@@ -1530,6 +1530,8 @@ background-color: rgb(0, 62, 0)
    <addaction name="actionCarregar_Anterior"/>
    <addaction name="separator"/>
    <addaction name="actionAtualizar_Playlists"/>
+   <addaction name="separator"/>
+   <addaction name="actionEditar_HTML"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConectar">
@@ -1599,6 +1601,15 @@ background-color: rgb(0, 62, 0)
    </property>
    <property name="text">
     <string>Atualizar Playlists</string>
+   </property>
+  </action>
+  <action name="actionEditar_HTML">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/libreoffice-writer.png</normaloff>:/icones/libreoffice-writer.png</iconset>
+   </property>
+   <property name="text">
+    <string>Editar HTML</string>
    </property>
   </action>
  </widget>
