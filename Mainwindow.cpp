@@ -25,23 +25,23 @@ MainWindow::MainWindow(QWidget *parent) :
     //caso contrário o programa quebra ao tentar transmitir sinais quando carregar configurações
     on_actionConectar_triggered();
 
-
+    qstageDir = QDir::homePath() + "/.config/QStage";
     configMusicasDir = QDir::homePath() + "/.config/QStage/songs"; // QStandardPaths::locate(QStandardPaths::HomeLocation, "songs", QStandardPaths::LocateFile);
     configSysExDir = QDir::homePath() + "/.config/QStage/XP-30";
 
-    QDir *musicasDir = new QDir( configMusicasDir );
+    //    QDir *musicasDir = new QDir( configMusicasDir );
 
-    QStringList musicas = musicasDir->entryList(QDir::Files);
+    //    QStringList musicas = musicasDir->entryList(QDir::Files);
 
-    QListWidgetItem *item[musicasDir->count()-2];
+    //    QListWidgetItem *item[musicasDir->count()-2];
 
-    for(int i=0; i<musicasDir->count()-2; i++ ){
-        item[i] = new QListWidgetItem(ui->listWidget);
-        QString str = musicas[i];
+    //    for(int i=0; i<musicasDir->count()-2; i++ ){
+    //        item[i] = new QListWidgetItem(ui->listWidget);
+    //        QString str = musicas[i];
 
-        item[i]->setText(str);
-        ui->listWidget->addItem(item[i]);
-    }
+    //        item[i]->setText(str);
+    //        ui->listWidget->addItem(item[i]);
+    //    }
 
     for(int efx=0; efx<40; efx++ ){
         QString nome = QString("%1 " + Efeito::nomes[efx]).arg(efx+1);
@@ -93,18 +93,19 @@ void MainWindow::loadTextFile(QString file)
 
 
 
-    ui->webView->load(QUrl(QString("file://" + file )));
+//    ui->webView->setHtml(QString("<strong>TESTE</strong><h1>OK</h1>"));// load(QUrl(QString("file://" + file )));
 
 
 
 }
 
-
 void MainWindow::on_listWidget_itemSelectionChanged()
 {
     QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
 
-    loadTextFile(configMusicasDir + "/" + selecionado->text());
+//    loadTextFile("");
+    ui->webView->setHtml(musica->html );
 }
 
 void MainWindow::on_perfBtnEnviar_clicked()
@@ -273,11 +274,15 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
 void MainWindow::on_actionAbrir_SYSEX_triggered()
 {
 
-    qDebug() << QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini");
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+
+    //qDebug() << QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini");
 
     //QSettings *conf = new QSettings("/tmp/teste.ini", QSettings::IniFormat);
-    QSettings *conf = new QSettings(QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini"), QSettings::IniFormat);
-    conf->beginGroup("PerformanceCommon");    
+//    QSettings *conf = new QSettings(QString(configSysExDir).append("/" + ui->listWidget->selectedItems()[0]->text() + ".ini"), QSettings::IniFormat);
+    QSettings *conf = new QSettings( musica->programa , QSettings::IniFormat);
+    conf->beginGroup("PerformanceCommon");
 
     ui->perfName->setText(conf->value("nome").toString());
     ui->perfOrigem->setCurrentIndex(conf->value("origem").toInt());
@@ -328,7 +333,7 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         conf->beginGroup(QString("Parte%1").arg(i));
 
 
-//        usleep(50000);//evitar sobrecarregar o ringbuffer
+        //        usleep(50000);//evitar sobrecarregar o ringbuffer
         tab->setLocalOn(conf->value("localOn").toInt());
 
         QString nomePatch = conf->value("nome").toString();
@@ -336,7 +341,7 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
             tab->carregarPatches();
             tab->setPatch(tab->getIndexFromPatches(nomePatch));
             //tab->enviar(); usleep(20000);
-//            usleep(50000);
+            //            usleep(50000);
         }
 
         tab->setAfinacaoBruta(conf->value("afinacaoBruta").toInt());//tab->enviar(); usleep(20000);
@@ -346,8 +351,8 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         tab->setMixEfxLevel(conf->value("mixEfxSendLevel").toInt());//tab->enviar(); usleep(20000);
         tab->setOitava(conf->value("oitava").toInt());//tab->enviar(); usleep(20000);
         //envio fracionado e com intervalos de tempo. foi assim que funcionou. as combos estavam ficando perdidas nos envios de SYSEX sem isso.
-//        //tab->enviar();
-//        usleep(50000);
+        //        //tab->enviar();
+        //        usleep(50000);
         tab->setPan(conf->value("pan").toInt());//tab->enviar(); usleep(20000);
         tab->setRegiaoMax(conf->value("regiaoMax").toInt());//tab->enviar(); usleep(20000);
         tab->setRegiaoMin(conf->value("regiaoMin").toInt());//tab->enviar(); usleep(20000);
@@ -409,4 +414,107 @@ void MainWindow::on_actionCarregar_Anterior_triggered()
         return;
     else
         ui->listWidget->setCurrentRow(ui->listWidget->currentRow()-1);
+}
+
+void MainWindow::on_actionAtualizar_Playlists_triggered()
+{
+    //    auto f = [](int a, int b) -> int { return a + b; };
+    //    auto n = f(1, 2);
+
+    disconnect(ui->playlist,SIGNAL(currentIndexChanged(int)), this
+               , SLOT(on_playlist_currentIndexChanged(int)));
+
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
+        SQLite::Statement   query(db, "SELECT id, titulo FROM playlist ORDER BY id ASC");
+
+        while (query.executeStep())
+        {
+            int         id      = query.getColumn(0);
+            const char* titulo   = query.getColumn(1);
+
+            ui->playlist->addItem(QString(titulo), QVariant::fromValue(id));
+        }
+
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << "exception: " << e.what();
+    }
+
+    connect(ui->playlist,SIGNAL(currentIndexChanged(int)), this
+               , SLOT(on_playlist_currentIndexChanged(int)));
+
+}
+
+void MainWindow::on_playlist_currentIndexChanged(int index)
+{
+
+    /*
+    QStringList musicas = musicasDir->entryList(QDir::Files);
+
+    QListWidgetItem *item[musicasDir->count()-2];
+
+    for(int i=0; i<musicasDir->count()-2; i++ ){
+        item[i] = new QListWidgetItem(ui->listWidget);
+        QString str = musicas[i];
+
+        item[i]->setText(str);
+        ui->listWidget->addItem(item[i]);
+    }
+    */
+
+    /* sem desconectar o sinal antes de listWidget->clear
+     * depois de selecionar um listWidget, troca-se um playlist, em seguida quebra
+     */
+    disconnect(ui->listWidget,SIGNAL(itemSelectionChanged()), this
+               , SLOT(on_listWidget_itemSelectionChanged()));
+    ui->listWidget->clear();
+    int playlistId = ui->playlist->currentData().toInt();
+
+    try
+    {
+
+
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
+        SQLite::Statement   query(db, "SELECT m.musica_id, m.titulo, m.html, pm.ordem, m.programa "
+                                      "FROM musicas m JOIN playlist_musicas pm ON pm.fk_musica = m.musica_id  "
+                                      "WHERE pm.fk_playlist = ? ORDER BY pm.ordem ASC;");
+        query.bind(1, playlistId);
+        while (query.executeStep())
+        {
+            int ordem = query.getColumn(3);
+            int musicaId = query.getColumn(0);
+            const char* tituloChar = query.getColumn(1);
+            const char* htmlChar = query.getColumn(2);
+            const char* programaChar = query.getColumn(4);
+            QString titulo = QString("%1 %2").arg(QString::number(ordem), tituloChar);
+            QString html = QString(htmlChar);
+            QString programa = QString(programaChar);
+
+            Musica *musica = new Musica();
+            musica->musicaId = musicaId;
+            musica->titulo = QString(tituloChar);
+            musica->html = html;
+            musica->programa = programa;
+
+            QListWidgetItem *novoItem = new QListWidgetItem(ui->listWidget);
+            novoItem->setText(titulo);
+            novoItem->setData(Qt::UserRole, QVariant::fromValue(musica));
+
+
+            ui->listWidget->addItem(novoItem);
+        }
+
+        connect(ui->listWidget,SIGNAL(itemSelectionChanged()), this
+                   , SLOT(on_listWidget_itemSelectionChanged()));
+
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << "exception: " << e.what();
+    }
+
+
 }

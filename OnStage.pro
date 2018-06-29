@@ -22,7 +22,7 @@ QMAKE_LFLAGS += `pkgconf -libs jack` -v
 #QMAKE_LFLAGS += `pkgconf --libs "glib-2.0 >= 2.2"`
 QMAKE_LFLAGS += -L/usr/local/lib -lglib-2.0 -lintl
 QMAKE_LIBS += -L/home/marcelbonnet/devel/workspace-audio/libsmf -lsmf
-
+QMAKE_LIBS += -lsqlite3 -L/home/marcelbonnet/devel/cpp/SQLiteCpp-master/build -lSQLiteCpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -43,7 +43,7 @@ SOURCES += main.cpp\
     parttab.cpp \
     patch.cpp \
     dialogjack.cpp \
-    WidgetPrincipal.cpp
+    musica.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -53,7 +53,7 @@ HEADERS  += Mainwindow.h \
     patch.h \
     dialogjack.h \
     ijack.h \
-    WidgetPrincipal.h
+    musica.h
 
 
 FORMS    += Mainwindow.ui \
@@ -67,9 +67,13 @@ DISTFILES += \
     map_de_enderecos.txt \
     icones/qjackctl.png
 
+
 INCLUDEPATH += /usr/local/include
 INCLUDEPATH += /home/marcelbonnet/devel/workspace-audio/libsmf
 INCLUDEPATH += /usr/local/include/glib-2.0 /usr/local/lib/glib-2.0/include /usr/local/include
+INCLUDEPATH += /home/marcelbonnet/devel/cpp/SQLiteCpp-master/include/
+
+
 
 RESOURCES += \
     recursos.qrc

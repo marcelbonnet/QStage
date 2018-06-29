@@ -5,6 +5,8 @@
 #include <QSpinBox>
 #include "MidiControl.h"
 #include "parttab.h"
+#include <SQLiteCpp/SQLiteCpp.h>
+#include "musica.h"
 
 namespace Ui {
 class MainWindow;
@@ -37,8 +39,13 @@ private slots:
 
     void on_actionCarregar_Anterior_triggered();
 
+    void on_actionAtualizar_Playlists_triggered();
+
+    void on_playlist_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
+    QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
     void loadTextFile(QString file);

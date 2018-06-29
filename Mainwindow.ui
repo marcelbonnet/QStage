@@ -112,6 +112,9 @@ background-color: rgb(0, 62, 0)
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
+           <widget class="QComboBox" name="playlist"/>
+          </item>
+          <item>
            <widget class="QListWidget" name="listWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -1525,6 +1528,8 @@ background-color: rgb(0, 62, 0)
    <addaction name="separator"/>
    <addaction name="actionCarregar_Proxima"/>
    <addaction name="actionCarregar_Anterior"/>
+   <addaction name="separator"/>
+   <addaction name="actionAtualizar_Playlists"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConectar">
@@ -1585,6 +1590,15 @@ background-color: rgb(0, 62, 0)
    </property>
    <property name="shortcut">
     <string>Q</string>
+   </property>
+  </action>
+  <action name="actionAtualizar_Playlists">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/view-refresh.png</normaloff>:/icones/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Atualizar Playlists</string>
    </property>
   </action>
  </widget>
