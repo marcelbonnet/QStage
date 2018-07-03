@@ -1,5 +1,6 @@
 #include "Mainwindow.h"
 #include "ui_Mainwindow.h"
+#include "kqueue.h"
 #include <QDir>
 #include <QList>
 #include "Efeito.h"
@@ -15,6 +16,11 @@
 #include <QFile>
 #include <QTextStream>
 #include <cstdlib>
+#include <QFileSystemWatcher>
+#include <sys/inotify.h>
+#include <thread>
+#include <future>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -523,6 +529,24 @@ void MainWindow::on_playlist_currentIndexChanged(int index)
 
 }
 
+void MainWindow::on_htmlFileChanged(){
+    qDebug() << "arquivo foi alterado...";
+    //QMessageBox::information(this, "OK","deu certo : " + file);
+}
+
+void MainWindow::abrirPrograma(){
+    std::string str = std::string(this->path.toLatin1().data());
+    system( str.c_str() );
+}
+
+bool MainWindow::watchFile(QString path){
+//    if (Kqueue::watch(path))
+//        qDebug() << "arquivo " << path << " foi modificado";
+//    else
+//        qDebug() << "arquivo " << path << " não sofreu alterações.";
+    return Kqueue::watch(path);
+}
+
 void MainWindow::on_actionEditar_HTML_triggered()
 {
     if(ui->listWidget->selectedItems().length() == 0){
@@ -531,17 +555,66 @@ void MainWindow::on_actionEditar_HTML_triggered()
     }
 
     QTemporaryFile file;
-    if(file.open()){
-        QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
-        Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
-        QTextStream fluxo(&file);
-        fluxo << musica->html << endl;
-        fluxo.flush();
-        qDebug() << file.fileName();
-        const char * tmp =  + file.fileName().toLatin1().data();
-        std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
-        system( str.c_str() );
+    //QFileSystemWatcher watcher;
+
+    if(!file.open()){
+        QMessageBox::warning(this, "Editar HTML", "Erro ao criar arquivo temporário");
+        return;
     }
+
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+    QTextStream fluxo(&file);
+    fluxo << musica->html << endl;
+    fluxo.flush();
+    qDebug() << file.fileName();
+    const char * tmp =  + file.fileName().toLatin1().data();
+
+
+    /*
+    std::thread threadKqueue(&MainWindow::watchFile, this, file.fileName());
+    threadKqueue.join();
+
+    int pid = fork();
+    if(pid == 0){
+        std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+        //system( str.c_str() );
+        //AbrirProgramaController ctrl(QString("/usr/local/bin/libreoffice --writer "  + file.fileName() ));
+        this->path = QString("/usr/local/bin/libreoffice --writer " + file.fileName());
+        std::thread threadAbrirPrograma(&MainWindow::abrirPrograma , this);
+        threadAbrirPrograma.join();
+    }
+    */
+
+    //future
+    std::future<bool> threadKqueue = std::async(std::launch::async, &MainWindow::watchFile, this, file.fileName());
+    std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+    this->path = QString("/usr/local/bin/libreoffice --writer " + file.fileName());
+    std::future<void> threadAbrirPrograma = std::async(std::launch::async, &MainWindow::abrirPrograma , this);
+    threadAbrirPrograma.get();
+    if(threadKqueue.get()){
+        qDebug() << "modificou, pode enfiar o HTML no banco de dados";
+    }
+        qDebug() << "trecho depois de chamar .get()'s ";
+
+    /*
+    watcher.addPath(file.fileName());
+
+    watcher.connect(&watcher
+            , SIGNAL(fileChanged(QString))
+            , this
+            , SLOT(on_htmlFileChanged()) );
+    */
+
+    //ver arquivo em /usr/home/marcelbonnet/devel/workspace-audio/m-pad/src
+//    int fd = inotify_init();
+//    for(;;){
+//        int retval = inotify_add_watch(fd, tmp, IN_MODIFY );
+//        if(retval > 0){
+//            qDebug() << "arquivo " << tmp << " foi modificado";
+//            break;
+//        }
+//    }
 
 
 

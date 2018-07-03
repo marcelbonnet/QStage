@@ -23,6 +23,7 @@ QMAKE_LFLAGS += `pkgconf -libs jack` -v
 QMAKE_LFLAGS += -L/usr/local/lib -lglib-2.0 -lintl
 QMAKE_LIBS += -L/home/marcelbonnet/devel/workspace-audio/libsmf -lsmf
 QMAKE_LIBS += -lsqlite3 -L/home/marcelbonnet/devel/cpp/SQLiteCpp-master/build -lSQLiteCpp
+QMAKE_LIBS += -linotify
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -43,7 +44,8 @@ SOURCES += main.cpp\
     parttab.cpp \
     patch.cpp \
     dialogjack.cpp \
-    musica.cpp
+    musica.cpp \
+    kqueue.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -53,7 +55,8 @@ HEADERS  += Mainwindow.h \
     patch.h \
     dialogjack.h \
     ijack.h \
-    musica.h
+    musica.h \
+    kqueue.h
 
 
 FORMS    += Mainwindow.ui \

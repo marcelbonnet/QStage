@@ -7,6 +7,7 @@
 #include "parttab.h"
 #include <SQLiteCpp/SQLiteCpp.h>
 #include "musica.h"
+#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +20,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void abrirPrograma();
+    bool watchFile(QString path);
 
 private slots:
     void on_listWidget_itemSelectionChanged();
@@ -45,6 +49,8 @@ private slots:
 
     void on_actionEditar_HTML_triggered();
 
+    void on_htmlFileChanged();
+
 private:
     Ui::MainWindow *ui;
     QString qstageDir;
@@ -57,10 +63,11 @@ private:
                             //TODO Receive Switch
     QSpinBox *partMidiCh[16]; //MIDI CHANNEL
 
+
  protected:
     MidiControl *jack = NULL;
 
-
+    QString path;
 };
 
 #endif // MAINWINDOW_H
