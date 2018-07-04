@@ -20,6 +20,7 @@
 #include <sys/inotify.h>
 #include <thread>
 #include <future>
+#include <QTextCodec>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -79,6 +80,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
         tab->addTab(tabParts[i], name );
     }
+
+    //carrega playlists e a primeira lista de músicas da playlist
+    this->on_actionAtualizar_Playlists_triggered();
+    if(this->ui->playlist->count() > 0)
+        this->on_playlist_currentIndexChanged(0);
 }
 
 MainWindow::~MainWindow()
@@ -439,6 +445,8 @@ void MainWindow::on_actionAtualizar_Playlists_triggered()
         SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
         SQLite::Statement   query(db, "SELECT id, titulo FROM playlist ORDER BY id ASC");
 
+        ui->playlist->clear();
+
         while (query.executeStep())
         {
             int         id      = query.getColumn(0);
@@ -583,12 +591,13 @@ void MainWindow::on_actionEditar_HTML_triggered()
             SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ? ");
 
             QTextStream arquivoHTMLTemporario(&file);
+            arquivoHTMLTemporario.setCodec(QTextCodec::codecForName("UTF-8") );
             arquivoHTMLTemporario.seek(0);
             musica->html = arquivoHTMLTemporario.readAll();
 
-            qDebug() << musica->html;
+            //qDebug() << musica->html;
 
-            query.bind(1, musica->html.toLatin1().data() );
+            query.bind(1, musica->html.toUtf8().data() );
             query.bind(2, musica->musicaId);
 
             query.exec();
