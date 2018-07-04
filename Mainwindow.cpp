@@ -571,6 +571,38 @@ void MainWindow::on_actionEditar_HTML_triggered()
     const char * tmp =  + file.fileName().toLatin1().data();
 
 
+    std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+    system( str.c_str() );
+
+    //if(Kqueue::watch(file.fileName())){ //não vai perceber a modificação realizada antes
+        //persistir HTML no banco de dados
+        try
+        {
+            SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data()
+                                , SQLite::OPEN_READWRITE);
+            SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ? ");
+
+            QTextStream arquivoHTMLTemporario(&file);
+            arquivoHTMLTemporario.seek(0);
+            musica->html = arquivoHTMLTemporario.readAll();
+
+            qDebug() << musica->html;
+
+            query.bind(1, musica->html.toLatin1().data() );
+            query.bind(2, musica->musicaId);
+
+            query.exec();
+
+        }
+        catch (std::exception& e)
+        {
+            qDebug() << "exception: " << e.what();
+            QMessageBox::warning(this,"Erro ao Salvar Letra da Música", QString(e.what()));
+        }
+    //}
+
+
+
     /*
     std::thread threadKqueue(&MainWindow::watchFile, this, file.fileName());
     threadKqueue.join();
@@ -586,16 +618,36 @@ void MainWindow::on_actionEditar_HTML_triggered()
     }
     */
 
-    //future
+    /*
+    //threads roda uma depois da outra, mas o kqueue percebe que o arquivo foi modificado ao fechar o libreoffice
+    //mas se o arquivo não for modificado, minha implementação do kqueue trava, pois espera uma modificação
     std::future<bool> threadKqueue = std::async(std::launch::async, &MainWindow::watchFile, this, file.fileName());
     std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
     this->path = QString("/usr/local/bin/libreoffice --writer " + file.fileName());
     std::future<void> threadAbrirPrograma = std::async(std::launch::async, &MainWindow::abrirPrograma , this);
     threadAbrirPrograma.get();
+
     if(threadKqueue.get()){
         qDebug() << "modificou, pode enfiar o HTML no banco de dados";
+        try
+        {
+            SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
+            SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ?");
+
+            query.bind(0, musica->html.toLatin1().data() );
+            query.bind(1, musica->musicaId);
+
+            query.exec();
+
+        }
+        catch (std::exception& e)
+        {
+            qDebug() << "exception: " << e.what();
+            QMessageBox::warning(this,"Erro ao Salvar Letra da Música", QString(e.what()));
+        }
     }
-        qDebug() << "trecho depois de chamar .get()'s ";
+    */
+
 
     /*
     watcher.addPath(file.fileName());
