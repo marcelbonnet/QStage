@@ -83,8 +83,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //carrega playlists e a primeira lista de músicas da playlist
     this->on_actionAtualizar_Playlists_triggered();
-    if(this->ui->playlist->count() > 0)
-        this->on_playlist_currentIndexChanged(0);
 }
 
 MainWindow::~MainWindow()
@@ -432,20 +430,29 @@ void MainWindow::on_actionCarregar_Anterior_triggered()
         ui->listWidget->setCurrentRow(ui->listWidget->currentRow()-1);
 }
 
+void MainWindow::atualizarListaDeMusicas(){
+    if(this->ui->playlist->count() > 0)
+        this->on_playlist_currentIndexChanged(0);
+}
+
 void MainWindow::on_actionAtualizar_Playlists_triggered()
 {
     //    auto f = [](int a, int b) -> int { return a + b; };
     //    auto n = f(1, 2);
 
+    //limpa essa playlist
     disconnect(ui->playlist,SIGNAL(currentIndexChanged(int)), this
                , SLOT(on_playlist_currentIndexChanged(int)));
+    ui->playlist->clear();
+    //limpa a list de músicas da playlist no listWidget:
+    disconnect(ui->listWidget,SIGNAL(itemSelectionChanged()), this
+               , SLOT(on_listWidget_itemSelectionChanged()));
+    ui->listWidget->clear();
 
     try
     {
         SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
         SQLite::Statement   query(db, "SELECT id, titulo FROM playlist ORDER BY id ASC");
-
-        ui->playlist->clear();
 
         while (query.executeStep())
         {
@@ -455,14 +462,19 @@ void MainWindow::on_actionAtualizar_Playlists_triggered()
             ui->playlist->addItem(QString(titulo), QVariant::fromValue(id));
         }
 
+        this->atualizarListaDeMusicas();
+
     }
     catch (std::exception& e)
     {
         qDebug() << "exception: " << e.what();
+        QMessageBox::warning(this, "Erro ao Atualizar Playlists", e.what());
     }
 
     connect(ui->playlist,SIGNAL(currentIndexChanged(int)), this
                , SLOT(on_playlist_currentIndexChanged(int)));
+    connect(ui->listWidget,SIGNAL(itemSelectionChanged()), this
+               , SLOT(on_listWidget_itemSelectionChanged()));
 
 }
 
@@ -555,7 +567,17 @@ bool MainWindow::watchFile(QString path){
     return Kqueue::watch(path);
 }
 
-void MainWindow::on_actionEditar_HTML_triggered()
+void MainWindow::on_actionEditar_HTML_triggered(){
+    this->editarHTML(QString("/usr/local/bin/libreoffice --writer "));
+}
+
+void MainWindow::on_actionEditar_HTML_GVim_triggered()
+{
+     this->editarHTML(QString("/usr/local/bin/geany "));
+}
+
+
+void MainWindow::editarHTML(QString binPath)
 {
     if(ui->listWidget->selectedItems().length() == 0){
         QMessageBox::warning(this, "Editar Música","Selecione uma música para editar.");
@@ -563,6 +585,7 @@ void MainWindow::on_actionEditar_HTML_triggered()
     }
 
     QTemporaryFile file;
+
     //QFileSystemWatcher watcher;
 
     if(!file.open()){
@@ -579,7 +602,7 @@ void MainWindow::on_actionEditar_HTML_triggered()
     const char * tmp =  + file.fileName().toLatin1().data();
 
 
-    std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+    std::string str = std::string(binPath.toUtf8().data()) + file.fileName().toUtf8().data();
     system( str.c_str() );
 
     //if(Kqueue::watch(file.fileName())){ //não vai perceber a modificação realizada antes
@@ -590,18 +613,20 @@ void MainWindow::on_actionEditar_HTML_triggered()
                                 , SQLite::OPEN_READWRITE);
             SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ? ");
 
-            QTextStream arquivoHTMLTemporario(&file);
-            arquivoHTMLTemporario.setCodec(QTextCodec::codecForName("UTF-8") );
-            arquivoHTMLTemporario.seek(0);
-            musica->html = arquivoHTMLTemporario.readAll();
-
-            //qDebug() << musica->html;
+            QTextStream *arquivoHTMLTemporario = &fluxo;
+//            QTextStream arquivoHTMLTemporario(&file);
+            arquivoHTMLTemporario->setCodec(QTextCodec::codecForName("UTF-8") );
+            arquivoHTMLTemporario->seek(0);
+            musica->html = arquivoHTMLTemporario->readAll();
 
             query.bind(1, musica->html.toUtf8().data() );
             query.bind(2, musica->musicaId);
 
             query.exec();
 
+            //o geany chega aqui depois de salvar
+            // o libreoffice chega aqui direto se já houver uma instância dele na memória (outro doc aberto por outro programa ou pelo usuário)
+            qDebug() << "Rodei UPDATE SQLite";
         }
         catch (std::exception& e)
         {
@@ -680,3 +705,4 @@ void MainWindow::on_actionEditar_HTML_triggered()
 
 
 }
+

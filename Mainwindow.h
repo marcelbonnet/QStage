@@ -51,13 +51,16 @@ private slots:
 
     void on_htmlFileChanged();
 
+    void on_actionEditar_HTML_GVim_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
     void loadTextFile(QString file);
-
+    void atualizarListaDeMusicas();
+    void editarHTML(QString binPath);
 
     PartTab *tabParts[16];    //Tab
                             //TODO Receive Switch

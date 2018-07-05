@@ -14,5 +14,6 @@
         <file>icones/view-time-schedule-baselined-remove.png</file>
         <file>icones/view-time-schedule-insert.png</file>
         <file>icones/libreoffice-writer.png</file>
+        <file>icones/gvim.png</file>
     </qresource>
 </RCC>

@@ -1532,6 +1532,7 @@ background-color: rgb(0, 62, 0)
    <addaction name="actionAtualizar_Playlists"/>
    <addaction name="separator"/>
    <addaction name="actionEditar_HTML"/>
+   <addaction name="actionEditar_HTML_GVim"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConectar">
@@ -1610,6 +1611,18 @@ background-color: rgb(0, 62, 0)
    </property>
    <property name="text">
     <string>Editar HTML</string>
+   </property>
+  </action>
+  <action name="actionEditar_HTML_GVim">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/gvim.png</normaloff>:/icones/gvim.png</iconset>
+   </property>
+   <property name="text">
+    <string>Editar HTML com GVim</string>
+   </property>
+   <property name="toolTip">
+    <string>Editar HTML com GVim</string>
    </property>
   </action>
  </widget>
