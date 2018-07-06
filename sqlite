@@ -1,0 +1,8 @@
+#!/usr/local/bin/bash
+
+[[ ! $1 ]] && echo "$0 [arquivo sql]" && exit -1
+
+echo "-- DB QStage" > $1
+sqlite3 ~/.config/QStage/qstage.db ".schema" >> $1
+echo "-- DUMP DE DADOS" >> $1
+sqlite3 ~/.config/QStage/qstage.db ".dump modelos" >> $1
