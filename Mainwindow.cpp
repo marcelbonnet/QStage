@@ -568,7 +568,7 @@ bool MainWindow::watchFile(QString path){
 }
 
 void MainWindow::on_actionEditar_HTML_triggered(){
-    this->editarHTML(QString("/usr/local/bin/libreoffice --writer "));
+    this->editarHTML(QString("/usr/local/bin/libreoffice --nologo --writer "));
 }
 
 void MainWindow::on_actionEditar_HTML_GVim_triggered()
