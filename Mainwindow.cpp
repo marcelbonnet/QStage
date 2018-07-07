@@ -23,6 +23,7 @@
 #include <QTextCodec>
 
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -83,6 +84,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //carrega playlists e a primeira lista de músicas da playlist
     this->on_actionAtualizar_Playlists_triggered();
+
+    dlgPlaylist = new dialog_playlist(this);
+    connect(dlgPlaylist, SIGNAL(registrarPlaylist(QString)), this, SLOT(playlistIncluir(QString)));
+    connect(dlgPlaylist, SIGNAL(alterarPlaylist(int,QString)), this, SLOT( playlistAlterar(int,QString)));
 }
 
 MainWindow::~MainWindow()
@@ -708,3 +713,76 @@ void MainWindow::editarHTML(QString binPath)
 
 
 
+
+void MainWindow::on_action_Playlist_Nova_triggered()
+{
+    this->dlgPlaylist->show();
+}
+
+void MainWindow::playlistIncluir(QString str){
+   try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "INSERT INTO playlist (titulo) VALUES(?) ");
+        query.bind(1, str.toUtf8().data());
+        query.exec();
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Incluir Playlist", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::playlistAlterar(int id, QString str){
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "UPDATE playlist SET titulo = ? WHERE id = ? ");
+        query.bind(1, str.toUtf8().data());
+        query.bind(2, id);
+        query.exec();
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Alterar Playlist", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::playlistRemover(int id){
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "DELETE FROM playlist_musicas WHERE fk_playlist = ?");
+        query.bind(1, id);
+        query.exec();
+
+        SQLite::Statement   query2(db, "DELETE FROM playlist WHERE id = ?");
+        query2.bind(1, id);
+        query2.exec();
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Remover Playlist", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::on_action_Playlist_Remover_triggered()
+{
+    int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    this->playlistRemover(id);
+}
+
+void MainWindow::on_action_Playlist_Editar_triggered()
+{
+    int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    QString str = ui->playlist->currentText();
+    dlgPlaylist->setId(id);
+    dlgPlaylist->setNome(str);
+    dlgPlaylist->show();
+}

@@ -1530,6 +1530,10 @@ background-color: rgb(0, 62, 0)
    <addaction name="actionCarregar_Anterior"/>
    <addaction name="separator"/>
    <addaction name="actionAtualizar_Playlists"/>
+   <addaction name="action_Playlist_Nova"/>
+   <addaction name="action_Playlist_Editar"/>
+   <addaction name="action_Playlist_Duplicar"/>
+   <addaction name="action_Playlist_Remover"/>
    <addaction name="separator"/>
    <addaction name="actionEditar_HTML"/>
    <addaction name="actionEditar_HTML_GVim"/>
@@ -1629,6 +1633,45 @@ background-color: rgb(0, 62, 0)
    </property>
    <property name="toolTip">
     <string>Editar HTML com GVim</string>
+   </property>
+  </action>
+  <action name="action_Playlist_Nova">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/doc_new_icon&amp;16.png</normaloff>:/icones/doc_new_icon&amp;16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Nova Playlist</string>
+   </property>
+  </action>
+  <action name="action_Playlist_Editar">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/doc_edit_icon&amp;16.png</normaloff>:/icones/doc_edit_icon&amp;16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Editar Playlist</string>
+   </property>
+  </action>
+  <action name="action_Playlist_Remover">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/doc_delete_icon&amp;16.png</normaloff>:/icones/doc_delete_icon&amp;16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remover Playlist</string>
+   </property>
+  </action>
+  <action name="action_Playlist_Duplicar">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/clipboard_copy_icon&amp;16.png</normaloff>:/icones/clipboard_copy_icon&amp;16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Duplicar Playlist</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicar Playlist</string>
    </property>
   </action>
  </widget>

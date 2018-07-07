@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     patch.cpp \
     dialogjack.cpp \
     musica.cpp \
-    kqueue.cpp
+    kqueue.cpp \
+    dialog_playlist.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -56,12 +57,14 @@ HEADERS  += Mainwindow.h \
     dialogjack.h \
     ijack.h \
     musica.h \
-    kqueue.h
+    kqueue.h \
+    dialog_playlist.h
 
 
 FORMS    += Mainwindow.ui \
     parttab.ui \
-    dialogjack.ui
+    dialogjack.ui \
+    dialog_playlist.ui
 
 
 DISTFILES += \

@@ -8,6 +8,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 #include "musica.h"
 #include <QString>
+#include "dialog_playlist.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,14 +54,28 @@ private slots:
 
     void on_actionEditar_HTML_GVim_triggered();
 
+    void on_action_Playlist_Nova_triggered();
+
+    void playlistIncluir(QString str);
+
+    void playlistAlterar(int id, QString str);
+
+    void playlistRemover(int id);
+
+    void on_action_Playlist_Remover_triggered();
+
+    void on_action_Playlist_Editar_triggered();
+
 private:
     Ui::MainWindow *ui;
+    dialog_playlist *dlgPlaylist;
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
     void loadTextFile(QString file);
     void atualizarListaDeMusicas();
     void editarHTML(QString binPath);
+
 
     PartTab *tabParts[16];    //Tab
                             //TODO Receive Switch

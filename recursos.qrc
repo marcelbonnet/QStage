@@ -17,5 +17,9 @@
         <file>icones/gvim.png</file>
         <file>icones/document-save-all.png</file>
         <file>icones/document-save-as.png</file>
+        <file>icones/doc_delete_icon&amp;16.png</file>
+        <file>icones/doc_edit_icon&amp;16.png</file>
+        <file>icones/doc_new_icon&amp;16.png</file>
+        <file>icones/clipboard_copy_icon&amp;16.png</file>
     </qresource>
 </RCC>
