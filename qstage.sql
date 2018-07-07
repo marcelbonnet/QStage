@@ -8,4 +8,5 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE modelos(id INTEGER PRIMARY KEY, nome STRING NOT NULL, modelo TEXT NOT NULL, tipo STRING NOT NULL);
 INSERT INTO "modelos" VALUES(1,'Nova Música','<html><head><meta="utf-8"><style>body{color:#fff; background-color: #000; } h1, h2 { color:orange; }</style></head><body><h1 contenteditable="true">Teste</h1><div contenteditable="true"><p>testando</p></div></body></html>','default');
+INSERT INTO "modelos" VALUES(2,'Nova Música','<html><head><meta="utf-8"><style>body{color:#fff; background-color: #000; } h1, h2 { color:orange; }</style></head><body><h1>Teste</h1><div><p>testando</p></div></body></html>','default');
 COMMIT;

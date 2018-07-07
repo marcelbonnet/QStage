@@ -1605,6 +1605,9 @@ background-color: rgb(0, 62, 0)
    </property>
   </action>
   <action name="actionEditar_HTML">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="recursos.qrc">
      <normaloff>:/icones/libreoffice-writer.png</normaloff>:/icones/libreoffice-writer.png</iconset>
@@ -1614,6 +1617,9 @@ background-color: rgb(0, 62, 0)
    </property>
   </action>
   <action name="actionEditar_HTML_GVim">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="recursos.qrc">
      <normaloff>:/icones/gvim.png</normaloff>:/icones/gvim.png</iconset>

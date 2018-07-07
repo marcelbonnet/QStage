@@ -15,5 +15,7 @@
         <file>icones/view-time-schedule-insert.png</file>
         <file>icones/libreoffice-writer.png</file>
         <file>icones/gvim.png</file>
+        <file>icones/document-save-all.png</file>
+        <file>icones/document-save-as.png</file>
     </qresource>
 </RCC>

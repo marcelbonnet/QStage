@@ -706,3 +706,5 @@ void MainWindow::editarHTML(QString binPath)
 
 }
 
+
+
