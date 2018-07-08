@@ -1,13 +1,13 @@
-Falta:
+# QStage
 
-- Editor de Patche e Rhythm
-	- carregar lista de sons internos
-- Carregar nomes dos parâmetros e valores máximos dos Efeitos do PERFORM COMMON. Bloquear widgets que não serão usados.
-- criar nova Apresentação
-- salvar set list da Apresentação
-- criar sequência SYSEX de uma mesma música
-- adicionar teclado virtual para fazer efeitos (teclas, sustain)
-- vincular tecla(s) do teclado virtual a uma Parte
+It is a program to send SYSEX MIDI Messages to my Roland Keyboard. Since it is the first program I wrote in C++, it was basically focused on my needs and as an opportunity to educate myself on C++. I chose to use Qt Framework, and almost nothing from stdlib.
 
-- avisar se o jack estiver desconectado , ou conectar sob demanda ou automaticamente
-- perguntar qual o device, testar se está com perm de RW
+## QStage Features
+
+	- saves a list of musics as Roland configurations and lyrics/chords
+	- displays the selected music (lyrics, chords, or whatever was saved as HTML markup)
+	- connects to a jack midi port and send SYSEX MIDI messages to configure Roland's "PERFORM" Mode.
+	- display all the Roland parameters as widgets on the screen, so the keyboard may be modified in realtime and all changes saved to a file
+
+
+The branch named //database// uses a SQLite wrapper to persist all data into sqlite3.
