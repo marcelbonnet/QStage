@@ -66,6 +66,8 @@ private slots:
 
     void on_action_Playlist_Editar_triggered();
 
+    void on_action_Playlist_Duplicar_triggered();
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;

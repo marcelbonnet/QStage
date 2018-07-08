@@ -786,3 +786,27 @@ void MainWindow::on_action_Playlist_Editar_triggered()
     dlgPlaylist->setNome(str);
     dlgPlaylist->show();
 }
+
+void MainWindow::on_action_Playlist_Duplicar_triggered()
+{
+    int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    QString str = ui->playlist->currentText() + " (Cópia)";
+
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "INSERT INTO playlist (titulo) SELECT titulo || ' (cópia)' FROM playlist WHERE id= ?");
+        query.bind(1, id);
+        query.exec();
+
+        SQLite::Statement   query2(db, "INSERT INTO playlist_musicas (fk_musica, fk_playlist, ordem) SELECT fk_musica, (SELECT last_insert_rowid()) , ordem FROM playlist_musicas WHERE fk_playlist = ?");
+        query2.bind(1, id);
+        query2.exec();
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Duplicar Playlist", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
