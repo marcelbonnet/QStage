@@ -9,6 +9,8 @@
 #include "musica.h"
 #include <QString>
 #include "dialog_playlist.h"
+#include "dialogmusica.h"
+#include "dialogmusicaexistente.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +26,9 @@ public:
 
     void abrirPrograma();
     bool watchFile(QString path);
+
+    static QString getQStageDir();
+    static QString getQStageDatabase();
 
 private slots:
     void on_listWidget_itemSelectionChanged();
@@ -68,9 +73,25 @@ private slots:
 
     void on_action_Playlist_Duplicar_triggered();
 
+    void on_action_Musica_Nova_triggered();
+
+    void on_action_Musica_Editar_triggered();
+
+    void on_action_Musica_Remover_triggered();
+
+    void musicaIncluir(QString str);
+
+    void musicaAlterar(QString str);
+
+    void on_action_Adicionar_Musica_na_Playlist_triggered();
+
+    void musicaExistenteIncluirNaPlaylist(int musicaId);
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;
+    DialogMusica *dlgMusica;
+    DialogMusicaExistente *dlgMusicaExistente;
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;

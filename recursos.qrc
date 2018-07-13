@@ -21,5 +21,9 @@
         <file>icones/doc_edit_icon&amp;16.png</file>
         <file>icones/doc_new_icon&amp;16.png</file>
         <file>icones/clipboard_copy_icon&amp;16.png</file>
+        <file>icones/document-new.png</file>
+        <file>icones/document-edit.png</file>
+        <file>icones/document-close.png</file>
+        <file>icones/doc_plus_icon&amp;16.png</file>
     </qresource>
 </RCC>

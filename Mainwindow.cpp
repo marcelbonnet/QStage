@@ -23,7 +23,6 @@
 #include <QTextCodec>
 
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -88,6 +87,13 @@ MainWindow::MainWindow(QWidget *parent) :
     dlgPlaylist = new dialog_playlist(this);
     connect(dlgPlaylist, SIGNAL(registrarPlaylist(QString)), this, SLOT(playlistIncluir(QString)));
     connect(dlgPlaylist, SIGNAL(alterarPlaylist(int,QString)), this, SLOT( playlistAlterar(int,QString)));
+
+    dlgMusica = new DialogMusica(this);
+    connect(dlgMusica, SIGNAL(incluirMusica(QString)), this, SLOT(musicaIncluir(QString)));
+    connect(dlgMusica, SIGNAL(alterarMusica(QString)), this, SLOT(musicaAlterar(QString)));
+
+    dlgMusicaExistente = new DialogMusicaExistente();
+    connect(dlgMusicaExistente, SIGNAL(musicaExistenteSelecionada(int)),this, SLOT(musicaExistenteIncluirNaPlaylist(int)));
 }
 
 MainWindow::~MainWindow()
@@ -774,6 +780,14 @@ void MainWindow::playlistRemover(int id){
 
 void MainWindow::on_action_Playlist_Remover_triggered()
 {
+    QMessageBox::StandardButton question = QMessageBox::question(this,
+                                                                 "Remover Playlist",
+                                                                 "Remover a playlist: " + ui->playlist->currentText(),
+                                                                 QMessageBox::Yes | QMessageBox::No);
+
+    if(question != QMessageBox::Yes )
+        return;
+
     int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
     this->playlistRemover(id);
 }
@@ -807,6 +821,156 @@ void MainWindow::on_action_Playlist_Duplicar_triggered()
     catch (std::exception& e)
     {
         QMessageBox::warning(this,"Erro ao Duplicar Playlist", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::musicaIncluir(QString str){
+    int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+
+    try
+    {
+        int modeloId = dlgMusica->getModeloId();
+
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "INSERT INTO musicas(titulo, html) "
+                                      "VALUES (?, (SELECT modelo FROM modelos WHERE id=? ))");
+        query.bind(1, str.toUtf8().data() );
+        query.bind(2, modeloId);
+        query.exec();
+
+        SQLite::Statement   query2(db, "INSERT INTO playlist_musicas"
+                                       "(fk_musica, fk_playlist, ordem) "
+                                       "VALUES( (SELECT last_insert_rowid()) , ?, (SELECT MAX(ordem) "
+                                            "FROM playlist_musicas WHERE fk_playlist= ?) )");
+
+        query2.bind(1, id);
+        query2.bind(2, id);
+        query2.exec();
+
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Incluir Música", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::musicaAlterar(QString str){
+    //int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+    int id = musica->musicaId;
+//    QString str = dlgMusica->getTitulo();
+
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "UPDATE musicas SET titulo = ? WHERE musica_id = ?");
+        query.bind(1, str.toUtf8().data() );
+        query.bind(2, id);
+        query.exec();
+
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Alterar Música", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+QString MainWindow::getQStageDir()
+{
+    return QDir::homePath() + "/.config/QStage";
+}
+
+QString MainWindow::getQStageDatabase()
+{
+    return getQStageDir()  + "/qstage.db";
+}
+
+void MainWindow::on_action_Musica_Nova_triggered()
+{
+    dlgMusica->show();
+}
+
+void MainWindow::on_action_Musica_Editar_triggered()
+{
+    if(ui->listWidget->selectedItems().count() == 0){
+        QMessageBox::warning(this, "Alterar Música", "Selecione uma música para alterar.");
+        return;
+    }
+
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+    dlgMusica->setTitulo(musica->titulo);
+    dlgMusica->setModoInclusao(false);
+    dlgMusica->show();
+}
+
+void MainWindow::on_action_Musica_Remover_triggered()
+{
+    if(ui->listWidget->selectedItems().count() == 0){
+        QMessageBox::warning(this, "Remover Música da Playlist", "Selecione uma música para remover da playlist.");
+        return;
+    }
+
+    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+    int id = musica->musicaId;
+    QMessageBox::StandardButton question = QMessageBox::question(this,
+                                                                 "Remover Música da Playlist",
+                                                                 "Remover a música: " + musica->titulo,
+                                                                 QMessageBox::Yes | QMessageBox::No);
+
+    if(question != QMessageBox::Yes)
+        return;
+
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+//        SQLite::Statement   query(db, "DELETE FROM musicas WHERE musica_id = ?");
+//        query.bind(1, id);
+        SQLite::Statement   query(db, "DELETE FROM playlist_musicas WHERE fk_musica = ? AND fk_playlist = ?");
+        query.bind(1, id);
+        query.bind(2, playlistId);
+        query.exec();
+
+        this->on_actionAtualizar_Playlists_triggered();
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Remover Música", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::on_action_Adicionar_Musica_na_Playlist_triggered()
+{
+    dlgMusicaExistente->show();
+}
+
+void MainWindow::musicaExistenteIncluirNaPlaylist(int musicaId){
+    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "INSERT INTO playlist_musicas (fk_musica, fk_playlist) VALUES(?, ?)");
+        query.bind(1, musicaId);
+        query.bind(2, playlistId);
+        query.exec();
+
+        this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(playlistId);
+        ui->playlist->setCurrentIndex(index);
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Remover Música", e.what());
         qDebug() << "exception: " << e.what();
     }
 }
