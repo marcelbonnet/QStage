@@ -21,7 +21,7 @@
 #include <thread>
 #include <future>
 #include <QTextCodec>
-
+#include <QUuid>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -216,8 +216,11 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
 
     try
     {
-        QString tmp("/tmp/QStage.ini");
+
+        QString tmp("/tmp/QStage." + QUuid().createUuid().createUuid().toString() + ".ini");
         QFile arquivoTemporario(tmp);
+//        QTemporaryFile arquivoTemporario;
+//        arquivoTemporario.open();
 
         int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
         QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
@@ -300,29 +303,26 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
             conf->endGroup();
         }
 
+        conf->sync();
+        arquivoTemporario.open(QFile::ReadOnly);//usar para QFile
+        QTextStream entrada(&arquivoTemporario);  entrada.seek(0);
 
-        arquivoTemporario.flush();
-
-//        qDebug() << arquivoTemporario.fileName();
-        arquivoTemporario.close();
-//        arquivoTemporario.open();
-        QFile arquivo2(tmp);
-        arquivo2.open(QFile::ReadOnly);
-        QTextStream fluxo(&arquivo2);
         //persiste do arquivo no banco de dados
         SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "UPDATE musicas SET programa = ? WHERE musica_id = ?");
-        query.bind(1, fluxo.readAll().toUtf8().data() );
+        query.bind(1, entrada.readAll().toUtf8().data() );
         query.bind(2, musicaId);
         query.exec();
-        arquivo2.close();
+        arquivoTemporario.close();
         this->on_actionAtualizar_Playlists_triggered();
+
     }
     catch (std::exception& e)
     {
         QMessageBox::warning(this,"Erro ao Remover Música", e.what());
         qDebug() << "exception: " << e.what();
     }
+
 
 }
 
