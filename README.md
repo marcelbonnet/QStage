@@ -10,4 +10,3 @@ It is a program to send SYSEX MIDI Messages to my Roland Keyboard. Since it is t
 	- display all the Roland parameters as widgets on the screen, so the keyboard may be modified in realtime and all changes saved to a file
 
 
-The branch named //database// uses a SQLite wrapper to persist all data into sqlite3.
