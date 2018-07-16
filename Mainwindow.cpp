@@ -142,7 +142,7 @@ void MainWindow::on_perfBtnEnviar_clicked()
         performanceName.append(" ");
     }
     for(int i=0 ; i<12; i++){
-        dados->append(performanceName.toLatin1().data()[i]);
+        dados->append(performanceName.toUtf8().data()[i]);
 
     }
 
@@ -500,7 +500,7 @@ void MainWindow::on_actionAtualizar_Playlists_triggered()
 
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data());
         SQLite::Statement   query(db, "SELECT id, titulo FROM playlist ORDER BY id ASC");
 
         while (query.executeStep())
@@ -556,7 +556,7 @@ void MainWindow::on_playlist_currentIndexChanged(int index)
     {
 
 
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data());
         SQLite::Statement   query(db, "SELECT m.musica_id, m.titulo, m.html, pm.ordem, m.programa "
                                       "FROM musicas m JOIN playlist_musicas pm ON pm.fk_musica = m.musica_id  "
                                       "WHERE pm.fk_playlist = ? ORDER BY pm.ordem ASC;");
@@ -604,7 +604,7 @@ void MainWindow::on_htmlFileChanged(){
 }
 
 void MainWindow::abrirPrograma(){
-    std::string str = std::string(this->path.toLatin1().data());
+    std::string str = std::string(this->path.toUtf8().data());
     system( str.c_str() );
 }
 
@@ -648,7 +648,7 @@ void MainWindow::editarHTML(QString binPath)
     fluxo << musica->html << endl;
     fluxo.flush();
     qDebug() << file.fileName();
-    const char * tmp =  + file.fileName().toLatin1().data();
+    const char * tmp =  + file.fileName().toUtf8().data();
 
 
     std::string str = std::string(binPath.toUtf8().data()) + file.fileName().toUtf8().data();
@@ -658,7 +658,7 @@ void MainWindow::editarHTML(QString binPath)
         //persistir HTML no banco de dados
         try
         {
-            SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data()
+            SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data()
                                 , SQLite::OPEN_READWRITE);
             SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ? ");
 
@@ -692,7 +692,7 @@ void MainWindow::editarHTML(QString binPath)
 
     int pid = fork();
     if(pid == 0){
-        std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+        std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toUtf8().data();
         //system( str.c_str() );
         //AbrirProgramaController ctrl(QString("/usr/local/bin/libreoffice --writer "  + file.fileName() ));
         this->path = QString("/usr/local/bin/libreoffice --writer " + file.fileName());
@@ -705,7 +705,7 @@ void MainWindow::editarHTML(QString binPath)
     //threads roda uma depois da outra, mas o kqueue percebe que o arquivo foi modificado ao fechar o libreoffice
     //mas se o arquivo não for modificado, minha implementação do kqueue trava, pois espera uma modificação
     std::future<bool> threadKqueue = std::async(std::launch::async, &MainWindow::watchFile, this, file.fileName());
-    std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toLatin1().data();
+    std::string str = std::string("/usr/local/bin/libreoffice --writer ") + file.fileName().toUtf8().data();
     this->path = QString("/usr/local/bin/libreoffice --writer " + file.fileName());
     std::future<void> threadAbrirPrograma = std::async(std::launch::async, &MainWindow::abrirPrograma , this);
     threadAbrirPrograma.get();
@@ -714,10 +714,10 @@ void MainWindow::editarHTML(QString binPath)
         qDebug() << "modificou, pode enfiar o HTML no banco de dados";
         try
         {
-            SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data());
+            SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data());
             SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ?");
 
-            query.bind(0, musica->html.toLatin1().data() );
+            query.bind(0, musica->html.toUtf8().data() );
             query.bind(1, musica->musicaId);
 
             query.exec();
@@ -766,7 +766,7 @@ void MainWindow::on_action_Playlist_Nova_triggered()
 void MainWindow::playlistIncluir(QString str){
    try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "INSERT INTO playlist (titulo) VALUES(?) ");
         query.bind(1, str.toUtf8().data());
         query.exec();
@@ -782,12 +782,14 @@ void MainWindow::playlistIncluir(QString str){
 void MainWindow::playlistAlterar(int id, QString str){
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "UPDATE playlist SET titulo = ? WHERE id = ? ");
         query.bind(1, str.toUtf8().data());
         query.bind(2, id);
         query.exec();
         this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(id);
+        ui->playlist->setCurrentIndex(index);
     }
     catch (std::exception& e)
     {
@@ -799,7 +801,7 @@ void MainWindow::playlistAlterar(int id, QString str){
 void MainWindow::playlistRemover(int id){
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "DELETE FROM playlist_musicas WHERE fk_playlist = ?");
         query.bind(1, id);
         query.exec();
@@ -846,7 +848,7 @@ void MainWindow::on_action_Playlist_Duplicar_triggered()
 
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "INSERT INTO playlist (titulo) SELECT titulo || ' (cópia)' FROM playlist WHERE id= ?");
         query.bind(1, id);
         query.exec();
@@ -870,7 +872,7 @@ void MainWindow::musicaIncluir(QString str){
     {
         int modeloId = dlgMusica->getModeloId();
 
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "INSERT INTO musicas(titulo, html) "
                                       "VALUES (?, (SELECT modelo FROM modelos WHERE id=? ))");
         query.bind(1, str.toUtf8().data() );
@@ -904,7 +906,7 @@ void MainWindow::musicaAlterar(QString str){
 
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "UPDATE musicas SET titulo = ? WHERE musica_id = ?");
         query.bind(1, str.toUtf8().data() );
         query.bind(2, id);
@@ -969,9 +971,7 @@ void MainWindow::on_action_Musica_Remover_triggered()
 
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
-//        SQLite::Statement   query(db, "DELETE FROM musicas WHERE musica_id = ?");
-//        query.bind(1, id);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "DELETE FROM playlist_musicas WHERE fk_musica = ? AND fk_playlist = ?");
         query.bind(1, id);
         query.bind(2, playlistId);
@@ -996,7 +996,7 @@ void MainWindow::musicaExistenteIncluirNaPlaylist(int musicaId){
 
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toLatin1().data(), SQLite::OPEN_READWRITE);
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
         SQLite::Statement   query(db, "INSERT INTO playlist_musicas (fk_musica, fk_playlist) VALUES(?, ?)");
         query.bind(1, musicaId);
         query.bind(2, playlistId);
@@ -1011,4 +1011,53 @@ void MainWindow::musicaExistenteIncluirNaPlaylist(int musicaId){
         QMessageBox::warning(this,"Erro ao Remover Música", e.what());
         qDebug() << "exception: " << e.what();
     }
+}
+
+void MainWindow::reordenar(int posicao){
+    if(ui->listWidget->selectedItems().count() == 0)
+    {
+        QMessageBox::warning(this, "Reordenar", "Selecione uma música para ordenar na playlist.");
+        return;
+    }
+
+//    int linha = ui->listWidget->currentRow();
+
+//    if(linha+posicao > ui->listWidget->count() || linha-posicao < 0)
+//        return;
+
+    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+    int musicaId = musica->musicaId;
+
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "UPDATE playlist_musicas SET ordem = ordem + ? WHERE fk_musica = ? AND fk_playlist = ?");
+        query.bind(1, posicao);
+        query.bind(2, musicaId);
+        query.bind(3, playlistId);
+        query.exec();
+
+        this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(playlistId);
+        ui->playlist->setCurrentIndex(index);
+        ui->listWidget->findItems(musica->titulo, Qt::MatchEndsWith)[0]->setSelected(true);
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao Reordenar Música", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+void MainWindow::on_actionMoverParaCima_triggered()
+{
+    reordenar(-1);
+
+}
+
+void MainWindow::on_actionMoverParaBaixo_triggered()
+{
+    reordenar(1);
 }

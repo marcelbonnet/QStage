@@ -87,6 +87,10 @@ private slots:
 
     void musicaExistenteIncluirNaPlaylist(int musicaId);
 
+    void on_actionMoverParaCima_triggered();
+
+    void on_actionMoverParaBaixo_triggered();
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;
@@ -98,6 +102,7 @@ private:
     void loadTextFile(QString file);
     void atualizarListaDeMusicas();
     void editarHTML(QString binPath);
+    void reordenar(int posicao);
 
 
     PartTab *tabParts[16];    //Tab
