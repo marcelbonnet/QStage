@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     kqueue.cpp \
     dialog_playlist.cpp \
     dialogmusica.cpp \
-    dialogmusicaexistente.cpp
+    dialogmusicaexistente.cpp \
+    dialogdocumenteditor.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -62,7 +63,8 @@ HEADERS  += Mainwindow.h \
     kqueue.h \
     dialog_playlist.h \
     dialogmusica.h \
-    dialogmusicaexistente.h
+    dialogmusicaexistente.h \
+    dialogdocumenteditor.h
 
 
 FORMS    += Mainwindow.ui \
@@ -70,7 +72,8 @@ FORMS    += Mainwindow.ui \
     dialogjack.ui \
     dialog_playlist.ui \
     dialogmusica.ui \
-    dialogmusicaexistente.ui
+    dialogmusicaexistente.ui \
+    dialogdocumenteditor.ui
 
 
 DISTFILES += \

@@ -22,6 +22,7 @@
 #include <future>
 #include <QTextCodec>
 #include <QUuid>
+#include "dialogdocumenteditor.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -622,7 +623,14 @@ void MainWindow::on_actionEditar_HTML_triggered(){
 
 void MainWindow::on_actionEditar_HTML_GVim_triggered()
 {
-     this->editarHTML(QString("/usr/local/bin/geany "));
+    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+    int musicaId = musica->musicaId;
+
+     DialogDocumentEditor *editor = new DialogDocumentEditor(this);
+     editor->setHtml(musica->html);
+     editor->show();
 }
 
 
@@ -889,6 +897,8 @@ void MainWindow::musicaIncluir(QString str){
         query2.exec();
 
         this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(id);
+        ui->playlist->setCurrentIndex(index);
     }
     catch (std::exception& e)
     {
@@ -898,7 +908,7 @@ void MainWindow::musicaIncluir(QString str){
 }
 
 void MainWindow::musicaAlterar(QString str){
-    //int id = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
     QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
     Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
     int id = musica->musicaId;
@@ -913,6 +923,8 @@ void MainWindow::musicaAlterar(QString str){
         query.exec();
 
         this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(playlistId);
+        ui->playlist->setCurrentIndex(index);
     }
     catch (std::exception& e)
     {
@@ -978,6 +990,8 @@ void MainWindow::on_action_Musica_Remover_triggered()
         query.exec();
 
         this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(playlistId);
+        ui->playlist->setCurrentIndex(index);
     }
     catch (std::exception& e)
     {
