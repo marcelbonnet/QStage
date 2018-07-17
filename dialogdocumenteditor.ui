@@ -29,15 +29,98 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>661</width>
-     <height>251</height>
+     <x>6</x>
+     <y>8</y>
+     <width>671</width>
+     <height>281</height>
     </rect>
    </property>
+   <property name="tabPosition">
+    <enum>QTabWidget::South</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tabEditor">
+    <attribute name="title">
+     <string>Editor</string>
+    </attribute>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QFrame" name="frame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="comboTag">
+          <item>
+           <property name="text">
+            <string>Estilo</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>H1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>H2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>H3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SMALL</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnBold">
+          <property name="text">
+           <string>B</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnItalic">
+          <property name="text">
+           <string>I</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnUnderscore">
+          <property name="text">
+           <string>U</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="textEdit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="tabSource">
+    <attribute name="title">
+     <string>HTML</string>
+    </attribute>
+   </widget>
   </widget>
  </widget>
  <resources/>
