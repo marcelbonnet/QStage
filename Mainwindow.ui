@@ -14,12 +14,12 @@
    <string>QStage</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#perfBtnEnviar, #perfIntervaloNotas {
+   <string notr="true">#perfBtnEnviar, #perfIntervaloNotas, #sysBtnTranspose {
 	background-color: rgb(0, 39, 0);
 	color: rgb(182, 182, 182);
 }
 
-#perfBtnEnviar:checked, #perfIntervaloNotas:checked {
+#perfBtnEnviar:checked, #perfIntervaloNotas:checked , #sysBtnTranspose:checked {
 	background-color: rgb(0, 255, 0);
 	color: rgb(47, 141, 69);
 }
@@ -99,7 +99,7 @@ background-color: rgb(0, 62, 0)
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabLista">
        <property name="styleSheet">
@@ -266,7 +266,7 @@ background-color: rgb(0, 62, 0)
          <rect>
           <x>10</x>
           <y>180</y>
-          <width>951</width>
+          <width>681</width>
           <height>411</height>
          </rect>
         </property>
@@ -1187,7 +1187,7 @@ background-color: rgb(0, 62, 0)
          <rect>
           <x>340</x>
           <y>60</y>
-          <width>341</width>
+          <width>351</width>
           <height>111</height>
          </rect>
         </property>
@@ -1452,7 +1452,7 @@ background-color: rgb(0, 62, 0)
        <widget class="QPushButton" name="perfBtnEnviar">
         <property name="geometry">
          <rect>
-          <x>830</x>
+          <x>990</x>
           <y>20</y>
           <width>80</width>
           <height>22</height>
@@ -1493,6 +1493,54 @@ background-color: rgb(0, 62, 0)
         <property name="text">
          <string>Regiões de Notas</string>
         </property>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_4">
+        <property name="geometry">
+         <rect>
+          <x>710</x>
+          <y>70</y>
+          <width>361</width>
+          <height>521</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>System</string>
+        </property>
+        <widget class="QPushButton" name="sysBtnTranspose">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>40</y>
+           <width>80</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TRANSPOSE</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="sysTransposeVal">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>40</y>
+           <width>48</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="minimum">
+          <number>-5</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="tabPatch">

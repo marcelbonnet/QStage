@@ -30,6 +30,8 @@ public:
     static QString getQStageDir();
     static QString getQStageDatabase();
 
+    QString getConfig(QString key);
+
 private slots:
     void on_listWidget_itemSelectionChanged();
 
@@ -103,6 +105,8 @@ private:
     void atualizarListaDeMusicas();
     void editarHTML(QString binPath);
     void reordenar(int posicao);
+    bool tentarAutoConectar(QString porta);
+
 
 
     PartTab *tabParts[16];    //Tab

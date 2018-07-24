@@ -447,6 +447,24 @@ void MidiControl::transmitir(){
     mensagens->clear();
 }
 
+void MidiControl::setSystemCommon(QMap<int, int> dados){
+    QMapIterator<int, int> i(dados);
+    int endereco= 0x0000; //System Common
+    while(i.hasNext()){
+        i.next();
+        int offset  = i.key();
+        int val     = i.value();
+
+        iniciarMensagem();
+        adicionarEndereco(endereco + offset);
+        int valor = adicionarDados(val);
+        mensagens->append(calcularChecksum(endereco+ offset, valor));
+        encerrarMensagem();
+    }
+
+    transmitir();
+}
+
 void MidiControl::setPerformanceCommon(QList<int> *dados){
     int ultimo = 0;
     int endereco= 0x01000000; //endereço temporary performance
@@ -554,9 +572,10 @@ void MidiControl::setPerformancePart(int parte, QList<int> *dados){
     transmitir();
 }
 
-void MidiControl::conectarNaPorta(QString nomePortaDestino){
+bool MidiControl::conectarNaPorta(QString nomePortaDestino){
         QString nomePortaOrigem =  QString("%1:%2").arg(PACKAGE_NAME).arg(OUTPUT_PORT_NAME);
-        jack_connect(jack_client, nomePortaOrigem.toLatin1().data() , nomePortaDestino.toLatin1().data());
+        int ret = jack_connect(jack_client, nomePortaOrigem.toLatin1().data() , nomePortaDestino.toLatin1().data());
+        return ret == 0 ? true : false;
 }
 
 QList<QString> *MidiControl::listarPortas(){

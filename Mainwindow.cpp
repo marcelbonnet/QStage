@@ -23,6 +23,7 @@
 #include <QTextCodec>
 #include <QUuid>
 #include "dialogdocumenteditor.h"
+#include <QMap>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,13 +34,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->jack= new MidiControl();
 
-
-    //caso contrário o programa quebra ao tentar transmitir sinais quando carregar configurações
-    on_actionConectar_triggered();
-
     qstageDir = QDir::homePath() + "/.config/QStage";
     configMusicasDir = QDir::homePath() + "/.config/QStage/songs"; // QStandardPaths::locate(QStandardPaths::HomeLocation, "songs", QStandardPaths::LocateFile);
     configSysExDir = QDir::homePath() + "/.config/QStage/XP-30";
+
+    //caso contrário o programa quebra ao tentar transmitir sinais quando carregar configurações
+    if(!tentarAutoConectar(getConfig("port")))
+        on_actionConectar_triggered();
 
     //    QDir *musicasDir = new QDir( configMusicasDir );
 
@@ -188,6 +189,14 @@ void MainWindow::on_perfBtnEnviar_clicked()
 
     jack->setPerformanceCommon(dados);
 
+    /*
+     * System Common que está na mesma UI
+     */
+    QMap<int, int> systemCommon;
+    systemCommon.insert(0x002B, ui->sysBtnTranspose->isChecked() ? 1 : 0 );
+    systemCommon.insert(0x002C, ui->sysTransposeVal->value()+5);
+
+    jack->setSystemCommon(systemCommon);
 }
 
 void MainWindow::on_perfIntervaloNotas_clicked()
@@ -304,6 +313,14 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
             conf->endGroup();
         }
 
+        /*
+         * System (Common)
+         */
+        conf->beginGroup("System");
+        conf->setValue("transpose", ui->sysBtnTranspose->isChecked()? 1 : 0);
+        conf->setValue("transposeVal", ui->sysTransposeVal->value());
+        conf->endGroup();
+
         conf->sync();
         arquivoTemporario.open(QFile::ReadOnly);//usar para QFile
         QTextStream entrada(&arquivoTemporario);  entrada.seek(0);
@@ -387,6 +404,14 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
     ui->perfTempo->setValue(conf->value("tempo").toInt());
     ui->perfIntervaloNotas->setChecked(conf->value("intervaloNotas").toInt());
     ui->perfMode->setCurrentIndex(conf->value("modo").toInt());
+    conf->endGroup();
+
+    /*
+     * System (Common)
+     */
+    conf->beginGroup("System");
+    ui->sysBtnTranspose->setChecked(conf->value("transpose").toInt() == 1 ? true : false );
+    ui->sysTransposeVal->setValue(conf->value("transposeVal").toInt());
     conf->endGroup();
 
     on_perfBtnEnviar_clicked();
@@ -1074,4 +1099,44 @@ void MainWindow::on_actionMoverParaCima_triggered()
 void MainWindow::on_actionMoverParaBaixo_triggered()
 {
     reordenar(1);
+}
+
+QString MainWindow::getConfig(QString key){
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READONLY);
+        SQLite::Statement   query(db, "SELECT val FROM config WHERE key = ? ");
+        query.bind(1, key.toUtf8().data());
+        while(query.executeStep()){
+        const char *val = query.getColumn(0);
+            qDebug() << val << QString(val);
+            return QString(val);
+        }
+
+
+    }
+    catch (std::exception& e)
+    {
+        QMessageBox::warning(this,"Erro ao obter configuração", e.what());
+        qDebug() << "exception: " << e.what();
+    }
+}
+
+bool MainWindow::tentarAutoConectar(QString porta){
+    if(jack->connect() != 0)
+        return false;
+
+    QList<QString> *lista = jack->listarPortas();
+    qDebug() <<  "Tentando auto conexao na porta preferencial: " << porta ;
+    for(int i=0; i< lista->length(); i++) {
+        if(lista->at(i).compare(porta) == 0){
+            if(jack->conectarNaPorta(porta))
+                return true;
+            else
+                return false;
+        }
+    }
+
+    return false;
+
 }

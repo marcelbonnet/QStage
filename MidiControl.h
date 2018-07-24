@@ -26,6 +26,7 @@ extern "C" {
 #include <QString>
 #include <QList>
 #include <QDateTime>
+#include <QMap>
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )			/*inotify event*/
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )		/*inotify events buffer size*/
@@ -98,7 +99,7 @@ public:
     int (MidiControl::*func)(jack_nframes_t nframes, void *notused);// <- declare by saying what class it is a pointer to
     int connect();
     void desconectar(QString nomePortaDestino);
-    void conectarNaPorta(QString nomePortaDestino);
+    bool conectarNaPorta(QString nomePortaDestino);
     struct MidiControl::MidiMessage * midi_message_from_midi_event(jack_midi_event_t event);
     int post_process_midi_input(struct MidiControl::MidiMessage *ev);
     void process_midi_output(jack_nframes_t nframes);
@@ -131,6 +132,7 @@ public:
 
 
     void setPerformanceCommon(QList<int> *dados);
+    void setSystemCommon(QMap<int, int> dados);
     void setPerformancePart(int parte, QList<int> *dados);
 
 
