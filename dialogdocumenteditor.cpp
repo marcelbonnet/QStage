@@ -90,10 +90,26 @@ void DialogDocumentEditor::on_comboTag_currentIndexChanged(int index)
         cursor.select(QTextCursor::WordUnderCursor);
 
     QString texto = cursor.selectedText();
+
+    QTextCharFormat fmt;
+    //usar sempre ou usar uma seleção de propriedades conforme a TAG/Estilo aplicado
+    fmt.setFontWeight(cursor.charFormat().fontWeight());
+    fmt.setFontItalic(cursor.charFormat().fontItalic());
+    fmt.setFontUnderline(cursor.charFormat().fontUnderline());
+    fmt.setForeground(cursor.charFormat().foreground());
+    fmt.setBackground(cursor.charFormat().background());
+
     cursor.removeSelectedText();
-    cursor.insertHtml("<"+ui->comboTag->currentText()+">"
-                      + texto
-                      + "</"+ui->comboTag->currentText()+">" );
+    QString novoHtml = "<"+ui->comboTag->currentText()+">"
+            + texto
+            + "</"+ui->comboTag->currentText()+">";
+
+    int inicio = cursor.position();
+    int final = novoHtml.length() - inicio;
+    cursor.insertHtml(novoHtml);
+
+    cursor.setPosition(inicio, QTextCursor::KeepAnchor);
+    cursor.mergeCharFormat(fmt);
 
 }
 
