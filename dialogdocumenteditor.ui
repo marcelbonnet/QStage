@@ -35,7 +35,7 @@
      <x>0</x>
      <y>0</y>
      <width>671</width>
-     <height>281</height>
+     <height>294</height>
     </rect>
    </property>
    <property name="tabPosition">
@@ -129,6 +129,11 @@
     <attribute name="title">
      <string>HTML</string>
     </attribute>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QTextEdit" name="textEditSource"/>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>

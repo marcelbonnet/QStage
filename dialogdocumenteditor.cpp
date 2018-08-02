@@ -97,3 +97,10 @@ void DialogDocumentEditor::on_comboTag_currentIndexChanged(int index)
                       + "</"+ui->comboTag->currentText()+">" );
 
 }
+
+void DialogDocumentEditor::on_tabWidget_currentChanged(int index)
+{
+    if(index == 1){
+        ui->textEditSource->setPlainText( getHtml() );
+    }
+}

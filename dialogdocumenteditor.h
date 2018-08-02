@@ -31,6 +31,8 @@ private slots:
 
     void on_comboTag_currentIndexChanged(int index);
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::DialogDocumentEditor *ui;
 };
