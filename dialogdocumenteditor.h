@@ -18,6 +18,19 @@ public:
     void setHtml(QString str);
     QString getHtml();
 
+private slots:
+    void on_btnBold_clicked();
+
+    void on_btnItalic_clicked();
+
+
+
+    void on_btnUnderline_clicked();
+
+    void on_buttonBox_rejected();
+
+    void on_comboTag_currentIndexChanged(int index);
+
 private:
     Ui::DialogDocumentEditor *ui;
 };
