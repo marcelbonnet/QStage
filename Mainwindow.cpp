@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     MainWindow::showMaximized();
     ui->setupUi(this);
-
+    ui->tabWidget->setCurrentIndex(0);
     this->jack= new MidiControl();
 
     qstageDir = QDir::homePath() + "/.config/QStage";
@@ -131,7 +131,6 @@ void MainWindow::on_listWidget_itemSelectionChanged()
     QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
     Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
 
-//    loadTextFile("");
     ui->webView->setHtml(musica->html );
 }
 
@@ -1064,24 +1063,38 @@ void MainWindow::reordenar(int posicao){
 //    if(linha+posicao > ui->listWidget->count() || linha-posicao < 0)
 //        return;
 
-    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
-    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
-    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
-    int musicaId = musica->musicaId;
-
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
-        SQLite::Statement   query(db, "UPDATE playlist_musicas SET ordem = ordem + ? WHERE fk_musica = ? AND fk_playlist = ?");
-        query.bind(1, posicao);
-        query.bind(2, musicaId);
-        query.bind(3, playlistId);
-        query.exec();
+        QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+        int currentRow = ui->listWidget->row(selecionado) ;
+        if( currentRow + posicao >=0 && currentRow + posicao < ui->listWidget->count() ){
+            QListWidgetItem * currentItem = ui->listWidget->takeItem(currentRow);
+            ui->listWidget->insertItem(currentRow + posicao, currentItem);
+//            ui->listWidget->setCurrentRow(currentRow + posicao);
+        } else
+            return;
+
+        int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+        for(int i=0; i<ui->listWidget->count(); i++){
+
+            QListWidgetItem * item = ui->listWidget->item(i);
+            Musica * musica = item->data(Qt::UserRole).value<Musica*>();
+            int musicaId = musica->musicaId;
+            int ordem = i+1;
+
+            SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data(), SQLite::OPEN_READWRITE);
+            SQLite::Statement query(db, "UPDATE playlist_musicas SET ordem = ? WHERE fk_musica = ? AND fk_playlist = ?");
+            query.bind(1, ordem );
+            query.bind(2, musicaId);
+            query.bind(3, playlistId);
+            query.exec();
+        }
 
         this->on_actionAtualizar_Playlists_triggered();
         int index =  ui->playlist->findData(playlistId);
         ui->playlist->setCurrentIndex(index);
-        ui->listWidget->findItems(musica->titulo, Qt::MatchEndsWith)[0]->setSelected(true);
+//        ui->listWidget->findItems(musica->titulo, Qt::MatchEndsWith)[0]->setSelected(true);
+        ui->listWidget->setCurrentRow(currentRow + posicao);
     }
     catch (std::exception& e)
     {

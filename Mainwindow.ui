@@ -99,7 +99,7 @@ background-color: rgb(0, 62, 0)
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabLista">
        <property name="styleSheet">
@@ -129,6 +129,9 @@ background-color: rgb(0, 62, 0)
             </property>
             <property name="tabKeyNavigation">
              <bool>true</bool>
+            </property>
+            <property name="sortingEnabled">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -1558,7 +1561,7 @@ background-color: rgb(0, 62, 0)
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>19</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
