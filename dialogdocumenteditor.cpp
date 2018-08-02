@@ -89,7 +89,6 @@ void DialogDocumentEditor::on_comboTag_currentIndexChanged(int index)
     if(!cursor.hasSelection())
         cursor.select(QTextCursor::WordUnderCursor);
 
-    qDebug() << cursor.selectedText();
     QString texto = cursor.selectedText();
     cursor.removeSelectedText();
     cursor.insertHtml("<"+ui->comboTag->currentText()+">"
@@ -103,4 +102,39 @@ void DialogDocumentEditor::on_tabWidget_currentChanged(int index)
     if(index == 1){
         ui->textEditSource->setPlainText( getHtml() );
     }
+
+    if(index == 0){
+        setHtml(ui->textEditSource->toPlainText());
+    }
+}
+
+void DialogDocumentEditor::on_btnCor_clicked()
+{
+    QColor cor = QColorDialog::getColor(ui->textEdit->textColor(), this);
+    if (!cor.isValid())
+        return;
+
+    QTextCharFormat fmt;
+    fmt.setForeground(cor);
+
+    QTextCursor cursor = ui->textEdit->textCursor();
+    if(!cursor.hasSelection())
+        cursor.select(QTextCursor::WordUnderCursor);
+    cursor.mergeCharFormat(fmt);
+
+}
+
+void DialogDocumentEditor::on_btnCorFundo_clicked()
+{
+    QColor cor = QColorDialog::getColor(ui->textEdit->textBackgroundColor(), this);
+    if (!cor.isValid())
+        return;
+
+    QTextCharFormat fmt;
+    fmt.setBackground(cor);
+
+    QTextCursor cursor = ui->textEdit->textCursor();
+    if(!cursor.hasSelection())
+        cursor.select(QTextCursor::WordUnderCursor);
+    cursor.mergeCharFormat(fmt);
 }

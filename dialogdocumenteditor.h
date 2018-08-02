@@ -33,6 +33,10 @@ private slots:
 
     void on_tabWidget_currentChanged(int index);
 
+    void on_btnCor_clicked();
+
+    void on_btnCorFundo_clicked();
+
 private:
     Ui::DialogDocumentEditor *ui;
 };
