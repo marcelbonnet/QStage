@@ -154,3 +154,9 @@ void DialogDocumentEditor::on_btnCorFundo_clicked()
         cursor.select(QTextCursor::WordUnderCursor);
     cursor.mergeCharFormat(fmt);
 }
+
+void DialogDocumentEditor::on_buttonBox_accepted()
+{
+    emit edicaoHTMLTerminada(musicaId, getHtml());
+    hide();
+}

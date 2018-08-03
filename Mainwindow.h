@@ -11,6 +11,7 @@
 #include "dialog_playlist.h"
 #include "dialogmusica.h"
 #include "dialogmusicaexistente.h"
+#include "dialogdocumenteditor.h"
 
 namespace Ui {
 class MainWindow;
@@ -55,11 +56,11 @@ private slots:
 
     void on_playlist_currentIndexChanged(int index);
 
-    void on_actionEditar_HTML_triggered();
-
     void on_htmlFileChanged();
 
     void on_actionEditar_HTML_GVim_triggered();
+
+    void onEdicaoHTMLEncerrada(int musicaId, QString html);
 
     void on_action_Playlist_Nova_triggered();
 
@@ -98,11 +99,22 @@ private:
     dialog_playlist *dlgPlaylist;
     DialogMusica *dlgMusica;
     DialogMusicaExistente *dlgMusicaExistente;
+    DialogDocumentEditor *dlgEditorHTML;
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
-    void loadTextFile(QString file);
+
+    /**
+     * @brief carregarHTML carrega o HTML no Widget
+     */
+    void carregarHTML();
     void atualizarListaDeMusicas();
+
+    /**
+      @deprecated do libre office
+     * @brief editarHTML
+     * @param binPath
+     */
     void editarHTML(QString binPath);
     void reordenar(int posicao);
     bool tentarAutoConectar(QString porta);

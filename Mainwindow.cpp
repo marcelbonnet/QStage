@@ -96,6 +96,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dlgMusicaExistente = new DialogMusicaExistente();
     connect(dlgMusicaExistente, SIGNAL(musicaExistenteSelecionada(int)),this, SLOT(musicaExistenteIncluirNaPlaylist(int)));
+
+    dlgEditorHTML = new DialogDocumentEditor(this);
+    connect(dlgEditorHTML, SIGNAL(edicaoHTMLTerminada(int,QString)), this, SLOT(onEdicaoHTMLEncerrada(int,QString)));
 }
 
 MainWindow::~MainWindow()
@@ -103,7 +106,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::loadTextFile(QString file)
+void MainWindow::carregarHTML()
 {
 
     //    QFile inputFile(file);
@@ -116,22 +119,18 @@ void MainWindow::loadTextFile(QString file)
     //    ui->textEdit->setPlainText(line);
     //    QTextCursor cursor = ui->textEdit->textCursor();
     //    cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor, 1);
-
-
-
-
 //    ui->webView->setHtml(QString("<strong>TESTE</strong><h1>OK</h1>"));// load(QUrl(QString("file://" + file )));
 
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
 
+    ui->webView->setHtml(musica->html );
 
 }
 
 void MainWindow::on_listWidget_itemSelectionChanged()
 {
-    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
-    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
-
-    ui->webView->setHtml(musica->html );
+    carregarHTML();
 }
 
 void MainWindow::on_perfBtnEnviar_clicked()
@@ -641,23 +640,55 @@ bool MainWindow::watchFile(QString path){
     return Kqueue::watch(path);
 }
 
-void MainWindow::on_actionEditar_HTML_triggered(){
-    this->editarHTML(QString("/usr/local/bin/libreoffice --nologo --writer "));
-}
 
 void MainWindow::on_actionEditar_HTML_GVim_triggered()
 {
-    int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+    if(ui->listWidget->selectedItems().length() == 0){
+        QMessageBox::warning(this, "Editar Música","Selecione uma música para editar.");
+        return;
+    }
+
     QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
     Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
-    int musicaId = musica->musicaId;
 
-     DialogDocumentEditor *editor = new DialogDocumentEditor(this);
-     editor->setHtml(musica->html);
-     editor->show();
+    dlgEditorHTML->musicaId = musica->musicaId;
+    dlgEditorHTML->setHtml(musica->html);
+    dlgEditorHTML->show();
 }
 
+void MainWindow::onEdicaoHTMLEncerrada(int musicaId, QString html){
 
+    try
+    {
+        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data()
+                            , SQLite::OPEN_READWRITE);
+        SQLite::Statement   query(db, "UPDATE musicas SET html = ? WHERE musica_id = ? ");
+
+        query.bind(1, html.toUtf8().data() );
+        query.bind(2, musicaId);
+        query.exec();
+
+        int musicaRow = ui->listWidget->currentRow();
+        int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+        this->on_actionAtualizar_Playlists_triggered();
+        int index =  ui->playlist->findData(playlistId);
+        ui->playlist->setCurrentIndex(index);
+        ui->listWidget->setCurrentRow(musicaRow);
+        carregarHTML();
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << "exception: " << e.what();
+        QMessageBox::warning(this,"Erro ao Salvar HTML da Música", QString(e.what()));
+    }
+
+}
+
+/**
+ * @deprecated era usado para salvar com LibreOffice
+ * @brief MainWindow::editarHTML
+ * @param binPath
+ */
 void MainWindow::editarHTML(QString binPath)
 {
     if(ui->listWidget->selectedItems().length() == 0){

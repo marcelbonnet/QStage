@@ -5,6 +5,7 @@
 #-------------------------------------------------
 #PRE_TARGETDEPS += /home/marcelbonnet/devel/workspace-audio/libsmf
 
+# webkitwidgets if QT >= 5.9 - https://doc-snapshots.qt.io/qt5-5.9/qtwebenginewidgets-qtwebkitportingguide.html
 QT       += core gui webkitwidgets webkit
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

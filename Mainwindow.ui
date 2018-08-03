@@ -138,7 +138,7 @@ background-color: rgb(0, 62, 0)
          </layout>
         </item>
         <item>
-         <widget class="QWebView" name="webView">
+         <widget class="QWebView" name="webView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -154,7 +154,7 @@ background-color: rgb(0, 62, 0)
           <property name="styleSheet">
            <string notr="true"/>
           </property>
-          <property name="url">
+          <property name="url" stdset="0">
            <url>
             <string>about:blank</string>
            </url>
@@ -1561,7 +1561,7 @@ background-color: rgb(0, 62, 0)
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>24</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>
@@ -1593,7 +1593,6 @@ background-color: rgb(0, 62, 0)
    <addaction name="actionMoverParaCima"/>
    <addaction name="actionMoverParaBaixo"/>
    <addaction name="separator"/>
-   <addaction name="actionEditar_HTML"/>
    <addaction name="actionEditar_HTML_GVim"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -1684,7 +1683,7 @@ background-color: rgb(0, 62, 0)
    </property>
    <property name="icon">
     <iconset resource="recursos.qrc">
-     <normaloff>:/icones/gvim.png</normaloff>:/icones/gvim.png</iconset>
+     <normaloff>:/icones/libreoffice-writer.png</normaloff>:/icones/libreoffice-writer.png</iconset>
    </property>
    <property name="text">
     <string>Editar HTML com GVim</string>
