@@ -24,6 +24,7 @@
 #include <QUuid>
 #include "dialogdocumenteditor.h"
 #include <QMap>
+#include "Controller.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,9 +35,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->setCurrentIndex(0);
     this->jack= new MidiControl();
 
-    qstageDir = QDir::homePath() + "/.config/QStage";
-    configMusicasDir = QDir::homePath() + "/.config/QStage/songs"; // QStandardPaths::locate(QStandardPaths::HomeLocation, "songs", QStandardPaths::LocateFile);
-    configSysExDir = QDir::homePath() + "/.config/QStage/XP-30";
+
+    qstageDir = QString(getenv("XDG_CONFIG_HOME")) + "/QStage";
+
+    try {
+        qDebug() << "***** TOTAL **** " << Controller::queryTemasUI().count();
+        setStyleSheet(Controller::queryTemasUI().value("tema-escuro"));
+    } catch (std::exception &e) {
+        QMessageBox::warning(this,"Erro ao Configurar Tema", e.what());
+    }
 
     //caso contrário o programa quebra ao tentar transmitir sinais quando carregar configurações
     if(!tentarAutoConectar(getConfig("port")))

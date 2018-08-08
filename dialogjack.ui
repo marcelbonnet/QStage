@@ -14,11 +14,7 @@
    <string>Jack</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#labelAviso{
-background-color: rgb(213, 213, 0);
-	color: rgb(0, 0, 0);
-
-}</string>
+   <string notr="true"/>
   </property>
   <widget class="QComboBox" name="portas">
    <property name="geometry">

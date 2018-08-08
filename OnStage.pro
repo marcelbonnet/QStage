@@ -50,7 +50,8 @@ SOURCES += main.cpp\
     dialog_playlist.cpp \
     dialogmusica.cpp \
     dialogmusicaexistente.cpp \
-    dialogdocumenteditor.cpp
+    dialogdocumenteditor.cpp \
+    Controller.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -65,7 +66,8 @@ HEADERS  += Mainwindow.h \
     dialog_playlist.h \
     dialogmusica.h \
     dialogmusicaexistente.h \
-    dialogdocumenteditor.h
+    dialogdocumenteditor.h \
+    Controller.h
 
 
 FORMS    += Mainwindow.ui \
