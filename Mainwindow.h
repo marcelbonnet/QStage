@@ -12,6 +12,7 @@
 #include "dialogmusica.h"
 #include "dialogmusicaexistente.h"
 #include "dialogdocumenteditor.h"
+#include <QAction>
 
 namespace Ui {
 class MainWindow;
@@ -93,6 +94,8 @@ private slots:
     void on_actionMoverParaCima_triggered();
 
     void on_actionMoverParaBaixo_triggered();
+
+    void setTema(QAction * action);
 
 private:
     Ui::MainWindow *ui;

@@ -25,6 +25,7 @@
 #include "dialogdocumenteditor.h"
 #include <QMap>
 #include "Controller.h"
+#include <QAction>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,15 +33,45 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     MainWindow::showMaximized();
     ui->setupUi(this);
+
+
     ui->tabWidget->setCurrentIndex(0);
     this->jack= new MidiControl();
 
 
     qstageDir = QString(getenv("XDG_CONFIG_HOME")) + "/QStage";
 
+    /*
+    *   *************************************
+    *       configura UI
+    * ***************************************
+    */
     try {
-        qDebug() << "***** TOTAL **** " << Controller::queryTemasUI().count();
-        setStyleSheet(Controller::queryTemasUI().value("tema-escuro"));
+        setStyleSheet(Controller::getUltimoTemaUsado());
+    } catch (std::exception &e) {
+        QMessageBox::warning(this, "Erro ao obter o último tema usado", e.what());
+    }
+
+    /*
+     * **************************************
+     *  cria menu de temas de look and feel
+     * **************************************
+     */
+    try {
+        QMenu *menuVisual = menuBar()->addMenu("Visual");
+
+        QMap<QString, QString> temas = Controller::queryTemasUI();
+        for(int i=0; i < temas.count(); i++){
+
+            QString nomeTema = temas.keys().at(i);
+            QString css = temas.value(temas.keys().at(i));
+
+            QAction *act = menuVisual->addAction( temas.keys().at(i));
+            act->setStatusTip("Ativar o tema " + nomeTema);
+            act->setData(QVariant::fromValue(css));
+
+        }
+        connect(menuVisual, SIGNAL(triggered(QAction*)), this, SLOT(setTema(QAction*)));
     } catch (std::exception &e) {
         QMessageBox::warning(this,"Erro ao Configurar Tema", e.what());
     }
@@ -111,6 +142,17 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setTema(QAction * action){
+    QString css = action->data().toString();
+    setStyleSheet(css);
+
+    try {
+        Controller::setUltimoTemaUsado(action->text());
+    } catch (std::exception &e) {
+        QMessageBox::warning(this, "Erro ao Atualizar Último Tema Usado", e.what());
+    }
 }
 
 void MainWindow::carregarHTML()

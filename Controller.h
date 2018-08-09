@@ -10,8 +10,9 @@ public:
     Controller();
 
     static QString getDbPath();
-
     static QMap<QString,QString> queryTemasUI() throw (std::exception);
+    static void setUltimoTemaUsado(QString nomeTema) throw (std::exception);
+    static QString getUltimoTemaUsado() throw (std::exception);
 
 };
 
