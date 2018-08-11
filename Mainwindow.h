@@ -111,7 +111,14 @@ private:
      * @brief carregarHTML carrega o HTML no Widget
      */
     void carregarHTML();
-    void atualizarListaDeMusicas();
+    /**
+     * @brief restaurarSelecao
+     * Selecionar playlist e música selecionadas antes
+     * de uma determinada ação.
+     */
+    void restaurarSelecao(int playlistIndex, int musicaIndex);
+    //recarrega combo de playlist
+    void playlistRecarregar();
 
     /**
       @deprecated do libre office

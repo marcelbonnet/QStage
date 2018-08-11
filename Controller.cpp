@@ -41,3 +41,18 @@ QString Controller::getUltimoTemaUsado() throw (std::exception) {
     const char* css = query.getColumn(0);
     return QString(css);
 }
+
+QMap<int, QString> Controller::queryPlaylists() throw (std::exception){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT id, titulo FROM playlist ORDER BY id ASC");
+
+    QMap<int, QString> rs;
+    while (query.executeStep())
+    {
+        int id            = query.getColumn(0);
+        const char* titulo= query.getColumn(1);
+        qDebug() << id << QString(titulo);
+        rs.insert(id, QString(titulo));
+    }
+    return rs;
+}

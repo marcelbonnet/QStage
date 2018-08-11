@@ -122,7 +122,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     //carrega playlists e a primeira lista de músicas da playlist
-    this->on_actionAtualizar_Playlists_triggered();
+    this->playlistRecarregar();
 
     dlgPlaylist = new dialog_playlist(this);
     connect(dlgPlaylist, SIGNAL(registrarPlaylist(QString)), this, SLOT(playlistIncluir(QString)));
@@ -379,7 +379,7 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
         query.bind(2, musicaId);
         query.exec();
         arquivoTemporario.close();
-        this->on_actionAtualizar_Playlists_triggered();
+        this->playlistRecarregar();
 
     }
     catch (std::exception& e)
@@ -552,15 +552,30 @@ void MainWindow::on_actionCarregar_Anterior_triggered()
         ui->listWidget->setCurrentRow(ui->listWidget->currentRow()-1);
 }
 
-void MainWindow::atualizarListaDeMusicas(){
-    if(this->ui->playlist->count() > 0)
-        this->on_playlist_currentIndexChanged(0);
+void MainWindow::restaurarSelecao(int playlistIndex, int musicaIndex){
+    if(this->ui->playlist->count() == 0)
+        return;
+
+    if(playlistIndex > -1){
+        ui->playlist->setCurrentIndex(playlistIndex);
+        this->on_playlist_currentIndexChanged(playlistIndex);
+        if(musicaIndex > -1)
+            ui->listWidget->setCurrentRow(musicaIndex);
+    }
 }
 
-void MainWindow::on_actionAtualizar_Playlists_triggered()
-{
+void MainWindow::playlistRecarregar(){
     //    auto f = [](int a, int b) -> int { return a + b; };
     //    auto n = f(1, 2);
+
+    //memoriza estado atual das combos
+    int playlistIndex = 0;
+    int musicaRow = ui->listWidget->currentRow();
+    if(ui->playlist->currentIndex() > -1){
+        int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
+        playlistIndex =  ui->playlist->findData(playlistId);
+    }
+
 
     //limpa essa playlist
     disconnect(ui->playlist,SIGNAL(currentIndexChanged(int)), this
@@ -573,24 +588,15 @@ void MainWindow::on_actionAtualizar_Playlists_triggered()
 
     try
     {
-        SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data());
-        SQLite::Statement   query(db, "SELECT id, titulo FROM playlist ORDER BY id ASC");
-
-        while (query.executeStep())
-        {
-            int         id      = query.getColumn(0);
-            const char* titulo   = query.getColumn(1);
-
-            ui->playlist->addItem(QString(titulo), QVariant::fromValue(id));
-        }
-
-        this->atualizarListaDeMusicas();
+        QMap<int, QString> rs = Controller::queryPlaylists();
+        for(int i=0; i<rs.count(); i++ )
+            ui->playlist->addItem( rs.value(rs.keys().at(i)) , QVariant::fromValue(rs.keys().at(i)));
 
     }
     catch (std::exception& e)
     {
         qDebug() << "exception: " << e.what();
-        QMessageBox::warning(this, "Erro ao Atualizar Playlists", e.what());
+        QMessageBox::warning(this, "Erro ao Recarregar Playlists", e.what());
     }
 
     connect(ui->playlist,SIGNAL(currentIndexChanged(int)), this
@@ -598,6 +604,12 @@ void MainWindow::on_actionAtualizar_Playlists_triggered()
     connect(ui->listWidget,SIGNAL(itemSelectionChanged()), this
                , SLOT(on_listWidget_itemSelectionChanged()));
 
+    this->restaurarSelecao(playlistIndex, musicaRow);
+}
+
+void MainWindow::on_actionAtualizar_Playlists_triggered()
+{
+    this->playlistRecarregar();
 }
 
 void MainWindow::on_playlist_currentIndexChanged(int index)
@@ -717,12 +729,7 @@ void MainWindow::onEdicaoHTMLEncerrada(int musicaId, QString html){
         query.bind(2, musicaId);
         query.exec();
 
-        int musicaRow = ui->listWidget->currentRow();
-        int playlistId = ui->playlist->itemData(ui->playlist->currentIndex()).value<int>();
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(playlistId);
-        ui->playlist->setCurrentIndex(index);
-        ui->listWidget->setCurrentRow(musicaRow);
+        this->playlistRecarregar();
         carregarHTML();
     }
     catch (std::exception& e)
@@ -882,7 +889,7 @@ void MainWindow::playlistIncluir(QString str){
         SQLite::Statement   query(db, "INSERT INTO playlist (titulo) VALUES(?) ");
         query.bind(1, str.toUtf8().data());
         query.exec();
-        this->on_actionAtualizar_Playlists_triggered();
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -899,9 +906,7 @@ void MainWindow::playlistAlterar(int id, QString str){
         query.bind(1, str.toUtf8().data());
         query.bind(2, id);
         query.exec();
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(id);
-        ui->playlist->setCurrentIndex(index);
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -921,7 +926,7 @@ void MainWindow::playlistRemover(int id){
         SQLite::Statement   query2(db, "DELETE FROM playlist WHERE id = ?");
         query2.bind(1, id);
         query2.exec();
-        this->on_actionAtualizar_Playlists_triggered();
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -968,7 +973,7 @@ void MainWindow::on_action_Playlist_Duplicar_triggered()
         SQLite::Statement   query2(db, "INSERT INTO playlist_musicas (fk_musica, fk_playlist, ordem) SELECT fk_musica, (SELECT last_insert_rowid()) , ordem FROM playlist_musicas WHERE fk_playlist = ?");
         query2.bind(1, id);
         query2.exec();
-        this->on_actionAtualizar_Playlists_triggered();
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -1000,9 +1005,7 @@ void MainWindow::musicaIncluir(QString str){
         query2.bind(2, id);
         query2.exec();
 
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(id);
-        ui->playlist->setCurrentIndex(index);
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -1026,9 +1029,7 @@ void MainWindow::musicaAlterar(QString str){
         query.bind(2, id);
         query.exec();
 
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(playlistId);
-        ui->playlist->setCurrentIndex(index);
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -1093,9 +1094,7 @@ void MainWindow::on_action_Musica_Remover_triggered()
         query.bind(2, playlistId);
         query.exec();
 
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(playlistId);
-        ui->playlist->setCurrentIndex(index);
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -1120,9 +1119,7 @@ void MainWindow::musicaExistenteIncluirNaPlaylist(int musicaId){
         query.bind(2, playlistId);
         query.exec();
 
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(playlistId);
-        ui->playlist->setCurrentIndex(index);
+        this->playlistRecarregar();
     }
     catch (std::exception& e)
     {
@@ -1170,9 +1167,7 @@ void MainWindow::reordenar(int posicao){
             query.exec();
         }
 
-        this->on_actionAtualizar_Playlists_triggered();
-        int index =  ui->playlist->findData(playlistId);
-        ui->playlist->setCurrentIndex(index);
+        this->playlistRecarregar();
 //        ui->listWidget->findItems(musica->titulo, Qt::MatchEndsWith)[0]->setSelected(true);
         ui->listWidget->setCurrentRow(currentRow + posicao);
     }
