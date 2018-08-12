@@ -3,6 +3,7 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <QMap>
+#include <QRgb>
 
 class Controller
 {
@@ -15,7 +16,7 @@ public:
     static QString getUltimoTemaUsado() throw (std::exception);
 
     static QMap<int, QString> queryPlaylists() throw (std::exception);
-
+    static void updateMusicaTag(int musicaId, QRgb tag) throw (std::exception);
 };
 
 #endif // CONTROLLER_H

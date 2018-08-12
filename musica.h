@@ -3,6 +3,7 @@
 
 #include <QMetaType>
 #include <QString>
+#include <QRgb>
 
 class Musica
 {
@@ -14,6 +15,7 @@ public:
     QString titulo;
     QString html;
     QString programa;
+    QRgb tag;
 };
 
 Q_DECLARE_METATYPE(Musica*)

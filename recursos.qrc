@@ -25,5 +25,6 @@
         <file>icones/document-edit.png</file>
         <file>icones/document-close.png</file>
         <file>icones/doc_plus_icon&amp;16.png</file>
+        <file>icones/mail-tagged.png</file>
     </qresource>
 </RCC>

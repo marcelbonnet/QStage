@@ -26,6 +26,7 @@
 #include <QMap>
 #include "Controller.h"
 #include <QAction>
+#include <QColorDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -642,7 +643,7 @@ void MainWindow::on_playlist_currentIndexChanged(int index)
 
 
         SQLite::Database db(QString(qstageDir + "/qstage.db").toUtf8().data());
-        SQLite::Statement   query(db, "SELECT m.musica_id, m.titulo, m.html, pm.ordem, m.programa "
+        SQLite::Statement   query(db, "SELECT m.musica_id, m.titulo, m.html, pm.ordem, m.programa, m.tag "
                                       "FROM musicas m JOIN playlist_musicas pm ON pm.fk_musica = m.musica_id  "
                                       "WHERE pm.fk_playlist = ? ORDER BY pm.ordem ASC;");
         query.bind(1, playlistId);
@@ -653,6 +654,8 @@ void MainWindow::on_playlist_currentIndexChanged(int index)
             const char* tituloChar = query.getColumn(1);
             const char* htmlChar = query.getColumn(2);
             const char* programaChar = query.getColumn(4);
+            QRgb tag = query.getColumn(5);
+
             QString titulo = QString("%1 %2").arg(QString::number(ordem), tituloChar);
             QString html = QString(htmlChar);
             QString programa = QString(programaChar);
@@ -665,6 +668,7 @@ void MainWindow::on_playlist_currentIndexChanged(int index)
 
             QListWidgetItem *novoItem = new QListWidgetItem(ui->listWidget);
             novoItem->setText(titulo);
+            novoItem->setBackgroundColor(QColor(tag));
             novoItem->setData(Qt::UserRole, QVariant::fromValue(musica));
 
 
@@ -1226,5 +1230,28 @@ bool MainWindow::tentarAutoConectar(QString porta){
     }
 
     return false;
+
+}
+
+void MainWindow::on_actionTagMusica_triggered()
+{
+    if(ui->listWidget->selectedItems().length() == 0){
+        QMessageBox::warning(this, "Etiquetar Música","Selecione uma música para etiquetar.");
+        return;
+    }
+
+    QListWidgetItem * selecionado = ui->listWidget->selectedItems()[0];
+    Musica * musica = selecionado->data(Qt::UserRole).value<Musica*>();
+
+    QColor cor = QColorDialog::getColor(QColor(selecionado->backgroundColor().rgb()), this);
+    if (!cor.isValid())
+        return;
+
+    try {
+        Controller::updateMusicaTag(musica->musicaId, cor.rgb());
+    } catch (std::exception &e) {
+        QMessageBox::warning(this, "Tag", e.what());
+    }
+    selecionado->setBackgroundColor(cor);
 
 }

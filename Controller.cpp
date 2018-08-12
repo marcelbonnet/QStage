@@ -56,3 +56,13 @@ QMap<int, QString> Controller::queryPlaylists() throw (std::exception){
     }
     return rs;
 }
+
+void Controller::updateMusicaTag(int musicaId, QRgb tag) throw (std::exception){
+    SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
+    SQLite::Statement   query(db, "UPDATE musicas SET tag = ? WHERE musica_id = ? ");
+
+
+    query.bind(1, tag );
+    query.bind(2, musicaId);
+    query.exec();
+}

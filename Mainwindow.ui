@@ -1516,6 +1516,7 @@
    <addaction name="actionMoverParaBaixo"/>
    <addaction name="separator"/>
    <addaction name="actionEditar_HTML_GVim"/>
+   <addaction name="actionTagMusica"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConectar">
@@ -1717,6 +1718,18 @@
    </property>
    <property name="shortcut">
     <string>E</string>
+   </property>
+  </action>
+  <action name="actionTagMusica">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/mail-tagged.png</normaloff>:/icones/mail-tagged.png</iconset>
+   </property>
+   <property name="text">
+    <string>Tag</string>
+   </property>
+   <property name="toolTip">
+    <string>Tag</string>
    </property>
   </action>
  </widget>

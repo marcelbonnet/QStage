@@ -97,6 +97,8 @@ private slots:
 
     void setTema(QAction * action);
 
+    void on_actionTagMusica_triggered();
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;
