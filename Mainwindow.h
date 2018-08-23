@@ -99,6 +99,12 @@ private slots:
 
     void on_actionTagMusica_triggered();
 
+    void on_btnFilterEnvelope_toggled(bool checked);
+
+    void on_btnLevel_toggled(bool checked);
+
+    void on_btnController_toggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;

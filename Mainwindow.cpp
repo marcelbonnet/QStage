@@ -1255,3 +1255,27 @@ void MainWindow::on_actionTagMusica_triggered()
     selecionado->setBackgroundColor(cor);
 
 }
+
+void MainWindow::on_btnFilterEnvelope_toggled(bool checked)
+{
+    if(checked){
+        ui->btnController->setChecked(false);
+        ui->btnLevel->setChecked(false);
+    }
+}
+
+void MainWindow::on_btnLevel_toggled(bool checked)
+{
+    if(checked){
+        ui->btnController->setChecked(false);
+        ui->btnFilterEnvelope->setChecked(false);
+    }
+}
+
+void MainWindow::on_btnController_toggled(bool checked)
+{
+    if(checked){
+        ui->btnFilterEnvelope->setChecked(false);
+        ui->btnLevel->setChecked(false);
+    }
+}
