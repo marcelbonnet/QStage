@@ -220,6 +220,9 @@ int MidiControl::processCallback(jack_nframes_t nframes, void *arg)
         return 0;
     }
 
+
+
+
     //process_midi_input(nframes);
     mc->process_midi_output(nframes);
 
@@ -237,7 +240,7 @@ int MidiControl::connect(){
         return EX_UNAVAILABLE;
     }
 
-    ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE);
+    ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE*2);
 
     if (ringbuffer == NULL) {
         printf("Cannot create JACK ringbuffer.");
@@ -297,7 +300,7 @@ void MidiControl::queue_message(struct MidiControl::MidiMessage *ev)
         return;
         // parece que começa a dar checksum error: talvez o teclado dê timeout na mensagem sysex truncada?
 //        qDebug() << "Not enough space in the ringbuffer, NOTE LOST.";
-//        usleep(300000);
+//        //usleep(300000);
 //        qDebug() << "Tentando de novo.";
 //        queue_message(ev);
     }
@@ -344,17 +347,16 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
 
     queue_message(&ev);
 
-    /* *****************************************************
-     *  É o que está evitando que o jack ring buffer encha
-     * *****************************************************
-     */
+
+    /*
     if(ev.data[0] == 0xF7 || ev.data[1] == 0xF7 || ev.data[2] == 0xF7){
-        // para carregar um arquivo SYSEX vão 353 mensagens exclusivas. Em eventos MIDI será maior.
-        // não usar isso em produção para não estourar ao chegar em MAX INTEGER
-//        qtdeMensagensExclusivas++;
-//        qDebug() << QString("Mensagem Enviada. #%1").arg(qtdeMensagensExclusivas);
-        usleep(22000);
+        //fazer um buffer das mensagens para saber o que re-enviar
+        qtdeMensagensExclusivas++;
+        qDebug() << QString("#%1").arg(qtdeMensagensExclusivas);
+        usleep(100000);
+
     }
+    */
 }
 
 int MidiControl::calcularChecksum(int endereco, int dado){
@@ -424,15 +426,90 @@ void MidiControl::encerrarMensagem(){
 }
 
 void MidiControl::transmitir(){
-    int total = mensagens->length();
-    int resto = (total%3);
-    int max = total - resto;
+    //int total = mensagens->length() / 3;
+    //int resto = (total%3);
+    //int max = total - resto;
 
-    for(int i=0; i<max; i=i+3){
-        queue_new_message(mensagens->at(i), mensagens->at(i+1), mensagens->at(i+2));
+    for(int i=0; i<mensagens->length(); i=i+3){
+        int b0=-1;
+        int b1=-1;
+        int b2=-1;
+
+        b0 = mensagens->at(i);
+        b1 = mensagens->at(i+1);
+        b2 = mensagens->at(i+2);
+
+        if(b0 == 0xF7){
+            b1 = -1;
+            b2 = -1;
+            i=i-2;
+        }else if(b1 == 0xF7){
+            b2 = -1;
+            i=i-1;
+        }
+
+        queue_new_message(b0, b1, b2);
+
     }
 
+    //for(int i=0; i<max; i++){
+/*
+        if(b0 == -1){
+            b0 = mensagens->at(i);
+            continue;
+        }
+        if(b0 == 0xF7){
+            queue_new_message(b0, b1, b2);
+            b0=-1;
+            b1=-1;
+            b2=-1;
 
+            continue;
+        }
+
+        if(b1 == -1){
+            b1 = mensagens->at(i);
+            continue;
+        }
+        if(b1 == 0xF7){
+            queue_new_message(b0, b1, b2);
+            b0=-1;
+            b1=-1;
+            b2=-1;
+
+            continue;
+        }
+
+        if(b2 == -1)
+            b2 = mensagens->at(i);
+
+        queue_new_message(b0, b1, b2);
+        b0=-1;
+        b1=-1;
+        b2=-1;
+*/
+
+        /*
+        if(b0 == 0xF7){
+            b1=-1;
+            b2=-1;
+            queue_new_message(b0, b1, b2);
+            i=i-2;
+        } else if(b1 == 0xF7){
+            b2 = -1;
+            queue_new_message(b0, b1, b2);
+            i=i-1;
+        } else {
+            queue_new_message(b0, b1, b2);
+        }
+        */
+        //queue_new_message(mensagens->at(i), mensagens->at(i+1), mensagens->at(i+2));
+
+
+    //}
+
+
+/*
     if(resto > 0){
         int b0 = mensagens->at(max);
         int b1 = -1;
@@ -443,7 +520,7 @@ void MidiControl::transmitir(){
         }
         queue_new_message(b0, b1, b2);
     }
-
+*/
     mensagens->clear();
 }
 
