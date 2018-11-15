@@ -84,6 +84,7 @@ public:
         unsigned char	data[3];
     };
 
+
     double	rate_limit = 0.0;
     int		time_offsets_are_zero = 0; //Send all MIDI messages with zero time offset, making them play as soon as they reach the synth.
 
@@ -140,6 +141,10 @@ protected:
     QList<int> *mensagens = new QList<int>();
     QDateTime tempoUltimoEnvio;
     int qtdeMensagensExclusivas = 0;
+
+    int ultimaMensagem[13] = { -1, -1, -1,-1, -1, -1,-1, -1, -1,-1, -1, -1, -1 };
+    int ultimaMensagemIndex = 0;
+    QList<QList<int>> *mensagensTransmitidas = new QList<QList<int>>();
 
 private:
 

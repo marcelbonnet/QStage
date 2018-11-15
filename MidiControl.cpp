@@ -344,7 +344,7 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
     }
 
     ev.time = jack_frame_time(jack_client);
-
+    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
     queue_message(&ev);
 
 
@@ -430,6 +430,7 @@ void MidiControl::transmitir(){
     //int resto = (total%3);
     //int max = total - resto;
 
+    bool segundoEnvio = false;
     for(int i=0; i<mensagens->length(); i=i+3){
         int b0=-1;
         int b1=-1;
@@ -438,6 +439,7 @@ void MidiControl::transmitir(){
         b0 = mensagens->at(i);
         b1 = mensagens->at(i+1);
         b2 = mensagens->at(i+2);
+
 
         if(b0 == 0xF7){
             b1 = -1;
@@ -450,78 +452,57 @@ void MidiControl::transmitir(){
 
         queue_new_message(b0, b1, b2);
 
-    }
-
-    //for(int i=0; i<max; i++){
+        /*
+         * tentando repetir a última mensagem SysEx (de F0 até F7)
+         */
 /*
-        if(b0 == -1){
-            b0 = mensagens->at(i);
-            continue;
+        if(ultimaMensagemIndex<=9){
+            ultimaMensagem[ultimaMensagemIndex++] = b0;
+            ultimaMensagem[ultimaMensagemIndex++] = b1;
+            ultimaMensagem[ultimaMensagemIndex++] = b2;
+        } else {
+            if(ultimaMensagem[11] != 0xF7)
+                ultimaMensagem[12] = 0xF7;//valor esperado de b0
+
+            QList<int> *msg = new QList<int>();
+            for(int k=0; k<=12; k++) {
+                msg->append(ultimaMensagem[k]);
+                ultimaMensagem[k] = -1;
+            }
+            mensagensTransmitidas->append(*msg);
+            ultimaMensagemIndex=0;
         }
-        if(b0 == 0xF7){
-            queue_new_message(b0, b1, b2);
-            b0=-1;
-            b1=-1;
-            b2=-1;
-
-            continue;
-        }
-
-        if(b1 == -1){
-            b1 = mensagens->at(i);
-            continue;
-        }
-        if(b1 == 0xF7){
-            queue_new_message(b0, b1, b2);
-            b0=-1;
-            b1=-1;
-            b2=-1;
-
-            continue;
-        }
-
-        if(b2 == -1)
-            b2 = mensagens->at(i);
-
-        queue_new_message(b0, b1, b2);
-        b0=-1;
-        b1=-1;
-        b2=-1;
 */
 
         /*
-        if(b0 == 0xF7){
-            b1=-1;
-            b2=-1;
-            queue_new_message(b0, b1, b2);
-            i=i-2;
-        } else if(b1 == 0xF7){
-            b2 = -1;
-            queue_new_message(b0, b1, b2);
-            i=i-1;
-        } else {
-            queue_new_message(b0, b1, b2);
+        if(i=mensagens->length()-1 && segundoEnvio == false){
+            usleep(22000);
+            //i=0;
+            segundoEnvio = true;
+            qDebug() << "Segundo Envio";
         }
         */
-        //queue_new_message(mensagens->at(i), mensagens->at(i+1), mensagens->at(i+2));
 
-
-    //}
-
-
-/*
-    if(resto > 0){
-        int b0 = mensagens->at(max);
-        int b1 = -1;
-        int b2 = -1;
-
-        if(resto == 2){
-            b1 = mensagens->at(max+1);
-        }
-        queue_new_message(b0, b1, b2);
     }
-*/
+
+
+
+
     mensagens->clear();
+
+    //WORKAROUND: agora tenta re-enviar tudo de novo
+/*
+    for(int i=0; i<mensagensTransmitidas->length(); i++){
+        qDebug() << "re-enviando " << i << "/" << mensagensTransmitidas->length();
+        QList<int> msg = mensagensTransmitidas->at(i);
+        queue_new_message(msg.at(0), msg.at(1), msg.at(2));
+        queue_new_message(msg.at(3), msg.at(4), msg.at(5));
+        queue_new_message(msg.at(6), msg.at(7), msg.at(8));
+        queue_new_message(msg.at(9), msg.at(10), msg.at(11));
+        queue_new_message(msg.at(12), -1, -1 );
+    }
+    mensagensTransmitidas->clear();
+*/
 }
 
 void MidiControl::setSystemCommon(QMap<int, int> dados){
