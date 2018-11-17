@@ -425,6 +425,25 @@ void MidiControl::encerrarMensagem(){
     mensagens->append(0xF7);//EOX
 }
 
+void MidiControl::tx(QList<SysExMessage *> *sxs){
+    bool segundoEnvio = false;
+    int wait = 1;
+    for(int i=0; i<sxs->length(); i++){
+        if(wait==9) usleep(22000);
+
+        SysExMessage *msg = sxs->at(i);
+
+        queue_new_message(msg->message.b0, msg->message.b1, msg->message.b2 );
+        queue_new_message(msg->message.b3, msg->message.b4, msg->message.b5 );
+        queue_new_message(msg->message.b6, msg->message.b7, msg->message.b8 );
+        queue_new_message(msg->message.b9, msg->message.b10, msg->message.b11 );
+        queue_new_message(msg->message.b12, -1, -1 );
+        wait++;
+    }
+    sxs->clear();
+
+}
+
 void MidiControl::transmitir(){
     //int total = mensagens->length() / 3;
     //int resto = (total%3);
@@ -524,6 +543,14 @@ void MidiControl::setSystemCommon(QMap<int, int> dados){
 }
 
 void MidiControl::setPerformanceCommon(QList<int> *dados){
+
+    return;
+    /* ***********************
+     * *********************
+     * */
+
+
+
     int ultimo = 0;
     int endereco= 0x01000000; //endereço temporary performance
     int offset  = 0x00000000;

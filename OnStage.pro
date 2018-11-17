@@ -51,7 +51,12 @@ SOURCES += main.cpp\
     dialogmusica.cpp \
     dialogmusicaexistente.cpp \
     dialogdocumenteditor.cpp \
-    Controller.cpp
+    Controller.cpp \
+    SysExMessage.cpp \
+    DataSet1.cpp \
+    baseaddress.cpp \
+    SystemCommon.cpp \
+    PerformanceCommon.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -67,7 +72,12 @@ HEADERS  += Mainwindow.h \
     dialogmusica.h \
     dialogmusicaexistente.h \
     dialogdocumenteditor.h \
-    Controller.h
+    Controller.h \
+    SysExMessage.h \
+    DataSet1.h \
+    baseaddress.h \
+    SystemCommon.h \
+    PerformanceCommon.h
 
 
 FORMS    += Mainwindow.ui \

@@ -191,60 +191,82 @@ void MainWindow::on_perfBtnEnviar_clicked()
     for(int i=performanceName.length() ; i<12; i++){
         performanceName.append(" ");
     }
-    for(int i=0 ; i<12; i++){
-        dados->append(performanceName.toUtf8().data()[i]);
 
-    }
-
-    dados->append(ui->perfOrigem->currentIndex());
-    dados->append(ui->perfEfeito->currentIndex() );
-    dados->append(ui->perfParam->value());
-    dados->append(ui->perfParam_2->value());
-    dados->append(ui->perfParam_3->value());
-    dados->append(ui->perfParam_4->value());
-    dados->append(ui->perfParam_5->value());
-    dados->append(ui->perfParam_6->value());
-    dados->append(ui->perfParam_7->value());
-    dados->append(ui->perfParam_8->value());
-    dados->append(ui->perfParam_9->value());
-    dados->append(ui->perfParam_10->value());
-    dados->append(ui->perfParam_11->value());
-    dados->append(ui->perfParam_12->value());
-    dados->append(ui->perfOA->currentIndex());
-    dados->append(ui->perfMSL->value());
-    dados->append(ui->perfCSL->value());
-    dados->append(ui->perfperfRSL->value());
-    dados->append(ui->perfCtrlSrc1->currentIndex());
-    dados->append(ui->perfCtrlDepth1->value());
-    dados->append(ui->perfCtrlSrc2->currentIndex());
-    dados->append(ui->perfCtrlDepth2->value());
-    dados->append(ui->perfChorusLevel->value());
-    dados->append(ui->perfChorusRate->value());
-    dados->append(ui->perfChorusDepth->value());
-    dados->append(ui->perfChorusPreDelay->value());
-    dados->append(ui->perfChorusFeedback->value());
-    dados->append(ui->perfChorusOut->currentIndex());
-    dados->append(ui->perfReverbType->currentIndex());
-    dados->append(ui->perfReverbLevel->value());
-    dados->append(ui->perfReverbTime->value());
-    dados->append(ui->perfReverbHFDamp->currentIndex());
-    dados->append(ui->perfReverbDelayFeedback->value());
-    dados->append(ui->perfTempo->value());
-    dados->append(ui->perfIntervaloNotas->isChecked() ? 1 : 0);
-    //pula alguns endereços/itens de config
-    dados->append(ui->perfMode->currentIndex());//item 48 da lista
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name01), performanceName.toUtf8().data()[0] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name02), performanceName.toUtf8().data()[1] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name03), performanceName.toUtf8().data()[2] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name04), performanceName.toUtf8().data()[3] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name05), performanceName.toUtf8().data()[4] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name06), performanceName.toUtf8().data()[5] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name07), performanceName.toUtf8().data()[6] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name08), performanceName.toUtf8().data()[7] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name09), performanceName.toUtf8().data()[8] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name10), performanceName.toUtf8().data()[9] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name11), performanceName.toUtf8().data()[10] ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name12), performanceName.toUtf8().data()[11] ));
 
 
-    jack->setPerformanceCommon(dados);
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXSource), ui->perfOrigem->currentIndex() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXType), ui->perfEfeito->currentIndex() ));
+
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam01), ui->perfParam->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam02), ui->perfParam_2->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam03), ui->perfParam_3->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam04), ui->perfParam_4->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam05), ui->perfParam_5->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam06), ui->perfParam_6->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam07), ui->perfParam_7->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam08), ui->perfParam_8->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam09), ui->perfParam_9->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam10), ui->perfParam_10->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam11), ui->perfParam_11->value() ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXParam12), ui->perfParam_12->value() ));
+
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXOutputAssign),ui->perfOA->currentIndex()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXMixSendOutputLevel),ui->perfMSL->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXChorusSendLevel),ui->perfCSL->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXReverbSendLevel),ui->perfperfRSL->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXControlSource1),ui->perfCtrlSrc1->currentIndex()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXControlDepth1),ui->perfCtrlDepth1->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXControlSource2),ui->perfCtrlSrc2->currentIndex()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXControlDepth2),ui->perfCtrlDepth2->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusLevel),ui->perfChorusLevel->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusRate),ui->perfChorusRate->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusDepth),ui->perfChorusDepth->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusPreDelay),ui->perfChorusPreDelay->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusFeedback),ui->perfChorusFeedback->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusOutput),ui->perfChorusOut->currentIndex()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbType),ui->perfReverbType->currentIndex()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbTime),ui->perfReverbLevel->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbLevel),ui->perfReverbTime->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbHFDamp),ui->perfReverbHFDamp->currentIndex()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::DelayFeedback),ui->perfReverbDelayFeedback->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::PerformanceTempo),ui->perfTempo->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::KeyboardRangeSwitch),ui->perfIntervaloNotas->isChecked() ? 1 : 0));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::KeyboardMode),ui->perfMode->currentIndex()));
+
+
+    //jack->setPerformanceCommon(dados);
 
     /*
      * System Common que está na mesma UI
      */
+            /*
     QMap<int, int> systemCommon;
     systemCommon.insert(0x002B, ui->sysBtnTranspose->isChecked() ? 1 : 0 );
     systemCommon.insert(0x002C, ui->sysTransposeVal->value()+5);
+*/
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance)
+        , SystemCommon(SystemCommon::TransposeSwitch), ui->sysBtnTranspose->isChecked() ? 1 : 0 ));
 
+   mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance)
+        , SystemCommon(SystemCommon::TransposeValue), ui->sysTransposeVal->value()+5 ));
+
+            /*
     jack->setSystemCommon(systemCommon);
+            */
+
+    jack->tx(mensagens);
 }
 
 void MainWindow::on_perfIntervaloNotas_clicked()

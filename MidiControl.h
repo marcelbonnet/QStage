@@ -28,6 +28,8 @@ extern "C" {
 #include <QDateTime>
 #include <QMap>
 
+#include "SysExMessage.h"
+
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )			/*inotify event*/
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )		/*inotify events buffer size*/
 
@@ -38,7 +40,7 @@ extern "C" {
 #define OUTPUT_PORT_NAME	"midi_out"
 #define INPUT_PORT_NAME		"midi_in"
 #define PACKAGE_NAME		"QStage"
-#define PACKAGE_VERSION		"0.0.0"
+#define PACKAGE_VERSION		"2.0.0"
 
 
 
@@ -113,6 +115,7 @@ public:
     void encerrarMensagem();//add 0xF7
     void transmitir();//envia as mensagens da QList para queue_new_message. Esvazia a QList no final
 
+    void tx(QList<SysExMessage*> *sxs);
 
     QList<QString> *listarPortas();
 
@@ -138,6 +141,7 @@ public:
 
 
 protected:
+    QList<SysExMessage> *sxm = new QList<SysExMessage>();
     QList<int> *mensagens = new QList<int>();
     QDateTime tempoUltimoEnvio;
     int qtdeMensagensExclusivas = 0;

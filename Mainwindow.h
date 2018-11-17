@@ -13,6 +13,8 @@
 #include "dialogmusicaexistente.h"
 #include "dialogdocumenteditor.h"
 #include <QAction>
+#include <QList>
+#include "SysExMessage.h"
 
 namespace Ui {
 class MainWindow;
@@ -148,6 +150,8 @@ private:
     MidiControl *jack = NULL;
 
     QString path;
+
+    QList<SysExMessage*> *mensagens = new QList<SysExMessage*>();
 };
 
 #endif // MAINWINDOW_H
