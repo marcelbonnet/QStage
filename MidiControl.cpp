@@ -7,72 +7,6 @@
 
 MidiControl::MidiControl()
 {
-    //recupera dados
-    /*queue_new_message( 0xF0, 0x41, 0x10);
-    queue_new_message( 0x6A, 0x11, 0x10);
-    queue_new_message( 0x02, 0x12, 0x00);
-    queue_new_message( 0x00, 0x00, 0x00);
-    queue_new_message( 0x19, 0x43, 0xF7);*/
-
-    //performance common EFX : PERFORM REVERB : type=delay
-    /*queue_new_message(0xF0, 0x41, 0x10);
-    queue_new_message(0x6a, 0x12, 0x01);
-    queue_new_message(0x00, 0x00, 0x28);
-    queue_new_message(0x06, 0x51, 0xf7);*/
-
-
-    //Em Modo GM: o teclado recebe a troca de patch em cada part:
-    /*queue_new_message(0xc0, 0x3e, -1);//GM:063
-    queue_new_message(0xc1, 0x2a, -1);
-    queue_new_message(0xc2, 0x5f, -1);
-    queue_new_message(MIDI_NOTE_ON, 0x49, VELOCITY_NORMAL);
-    queue_new_message(0x91, 0x52, VELOCITY_NORMAL);
-    queue_new_message(0x92, 0x56, VELOCITY_NORMAL);
-    sleep(2);	//não recebeu o note off?
-    queue_new_message(0x80, 0x49, -1);
-    queue_new_message(0x81, 0x52, -1);
-    queue_new_message(0x82, 0x56, -1);*/
-
-    //pg 204 Example 2 : o cliente precisa continuar conectado no jackd para o XP-30 transmitir
-    /*
-    queue_new_message(0xf0, 0x41, 0x10);
-    queue_new_message(0x6a, 0x11, 0x10); //0x11 pede para transmitir dados
-    queue_new_message(0x02, 0x12, 0x00);
-    queue_new_message(0x00, 0x00, 0x00);
-    queue_new_message(0x19, 0x43, 0xf7);*/
-
-    /*//troca o caracter posição 4 do perform common / perform name
-    queue_new_message(0xf0, 0x41, 0x10);
-    queue_new_message(0x6a, 0x12, 0x01);
-    queue_new_message(0x00, 0x00, 0x04);
-    int data = 0x23;
-    int cksum = 128 - (0x01 + 0x04 + data)%128;
-    queue_new_message(data, cksum, 0xf7);*/
-
-
-    /*
-    //patch no perform part 1, trocando para XPA
-    //set perform patch group type (1-2-2) = 0x02
-    queue_new_message(0xf0, 0x41, 0x10);
-    queue_new_message(0x6a, 0x12, 0x01);
-    queue_new_message(0x00, 0x10, 0x02);
-    int cksum = 128 - (0x01 + 0x10 + 0x02 + 0x02)%128;
-    queue_new_message(0x02, cksum, 0xf7);
-    //set perform patch group id (1-2-2) = 0x09
-    queue_new_message(0xf0, 0x41, 0x10);
-    queue_new_message(0x6a, 0x12, 0x01);
-    queue_new_message(0x00, 0x10, 0x03);
-    cksum = 128 - (0x01 + 0x10 + 0x03 + 0x09)%128;
-    queue_new_message(0x09, cksum, 0xf7);
-    //patch number 112 = 0x6F => a transmitir em duas partes: 0x06 e 0x0F
-    queue_new_message(0xf0, 0x41, 0x10);
-    queue_new_message(0x6a, 0x12, 0x01);
-    queue_new_message(0x00, 0x10, 0x04);
-    cksum = 128 - (0x01 + 0x10 + 0x04 + 0x06 + 0x0f )%128;
-    queue_new_message(0x06, 0x0f,cksum);
-    queue_new_message(0xf7, -1, -1);
-    */
-    //jack_client_close(jack_client);
 
 
 }
@@ -298,11 +232,7 @@ void MidiControl::queue_message(struct MidiControl::MidiMessage *ev)
     if (jack_ringbuffer_write_space(ringbuffer) < sizeof(*ev)) {
         printf("Not enough space in the ringbuffer, NOTE LOST.\n");
         return;
-        // parece que começa a dar checksum error: talvez o teclado dê timeout na mensagem sysex truncada?
-//        qDebug() << "Not enough space in the ringbuffer, NOTE LOST.";
-//        //usleep(300000);
-//        qDebug() << "Tentando de novo.";
-//        queue_message(ev);
+
     }
 
     written = jack_ringbuffer_write(ringbuffer, (char *)ev, sizeof(*ev));
@@ -344,85 +274,9 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
     }
 
     ev.time = jack_frame_time(jack_client);
-    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
+//    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
     queue_message(&ev);
 
-
-    /*
-    if(ev.data[0] == 0xF7 || ev.data[1] == 0xF7 || ev.data[2] == 0xF7){
-        //fazer um buffer das mensagens para saber o que re-enviar
-        qtdeMensagensExclusivas++;
-        qDebug() << QString("#%1").arg(qtdeMensagensExclusivas);
-        usleep(100000);
-
-    }
-    */
-}
-
-int MidiControl::calcularChecksum(int endereco, int dado){
-    int a,b,c,d, e, f, soma = 0;
-    a = b = c = d = e = f = soma = 0; //faltava inicializar as variáveis corretamente para o checksum ser correto
-    //endereço
-    a = endereco & 0xFF;
-    b = (endereco >> 8) & 0xFF;
-    c = (endereco >> 16) & 0xFF;
-    d = (endereco >> 24) & 0xFF;
-    //dados
-    if(dado <= 0xFF){
-        e=dado;
-    } else {
-        e = dado & 0xFF;
-        f = (dado >> 8) & 0xFF;
-    }
-
-    soma = 128 - ( (a+b+c+d+e+f)%128 );
-
-    return soma;
-}
-
-void MidiControl::adicionarEndereco(int endereco){
-    int a,b,c,d = 0;
-
-    a = endereco & 0xFF;    //LSB
-    b = (endereco >> 8) & 0xFF;
-    c = (endereco >> 16) & 0xFF;
-    d = (endereco >> 24) & 0xFF; //MSB
-
-    mensagens->append(d);
-    mensagens->append(c);
-    mensagens->append(b);
-    mensagens->append(a);
-}
-
-int MidiControl::adicionarDados(int dados, bool usarDuasMsg){
-    int e, f = 0;
-
-    if(usarDuasMsg) /*nos endereços que usam valores maiores que 127*/ {
-        e = dados & 0xF;
-        f = (dados >> 4) & 0xF;
-        //qDebug() << dados << QString("%1 %2").arg(f,0,16).arg(e,0,16);
-        mensagens->append(f);
-        mensagens->append(e);
-
-        return f+e;
-    } else {
-        mensagens->append(dados);
-        return dados;
-    }
-
-}
-
-void MidiControl::iniciarMensagem(){
-    mensagens->append(0xF0);//sysex
-    mensagens->append(0x41);//roland
-    mensagens->append(0x10);//device id
-    mensagens->append(0x6A);//xp-30
-    mensagens->append(0x12);//DT1
-
-}
-
-void MidiControl::encerrarMensagem(){
-    mensagens->append(0xF7);//EOX
 }
 
 void MidiControl::tx(QList<SysExMessage *> *sxs){
@@ -524,110 +378,8 @@ void MidiControl::transmitir(){
 */
 }
 
-void MidiControl::setSystemCommon(QMap<int, int> dados){
-    QMapIterator<int, int> i(dados);
-    int endereco= 0x0000; //System Common
-    while(i.hasNext()){
-        i.next();
-        int offset  = i.key();
-        int val     = i.value();
 
-        iniciarMensagem();
-        adicionarEndereco(endereco + offset);
-        int valor = adicionarDados(val);
-        mensagens->append(calcularChecksum(endereco+ offset, valor));
-        encerrarMensagem();
-    }
-
-    transmitir();
-}
-
-void MidiControl::setPerformanceCommon(QList<int> *dados){
-
-    return;
-    /* ***********************
-     * *********************
-     * */
-
-
-
-    int ultimo = 0;
-    int endereco= 0x01000000; //endereço temporary performance
-    int offset  = 0x00000000;
-    int valor = 0;
-
-
-
-    //Name
-    for(int i=0; i<12 ; i++){
-        iniciarMensagem();
-
-        valor = dados->at(i);
-
-        adicionarEndereco(endereco + offset);
-
-        valor = adicionarDados(valor);
-        mensagens->append(calcularChecksum(endereco+ offset, valor));
-
-        encerrarMensagem();
-        ultimo = i;
-        offset++; //varia de 0 a 11 ; 0x00 a 0x0B
-    }
-
-
-
-    ultimo++;
-
-    //demais parâmetros
-    for(int i=ultimo; i < ultimo+35; i++){
-
-//        if(offset == 0x1a || offset == 0x2d || offset == 0x2e){
-//            offset++;
-//            continue;
-//        }
-        bool usarDuasMsg = false;
-        if (offset == 0x2D) usarDuasMsg=true;
-
-        iniciarMensagem();
-        valor = dados->at(i);
-        adicionarEndereco(endereco + offset);
-        valor = adicionarDados(valor, usarDuasMsg);
-        mensagens->append(calcularChecksum(endereco+ offset, valor));
-        encerrarMensagem();
-
-        //QString strDebug = QString("Endereco %1 Valor %2\n").arg(endereco+offset,0,16).arg(valor);
-        //qDebug() << strDebug;
-        (offset == 0x2D) ? offset=0x2F : offset++;
-    }
-
-    //Voice Reserve 0030 a 003F
-    //TODO
-
-
-    //keyboard mode
-    iniciarMensagem();
-    offset = 0x00000040;
-    valor = dados->at(47);
-    adicionarEndereco(endereco + offset);
-    valor = adicionarDados(valor);
-    mensagens->append(calcularChecksum(endereco+ offset, valor));
-    encerrarMensagem();
-
-
-    //Clock Source: fixo em PERFORM
-    iniciarMensagem();
-    offset = 0x00000041;
-    valor = 0;
-    adicionarEndereco(endereco + offset);
-    valor = adicionarDados(valor);
-    mensagens->append(calcularChecksum(endereco+ offset, valor));
-    encerrarMensagem();
-
-
-    transmitir();
-
-}
-
+/*
 void MidiControl::setPerformancePart(int parte, QList<int> *dados){
     int ultimo = 0;
     int endereco= 0x01000000 + ((parte-1 << 8) | 0x1000) ; //endereço temporary performance + endereço da parte
@@ -656,6 +408,7 @@ void MidiControl::setPerformancePart(int parte, QList<int> *dados){
 
     transmitir();
 }
+*/
 
 bool MidiControl::conectarNaPorta(QString nomePortaDestino){
         QString nomePortaOrigem =  QString("%1:%2").arg(PACKAGE_NAME).arg(OUTPUT_PORT_NAME);

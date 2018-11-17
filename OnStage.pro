@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     DataSet1.cpp \
     baseaddress.cpp \
     SystemCommon.cpp \
-    PerformanceCommon.cpp
+    PerformanceCommon.cpp \
+    PerformancePart.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -77,7 +78,8 @@ HEADERS  += Mainwindow.h \
     DataSet1.h \
     baseaddress.h \
     SystemCommon.h \
-    PerformanceCommon.h
+    PerformanceCommon.h \
+    PerformancePart.h
 
 
 FORMS    += Mainwindow.ui \

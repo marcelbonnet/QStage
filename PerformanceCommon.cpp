@@ -104,7 +104,6 @@ PerformanceCommon::PerformanceCommon(Function func)
         break;
     case         EFXType:
         address = 0x000D;
-        qDebug() << "PerformanceCommon EFXType address=" << QString::number(address,16);
         break;
     case         EFXParam01:
         address = 0x000E;

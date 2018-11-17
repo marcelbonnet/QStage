@@ -49,6 +49,30 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PerformanceCommon perf, int 
     message.b11 = calcularChecksum(addr, data);
 }
 
+SysExMessage::SysExMessage(BaseAddress baseAddress, PerformancePart part, int data)
+{
+    this->base = baseAddress;
+    this->part = part;
+    this->data = data;
+
+    int addr = base.startAddress + part.address;
+    message.b8 = addr & 0xFF;
+    message.b7 = addr >> 8 & 0xFF;
+    message.b6 = addr >> 16 & 0xFF;
+    message.b5 = addr >> 24 & 0xFF;
+
+    if(!part.is2ByteData){
+        message.b9 = data;
+    } else {
+        int d1 = data & 0xF;
+        int d2 = (data >> 4) & 0xF;
+        message.b9 = d2;
+        message.b10 = d1;
+    }
+
+    message.b11 = calcularChecksum(addr, data);
+}
+
 
 int SysExMessage::calcularChecksum(int endereco, int dado)
 {

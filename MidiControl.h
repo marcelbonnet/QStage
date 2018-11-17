@@ -111,8 +111,7 @@ public:
     void queue_new_message(int b0, int b1, int b2);
 
 
-    void iniciarMensagem();//add header na QList mensagens
-    void encerrarMensagem();//add 0xF7
+
     void transmitir();//envia as mensagens da QList para queue_new_message. Esvazia a QList no final
 
     void tx(QList<SysExMessage*> *sxs);
@@ -135,10 +134,6 @@ public:
     };
 
 
-    void setPerformanceCommon(QList<int> *dados);
-    void setSystemCommon(QMap<int, int> dados);
-    void setPerformancePart(int parte, QList<int> *dados);
-
 
 protected:
     QList<SysExMessage> *sxm = new QList<SysExMessage>();
@@ -152,20 +147,7 @@ protected:
 
 private:
 
-    int calcularChecksum(int endereco, int dado);
-    /**
-      fraciona cada byte e adiciona na lista de mensagens
-     * @brief adicionarEndereco
-     * @param endereco
-     */
-    void adicionarEndereco(int endereco);
-    /**
-      adiciona os dados na lista de mensagens. Se maior que 0xFF divide em duas partes conforme o manual da Roland
-     * @brief adicionarDados
-     * @param dados
-     * @param usarDuasMsg nos endereços que usam valores maiores que 127 (marcados com # no manual)
-     */
-    int adicionarDados(int dados, bool usarDuasMsg=false);
+
 
 };
 

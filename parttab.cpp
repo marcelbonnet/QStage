@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QException>
 #include <QList>
+#include "SysExMessage.h"
+#include "PerformancePart.h"
+#include "baseaddress.h"
 
 PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     QWidget(parent),
@@ -14,7 +17,7 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
 
     this->jack = jack;
     this->parte = parte;
-    tempoUltimoEnvio = QDateTime::currentDateTime();
+//    tempoUltimoEnvio = QDateTime::currentDateTime();
 
     QString notas[12] = {
         "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
@@ -94,43 +97,46 @@ int PartTab::getIndexFromPatches(QString nome){
 void PartTab::enviar(){
     //intervalo mínimo de tempo entre envios para não estourar o ringbuffer
     //é necessário por causa dos controles da GUI, como o dial.
-    QDateTime agora = QDateTime::currentDateTime();
-    qint64 intervaloMinimo = 20;
+//    QDateTime agora = QDateTime::currentDateTime();
+//    qint64 intervaloMinimo = 20;
 
-    if(tempoUltimoEnvio.msecsTo(agora) <= intervaloMinimo){
-        return;
-    }
+//    if(tempoUltimoEnvio.msecsTo(agora) <= intervaloMinimo){
+//        return;
+//    }
 
-    QList<int> *dados = new QList<int>();
-    dados->append(ui->canal->value());
+    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value()));
 
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
-    dados->append(patch->groupType);
-    dados->append(patch->groupId);
-    dados->append(patch->number);
-
-    dados->append(ui->level->value());
-    dados->append(ui->pan->value());
-    dados->append(ui->afinacaoBruta->value() +48);
-    dados->append(ui->afinacaoFina->value() +50);
-    dados->append(ui->saida->currentIndex());
-    dados->append(ui->sendLevel->value());
-    dados->append(ui->chorus->value());
-    dados->append(ui->reverb->value());
+    if(ui->patch->currentIndex() > -1){
+        qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
+        dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchGroupType, parte),patch->groupType));
+        dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchGroupID, parte),patch->groupId));
+        dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchNumber, parte),patch->number));
+    }
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartLevel, parte),ui->level->value()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartPan, parte),ui->pan->value()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartCoarseTune, parte),ui->afinacaoBruta->value() +48));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartFineTune, parte),ui->afinacaoFina->value() +50));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::OutputAssign, parte),ui->saida->currentIndex()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MixEFXSendLevel, parte),ui->sendLevel->value()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ChorusSendLevel, parte),ui->chorus->value()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReverbSendLevel, parte),ui->reverb->value()));
 
     //receive midis:
-    dados->append(1);
-    dados->append(1);
-    dados->append(1);
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReceiveProgramChangeSwitch, parte),1));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReceiveVolumeSwitch, parte),1));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReceiveHold1Switch, parte),1));
 
-    dados->append(ui->minimo->currentIndex());
-    dados->append(ui->maximo->currentIndex());
-    dados->append(ui->oitava->value() + 3);
-    dados->append(ui->btnLocal->isChecked()? 1 : 0);
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::KeyboardRangeLower, parte),ui->minimo->currentIndex()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::KeyboardRangeUpper, parte),ui->maximo->currentIndex()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::OctaveShift, parte),ui->oitava->value() + 3));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::LocalSwitch, parte),ui->btnLocal->isChecked()? 1 : 0));
 
-    jack->setPerformancePart(parte, dados);
+    jack->tx(dados);
 
-    tempoUltimoEnvio = QDateTime::currentDateTime();
+
+//    tempoUltimoEnvio = QDateTime::currentDateTime();
 }
 
 void PartTab::on_patch_currentIndexChanged(int index)

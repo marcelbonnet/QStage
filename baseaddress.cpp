@@ -25,7 +25,7 @@ BaseAddress::BaseAddress(Edit ed, int param)
         break; //usar o valor padrão
     case TempPerformance:
         startAddress = 0x01000000;
-        qDebug() << "Selecionado TempPerformance startAddress=" << QString::number(startAddress, 16);
+        //qDebug() << "Selecionado TempPerformance startAddress=" << QString::number(startAddress, 16);
         break;
     case PerformanceModeTempPatch:
         //se 10 (0xA) usar temporary rhythm setup
