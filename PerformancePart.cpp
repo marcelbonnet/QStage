@@ -36,6 +36,7 @@ PerformancePart::PerformancePart(Function func, int part)
 
     functionName = functionMap.value(func);
 
+
     switch(func){
     case    ReceiveSwitch:
         address = 0x00;

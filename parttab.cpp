@@ -94,15 +94,22 @@ int PartTab::getIndexFromPatches(QString nome){
     return -1;
 }
 
-void PartTab::enviar(){
-    //intervalo mínimo de tempo entre envios para não estourar o ringbuffer
-    //é necessário por causa dos controles da GUI, como o dial.
-//    QDateTime agora = QDateTime::currentDateTime();
-//    qint64 intervaloMinimo = 20;
+void PartTab::enviarMensagem(PerformancePart::Function function, int data){
+    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+    PerformancePart pp = PerformancePart(function, parte);
+    dados->append(
+                new SysExMessage(
+                    BaseAddress(BaseAddress::TempPerformance),
+                    pp,
+                    data));
+    qDebug() << QString("Enviando Parte %1 -> %2 = %3").arg(parte).arg(pp.functionName).arg(QString::number(data,16));
+    jack->tx(dados);
+}
 
-//    if(tempoUltimoEnvio.msecsTo(agora) <= intervaloMinimo){
-//        return;
-//    }
+void PartTab::enviar(){
+
+    qDebug() << QString("====> Enviando todas as mensagens de Performance Tab #%1").arg(parte);
+
 
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
     dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value()));
@@ -141,7 +148,13 @@ void PartTab::enviar(){
 
 void PartTab::on_patch_currentIndexChanged(int index)
 {
-    enviar();
+	Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
+    if(ui->patch->currentIndex() > -1){
+       qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
+       enviarMensagem( PerformancePart::PatchGroupType, patch->groupType);
+       enviarMensagem( PerformancePart::PatchGroupID, patch->groupId);
+       enviarMensagem( PerformancePart::PatchNumber, patch->number);
+    }
 }
 
 
@@ -153,8 +166,7 @@ void PartTab::on_btnLocal_clicked()
 //    else
 //        ui->btnLocal->setText("DESLIGADO");
 
-    enviar();
-
+	enviarMensagem(PerformancePart::LocalSwitch, ui->btnLocal->isChecked()? 1 : 0 );
 }
 
 Patch *PartTab::getPatch(){
@@ -273,62 +285,62 @@ void PartTab::setLocalOn(int i){
 
 void PartTab::on_level_valueChanged(int value)
 {
-    enviar();
+    enviarMensagem(PerformancePart::PartLevel, ui->level->value() );
 }
 
 void PartTab::on_sendLevel_valueChanged(int value)
 {
-    enviar();
+    enviarMensagem(PerformancePart::MixEFXSendLevel, ui->sendLevel->value() );
 }
 
 void PartTab::on_reverb_valueChanged(int value)
 {
-    enviar();
+    enviarMensagem(PerformancePart::ReverbSendLevel, ui->reverb->value() );
 }
 
 void PartTab::on_chorus_valueChanged(int value)
 {
-    enviar();
+    enviarMensagem(PerformancePart::ChorusSendLevel, ui->chorus->value() );
 }
 
 void PartTab::on_pan_valueChanged(int value)
 {
-    enviar();
+    enviarMensagem(PerformancePart::PartPan, ui->pan->value() );
 }
 
 void PartTab::on_canal_valueChanged(int arg1)
 {
-    enviar();
+    enviarMensagem(PerformancePart::MIDIChannel, ui->canal->value() );
 }
 
 void PartTab::on_minimo_currentIndexChanged(int index)
 {
-    enviar();
+    enviarMensagem(PerformancePart::KeyboardRangeLower, ui->minimo->currentIndex() );
 }
 
 void PartTab::on_maximo_currentIndexChanged(int index)
 {
-    enviar();
+    enviarMensagem(PerformancePart::KeyboardRangeUpper, ui->maximo->currentIndex() );
 }
 
 void PartTab::on_oitava_valueChanged(int arg1)
 {
-    enviar();
+    enviarMensagem(PerformancePart::OctaveShift, ui->oitava->value() + 3);
 }
 
 void PartTab::on_afinacaoBruta_valueChanged(int arg1)
 {
-    enviar();
+    enviarMensagem(PerformancePart::PartCoarseTune, ui->afinacaoBruta->value() +48 );
 }
 
 void PartTab::on_afinacaoFina_valueChanged(int arg1)
 {
-    enviar();
+    enviarMensagem(PerformancePart::PartFineTune, ui->afinacaoFina->value() +50 );
 }
 
 void PartTab::on_saida_currentIndexChanged(int index)
 {
-    enviar();
+    enviarMensagem(PerformancePart::OutputAssign, ui->saida->currentIndex() );
 }
 
 void PartTab::on_btn_clicked()

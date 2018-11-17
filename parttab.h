@@ -6,6 +6,7 @@
 #include <MidiControl.h>
 #include <QDateTime>
 #include "patch.h"
+#include "PerformancePart.h"
 
 namespace Ui {
 class PartTab;
@@ -19,6 +20,7 @@ public:
     explicit PartTab(int parte, MidiControl *jack, QWidget *parent = 0);
     ~PartTab();
 
+    void enviarMensagem(enum PerformancePart::Function func, int data);
     void enviar();
     void carregarPatches(QString categoria="");
 
