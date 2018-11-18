@@ -256,10 +256,10 @@ void MainWindow::on_perfBtnEnviar_clicked()
     systemCommon.insert(0x002B, ui->sysBtnTranspose->isChecked() ? 1 : 0 );
     systemCommon.insert(0x002C, ui->sysTransposeVal->value()+5);
 */
-    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance)
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::System)
         , SystemCommon(SystemCommon::TransposeSwitch), ui->sysBtnTranspose->isChecked() ? 1 : 0 ));
 
-   mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance)
+   mensagens->append(new SysExMessage( BaseAddress(BaseAddress::System)
         , SystemCommon(SystemCommon::TransposeValue), ui->sysTransposeVal->value()+5 ));
 
             /*

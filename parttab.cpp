@@ -108,7 +108,7 @@ void PartTab::enviarMensagem(PerformancePart::Function function, int data){
 
 void PartTab::enviar(){
 
-    qDebug() << QString("====> Enviando todas as mensagens de Performance Tab #%1").arg(parte);
+    qDebug() << QString("====> Enviando todas as mensagens de Performance Part #%1").arg(parte);
 
 
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();

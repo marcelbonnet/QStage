@@ -1,4 +1,5 @@
 #include "SysExMessage.h"
+#include <QDebug>
 
 SysExMessage::SysExMessage(BaseAddress baseAddress, SystemCommon sys, int data)
 {
@@ -22,6 +23,8 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, SystemCommon sys, int data)
     }
 
     message.b11 = calcularChecksum(addr, data);
+
+    qDebug() << QString("SYSTEM COMMON %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 
 }
 
@@ -47,6 +50,8 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PerformanceCommon perf, int 
     }
 
     message.b11 = calcularChecksum(addr, data);
+
+    qDebug() << QString("Performance COMMON %1 -> %2 = %3    DATA: %4").arg(perf.functionName).arg(QString::number(perf.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 }
 
 SysExMessage::SysExMessage(BaseAddress baseAddress, PerformancePart part, int data)
@@ -71,6 +76,8 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PerformancePart part, int da
     }
 
     message.b11 = calcularChecksum(addr, data);
+
+    qDebug() << QString("Performance Part %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 }
 
 

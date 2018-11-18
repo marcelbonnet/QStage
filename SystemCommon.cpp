@@ -1,4 +1,5 @@
 #include "SystemCommon.h"
+#include <QDebug>
 
 SystemCommon::SystemCommon()
 {
@@ -262,5 +263,5 @@ SystemCommon::SystemCommon(Function func)
         break;
     }
 
-
+    qDebug() << QString("SYSTEM COMMON %1 -> %2").arg(functionName).arg(QString::number(address,16));
 }

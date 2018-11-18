@@ -37,6 +37,7 @@ public:
     PerformancePart(Function func, int part);
 
     int address = 0x0000;
+
     bool is2ByteData = false;
 
     QString functionName;

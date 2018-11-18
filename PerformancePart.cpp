@@ -34,6 +34,7 @@ PerformancePart::PerformancePart(Function func, int part)
     functionMap.insert(TransmitBankSelectGroup,"TransmitBankSelectGroup");
     functionMap.insert(TransmitVolume,"TransmitVolume");
 
+
     functionName = functionMap.value(func);
 
 
