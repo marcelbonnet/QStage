@@ -86,7 +86,7 @@ public:
         unsigned char	data[3];
     };
 
-
+    int contadorMensagensEnviadas = 0; //para saber quando fazer um intervalo entre pacotes de mensagens
     double	rate_limit = 0.0;
     int		time_offsets_are_zero = 0; //Send all MIDI messages with zero time offset, making them play as soon as they reach the synth.
 

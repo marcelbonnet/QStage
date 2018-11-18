@@ -281,9 +281,13 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
 
 void MidiControl::tx(QList<SysExMessage *> *sxs){
     bool segundoEnvio = false;
-    int wait = 1;
+
     for(int i=0; i<sxs->length(); i++){
-        if(wait==9) usleep(22000);
+        if(contadorMensagensEnviadas%8 == 0) {
+            qDebug() << "===> INTERVALO ENTRE PACOTES";
+            contadorMensagensEnviadas = 0;
+            usleep(22000);
+        }
 
         SysExMessage *msg = sxs->at(i);
 
@@ -292,7 +296,7 @@ void MidiControl::tx(QList<SysExMessage *> *sxs){
         queue_new_message(msg->message.b6, msg->message.b7, msg->message.b8 );
         queue_new_message(msg->message.b9, msg->message.b10, msg->message.b11 );
         queue_new_message(msg->message.b12, -1, -1 );
-        wait++;
+        contadorMensagensEnviadas++;
     }
     sxs->clear();
 
