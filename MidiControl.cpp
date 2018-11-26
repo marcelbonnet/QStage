@@ -284,9 +284,9 @@ void MidiControl::tx(QList<SysExMessage *> *sxs){
 
     for(int i=0; i<sxs->length(); i++){
         if(contadorMensagensEnviadas%8 == 0) {
-            qDebug() << "===> INTERVALO ENTRE PACOTES";
+            qDebug() << "===> INTERVALO ENTRE PACOTES " << QString::number(contadorMensagensEnviadas);
             contadorMensagensEnviadas = 0;
-            usleep(22000);
+            usleep(25000);
         }
 
         SysExMessage *msg = sxs->at(i);
@@ -326,7 +326,7 @@ void MidiControl::transmitir(){
             b2 = -1;
             i=i-1;
         }
-
+        printf("==============> foi chamado =====> %x %x %x", b0, b1, b2 );
         queue_new_message(b0, b1, b2);
 
         /*

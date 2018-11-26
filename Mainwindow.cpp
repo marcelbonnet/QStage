@@ -205,7 +205,6 @@ void MainWindow::on_perfBtnEnviar_clicked()
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name11), performanceName.toUtf8().data()[10] ));
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::Name12), performanceName.toUtf8().data()[11] ));
 
-
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXSource), ui->perfOrigem->currentIndex() ));
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::EFXType), ui->perfEfeito->currentIndex() ));
 
@@ -251,20 +250,16 @@ void MainWindow::on_perfBtnEnviar_clicked()
     /*
      * System Common que está na mesma UI
      */
-            /*
-    QMap<int, int> systemCommon;
-    systemCommon.insert(0x002B, ui->sysBtnTranspose->isChecked() ? 1 : 0 );
-    systemCommon.insert(0x002C, ui->sysTransposeVal->value()+5);
-*/
+
+
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::System)
         , SystemCommon(SystemCommon::TransposeSwitch), ui->sysBtnTranspose->isChecked() ? 1 : 0 ));
 
-   mensagens->append(new SysExMessage( BaseAddress(BaseAddress::System)
-        , SystemCommon(SystemCommon::TransposeValue), ui->sysTransposeVal->value()+5 ));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::System)
+         , SystemCommon(SystemCommon::TransposeValue), ui->sysTransposeVal->value()+5 ));
 
-            /*
-    jack->setSystemCommon(systemCommon);
-            */
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::System)
+                                        , SystemCommon(SystemCommon::OctaveShift), 3 )); //de 0 a 6 (-3 a +3)
 
     jack->tx(mensagens);
 }
