@@ -27,6 +27,7 @@
 #include "Controller.h"
 #include <QAction>
 #include <QColorDialog>
+#include "PatchUI.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -111,6 +112,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->perfReverbHFDamp->setCurrentIndex(17);//seleciona "BYPASS"
 
+    PatchUI *patchui  = new PatchUI();
+    ui->tabWidget->addTab(patchui, "Patch");
+
     /*
      * PARTES
      */
@@ -138,6 +142,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dlgEditorHTML = new DialogDocumentEditor(this);
     connect(dlgEditorHTML, SIGNAL(edicaoHTMLTerminada(int,QString)), this, SLOT(onEdicaoHTMLEncerrada(int,QString)));
+
+
 }
 
 MainWindow::~MainWindow()

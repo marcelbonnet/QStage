@@ -1700,11 +1700,6 @@
         </widget>
        </widget>
       </widget>
-      <widget class="QWidget" name="tabPatch">
-       <attribute name="title">
-        <string>Patch</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>
