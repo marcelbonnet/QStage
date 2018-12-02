@@ -2,12 +2,12 @@
 #define DEFAULTS_H
 
 #include <QString>
+#include <QList>
 
 /**
   Nesta ordem, o valor decimal correspondente no XP-30
   vai de 0 até 38.
  * */
-
 QString categorias[39] = {
     "NO ASSIGN",
     "AC PNO",

@@ -22,11 +22,22 @@ PatchUI::PatchUI(QWidget *parent) :
     }
 
     QComboBox *combo = ui->patchCategory;
+    QComboBox *comboTone1Categ = ui->tone1WaveGroup;
+    QComboBox *comboTone2Categ = ui->tone2WaveGroup;
+    QComboBox *comboTone3Categ = ui->tone3WaveGroup;
+    QComboBox *comboTone4Categ = ui->tone4WaveGroup;
     combo->setMinimumSize(QSize(150,60));
     for(int i=0; i<39; i++){
         QIcon icon(QString(":/icones/icons/%1.ico").arg(i));
         combo->addItem(icon, categorias[i]);
         combo->setIconSize(QSize(60,60));
+        /*
+         * Wave group nome e type adicionar do banco de dados
+        comboTone1Categ->addItem(icon, categorias[i]);
+        comboTone2Categ->addItem(icon, categorias[i]);
+        comboTone3Categ->addItem(icon, categorias[i]);
+        comboTone4Categ->addItem(icon, categorias[i]);
+        */
     }
 }
 

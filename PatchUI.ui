@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1339</width>
-    <height>648</height>
+    <height>833</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -931,6 +931,1372 @@
           <height>31</height>
          </rect>
         </property>
+       </widget>
+      </widget>
+      <widget class="QTabWidget" name="tabWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>100</y>
+         <width>981</width>
+         <height>491</height>
+        </rect>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Wave</string>
+        </attribute>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>10</y>
+           <width>981</width>
+           <height>421</height>
+          </rect>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>979</width>
+            <height>419</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="label_42">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>50</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Wave Grp</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone1WaveGroup">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>40</y>
+             <width>201</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone1Switch">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>10</y>
+             <width>201</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>1</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone2Switch">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>10</y>
+             <width>201</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>2</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone3Switch">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>10</y>
+             <width>201</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>3</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone4Switch">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>10</y>
+             <width>201</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>4</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone2WaveGroup">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>40</y>
+             <width>201</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone3WaveGroup">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>40</y>
+             <width>201</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone4WaveGroup">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>40</y>
+             <width>201</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone1WaveGain">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>130</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>-6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>12</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QLabel" name="label_44">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>140</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Gain</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone2WaveGain">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>130</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>-6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>12</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QComboBox" name="tone3WaveGain">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>130</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>-6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>12</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QComboBox" name="tone4WaveGain">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>130</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>-6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>12</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QLabel" name="label_59">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>180</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>FXM</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone1FXMSwitch">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>170</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>ON</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone1FXMColor">
+           <property name="geometry">
+            <rect>
+             <x>170</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Color</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone1FXMDepth">
+           <property name="geometry">
+            <rect>
+             <x>240</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Depth</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone2FXMDepth">
+           <property name="geometry">
+            <rect>
+             <x>460</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Depth</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone2FXMColor">
+           <property name="geometry">
+            <rect>
+             <x>390</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Color</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone2FXMSwitch">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>170</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>ON</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone3FXMSwitch">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>170</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>ON</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone3FXMColor">
+           <property name="geometry">
+            <rect>
+             <x>610</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Color</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone3FXMDepth">
+           <property name="geometry">
+            <rect>
+             <x>680</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Depth</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16</number>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone4FXMSwitch">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>170</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>ON</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone4FXMColor">
+           <property name="geometry">
+            <rect>
+             <x>830</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Color</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone4FXMDepth">
+           <property name="geometry">
+            <rect>
+             <x>900</x>
+             <y>170</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>FXM Depth</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_63">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>220</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Delay</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone1DelayMode">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>210</y>
+             <width>121</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>NORMAL</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>HOLD</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PLAYMATE</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CLOCK-SYNC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>&lt;TAP-SYNC&gt;</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-N</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-D</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TEMPO-SYNC</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QSpinBox" name="tone1DelayTime">
+           <property name="geometry">
+            <rect>
+             <x>235</x>
+             <y>210</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone2DelayTime">
+           <property name="geometry">
+            <rect>
+             <x>455</x>
+             <y>210</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone2DelayMode">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>210</y>
+             <width>121</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>NORMAL</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>HOLD</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PLAYMATE</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CLOCK-SYNC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>&lt;TAP-SYNC&gt;</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-N</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-D</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TEMPO-SYNC</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QSpinBox" name="tone3DelayTime">
+           <property name="geometry">
+            <rect>
+             <x>675</x>
+             <y>210</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone3DelayMode">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>210</y>
+             <width>121</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>NORMAL</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>HOLD</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PLAYMATE</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CLOCK-SYNC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>&lt;TAP-SYNC&gt;</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-N</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-D</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TEMPO-SYNC</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QSpinBox" name="tone4DelayTime">
+           <property name="geometry">
+            <rect>
+             <x>895</x>
+             <y>210</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone4DelayMode">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>210</y>
+             <width>121</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>NORMAL</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>HOLD</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PLAYMATE</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CLOCK-SYNC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>&lt;TAP-SYNC&gt;</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-N</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-OFF-D</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TEMPO-SYNC</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QComboBox" name="tone1KeyboardRangeLower">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone1KeyboardRangeUpper">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_79">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>260</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Range</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone2KeyboardRangeUpper">
+           <property name="geometry">
+            <rect>
+             <x>380</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone2KeyboardRangeLower">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone3KeyboardRangeUpper">
+           <property name="geometry">
+            <rect>
+             <x>600</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone3KeyboardRangeLower">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone4KeyboardRangeUpper">
+           <property name="geometry">
+            <rect>
+             <x>820</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="tone4KeyboardRangeLower">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>250</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_80">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>300</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Velocity</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone1VelocityLower">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Lower</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone1VelocityUpper">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>290</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Uppwer</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+           <property name="value">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone1VelocityCrossFade">
+           <property name="geometry">
+            <rect>
+             <x>240</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Cross Fade</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone2VelocityLower">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Lower</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone2VelocityUpper">
+           <property name="geometry">
+            <rect>
+             <x>380</x>
+             <y>290</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Uppwer</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+           <property name="value">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone2VelocityCrossFade">
+           <property name="geometry">
+            <rect>
+             <x>460</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Cross Fade</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone3VelocityLower">
+           <property name="geometry">
+            <rect>
+             <x>530</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Lower</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone3VelocityUpper">
+           <property name="geometry">
+            <rect>
+             <x>600</x>
+             <y>290</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Uppwer</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+           <property name="value">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone4VelocityCrossFade">
+           <property name="geometry">
+            <rect>
+             <x>900</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Cross Fade</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone3VelocityCrossFade">
+           <property name="geometry">
+            <rect>
+             <x>680</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Cross Fade</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone4VelocityUpper">
+           <property name="geometry">
+            <rect>
+             <x>820</x>
+             <y>290</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Uppwer</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+           <property name="value">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="tone4VelocityLower">
+           <property name="geometry">
+            <rect>
+             <x>750</x>
+             <y>290</y>
+             <width>46</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Velocity Lower</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_81">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>340</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Rx</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone1FXMSwitch_3">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>330</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Volume Control Switch</string>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>VOL</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="comboBox">
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>330</y>
+             <width>81</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Pan Control Switch</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>OFF</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CONTINUOUS</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>KEY-ON</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QPushButton" name="tone1FXMSwitch_4">
+           <property name="geometry">
+            <rect>
+             <x>240</x>
+             <y>330</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Pitch Bend Control Switch</string>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>BEND</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_82">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>380</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Damper</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone1FXMSwitch_5">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>370</y>
+             <width>91</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Volume Control Switch</string>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>Hold1-1</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="tone1FXMSwitch_6">
+           <property name="geometry">
+            <rect>
+             <x>190</x>
+             <y>370</y>
+             <width>101</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Volume Control Switch</string>
+           </property>
+           <property name="accessibleName">
+            <string>toggle-btn</string>
+           </property>
+           <property name="text">
+            <string>Redamper</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_60">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>90</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Wave</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Control</string>
+        </attribute>
        </widget>
       </widget>
      </widget>
