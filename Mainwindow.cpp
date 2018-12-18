@@ -28,6 +28,7 @@
 #include <QAction>
 #include <QColorDialog>
 #include "PatchUI.h"
+#include "QHBoxLayout"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -112,8 +113,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->perfReverbHFDamp->setCurrentIndex(17);//seleciona "BYPASS"
 
+    QHBoxLayout *patchLayout = new QHBoxLayout();
     PatchUI *patchui  = new PatchUI();
+    patchui->setLayout(patchLayout);
     ui->tabWidget->addTab(patchui, "Patch");
+
 
     /*
      * PARTES

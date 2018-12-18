@@ -58,7 +58,8 @@ SOURCES += main.cpp\
     SystemCommon.cpp \
     PerformanceCommon.cpp \
     PerformancePart.cpp \
-    PatchUI.cpp
+    PatchUI.cpp \
+    MainWindow2.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -82,7 +83,8 @@ HEADERS  += Mainwindow.h \
     PerformanceCommon.h \
     PerformancePart.h \
     PatchUI.h \
-    defaults.h
+    defaults.h \
+    MainWindow2.h
 
 
 FORMS    += Mainwindow.ui \
@@ -92,7 +94,8 @@ FORMS    += Mainwindow.ui \
     dialogmusica.ui \
     dialogmusicaexistente.ui \
     dialogdocumenteditor.ui \
-    PatchUI.ui
+    PatchUI.ui \
+    MainWindow2.ui
 
 
 DISTFILES += \

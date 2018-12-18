@@ -3,6 +3,11 @@
 #include <QIcon>
 #include <QPixmap>
 #include "defaults.h"
+#include <QDebug>
+#include <QVBoxLayout>
+#include <QFrame>
+#include <QDebug>
+#include "defaults.h"
 
 PatchUI::PatchUI(QWidget *parent) :
     QWidget(parent),
@@ -39,6 +44,53 @@ PatchUI::PatchUI(QWidget *parent) :
         comboTone4Categ->addItem(icon, categorias[i]);
         */
     }
+
+    QTabWidget *tab = ui->tabWidget_2;
+    scrollArea = new QScrollArea();
+    QFrame *frameControles = new QFrame();
+    grid = new QGridLayout();
+    int row=0;
+    for(int ig=0; ig<3; ig++){
+        int col = 0;
+        QFrame *frame = new QFrame();
+        for(int ic=0; ic<4; ic++){
+            QComboBox *dest = new QComboBox();
+
+            for(int opt=0; opt<19; opt++){
+                dest->addItem(CONTROLES_DEST_DEPTH[opt]);
+            }
+
+            QSlider *depth = new QSlider(Qt::Horizontal);
+            depth->setMinimum(0);
+            depth->setMaximum(126);
+            depth->setValue(63);
+
+            lista->append(dest);
+            lista->append(depth);
+
+            /*
+            grid->addWidget(dest,ig, col, 1, 1, Qt::AlignTop);
+            col++;
+            grid->addWidget(depth,ig, col, 1, 1, Qt::AlignTop);
+            col++;
+            */
+            grid->addWidget(dest,row, ic, 1, 1, Qt::AlignTop);
+            row++;
+            grid->addWidget(depth,row, ic, 1, 1, Qt::AlignTop);
+            row--;
+        }
+        row+=2;
+    }
+
+    frameControles->setLayout(grid);
+    scrollArea->setWidget(frameControles);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+//    QVBoxLayout *vbox = new QVBoxLayout(tab);
+//    tab->setLayout(vbox);
+//    scrollArea->setViewport(grid);
+    tab->addTab(scrollArea,"Controles");
 }
 
 PatchUI::~PatchUI()

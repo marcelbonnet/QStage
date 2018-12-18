@@ -2,6 +2,13 @@
 #define PATCHUI_H
 
 #include <QWidget>
+#include <QScrollArea>
+#include <QComboBox>
+#include <QSlider>
+#include <QLabel>
+#include <QGridLayout>
+#include <QList>
+#include <QTabWidget>
 
 namespace Ui {
 class PatchUI;
@@ -17,6 +24,11 @@ public:
 
 private:
     Ui::PatchUI *ui;
+
+    QGridLayout *grid;
+    QScrollArea *scrollArea;
+    QList<QWidget*> *lista = new QList<QWidget*>();
+
 };
 
 #endif // PATCHUI_H
