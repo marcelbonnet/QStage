@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
+  <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -23,8 +23,639 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Page</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QScrollArea" name="scrollArea_4">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>1284</width>
+            <height>1036</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QFrame" name="frame_7">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QFormLayout" name="formLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_61">
+                <property name="text">
+                 <string>Nome</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="name_2">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="maxLength">
+                 <number>12</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_68">
+                <property name="text">
+                 <string>Tempo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="tempo_2">
+                <property name="minimum">
+                 <number>20</number>
+                </property>
+                <property name="maximum">
+                 <number>250</number>
+                </property>
+                <property name="value">
+                 <number>120</number>
+                </property>
+                <property name="displayIntegerBase">
+                 <number>10</number>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="2">
+               <widget class="QLabel" name="label_62">
+                <property name="text">
+                 <string>Categoria</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QComboBox" name="patchCategory"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QFrame" name="frame_10">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
+               <widget class="QPushButton" name="btnKeyAssignMode">
+                <property name="accessibleName">
+                 <string>toggle-btn</string>
+                </property>
+                <property name="text">
+                 <string>SOLO</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1" colspan="2">
+               <widget class="QPushButton" name="btnSoloLegato">
+                <property name="accessibleName">
+                 <string>toggle-btn</string>
+                </property>
+                <property name="text">
+                 <string>LEGATO</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_67">
+                <property name="text">
+                 <string>Bend Range</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="bendMin">
+                <property name="minimum">
+                 <number>-48</number>
+                </property>
+                <property name="maximum">
+                 <number>0</number>
+                </property>
+                <property name="value">
+                 <number>-2</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QSpinBox" name="benMax">
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>12</number>
+                </property>
+                <property name="value">
+                 <number>2</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QFrame" name="frame_9">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_64">
+                <property name="text">
+                 <string>Level</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSlider" name="patchLevel">
+                <property name="maximum">
+                 <number>127</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_65">
+                <property name="text">
+                 <string>Pan</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSlider" name="patchPan">
+                <property name="maximum">
+                 <number>127</number>
+                </property>
+                <property name="value">
+                 <number>63</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_66">
+                <property name="text">
+                 <string>Analog Feel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSlider" name="analogFeel">
+                <property name="maximum">
+                 <number>127</number>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>Portamento</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_89">
+                <property name="text">
+                 <string>Início</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="portamentoType_2">
+                <item>
+                 <property name="text">
+                  <string>RATE</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>TIME</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_88">
+                <property name="text">
+                 <string>Tipo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSlider" name="portamentoTime_2">
+                <property name="maximum">
+                 <number>127</number>
+                </property>
+                <property name="value">
+                 <number>18</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_87">
+                <property name="text">
+                 <string>Tempo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="btnPortamentoMode_2">
+                <property name="accessibleName">
+                 <string>toggle-btn</string>
+                </property>
+                <property name="text">
+                 <string>LEGATO</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="btnPortamentoSwitch_2">
+                <property name="focusPolicy">
+                 <enum>Qt::StrongFocus</enum>
+                </property>
+                <property name="accessibleName">
+                 <string>toggle-btn</string>
+                </property>
+                <property name="text">
+                 <string>ON</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QComboBox" name="portamentoStart_2">
+                <item>
+                 <property name="text">
+                  <string>PITCH</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>NOTE</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Peak&amp;&amp;Hold</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_7">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_75">
+                <property name="text">
+                 <string>EFX Control</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="efxControl_2">
+                <item>
+                 <property name="text">
+                  <string>OFF</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>HOLD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>PEAK</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_76">
+                <property name="text">
+                 <string>Control 1</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="control1_2">
+                <item>
+                 <property name="text">
+                  <string>OFF</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>HOLD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>PEAK</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_77">
+                <property name="text">
+                 <string>Control 2</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="control2_2">
+                <item>
+                 <property name="text">
+                  <string>OFF</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>HOLD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>PEAK</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_78">
+                <property name="text">
+                 <string>Control 3</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QComboBox" name="control3_2">
+                <item>
+                 <property name="text">
+                  <string>OFF</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>HOLD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>PEAK</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QGroupBox" name="groupBox_4">
+             <property name="title">
+              <string>GroupBox</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_9">
+              <item row="0" column="0" rowspan="2">
+               <widget class="QComboBox" name="structure12"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>Boost</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2" rowspan="2">
+               <widget class="QComboBox" name="structure34"/>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Boost</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="booster12">
+                <item>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>6</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>12</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>18</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QComboBox" name="booster34">
+                <item>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>6</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>12</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>18</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="title">
+              <string>GroupBox</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_8">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_83">
+                <property name="text">
+                 <string>Octave</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="octave">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_85">
+                <property name="text">
+                 <string>Priority</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QComboBox" name="voicePriority">
+                <item>
+                 <property name="text">
+                  <string>LAST</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>LOUDEST</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_84">
+                <property name="text">
+                 <string>Stretch</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="stretchTuneDepth">
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_86">
+                <property name="text">
+                 <string>VelRange</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QPushButton" name="btnVelocityRangeSwitch">
+                <property name="accessibleName">
+                 <string>toggle-btn</string>
+                </property>
+                <property name="text">
+                 <string>ON</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="1" rowspan="4">
+            <widget class="QTabWidget" name="tabWidget_3">
+             <widget class="QWidget" name="tab_6">
+              <attribute name="title">
+               <string>Tab 1</string>
+              </attribute>
+             </widget>
+             <widget class="QWidget" name="tab_7">
+              <attribute name="title">
+               <string>Tab 2</string>
+              </attribute>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Tons</string>
@@ -51,498 +682,7 @@
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QFrame" name="frame_5">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QFrame" name="frame_6">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <widget class="QLabel" name="label_39">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>10</y>
-                   <width>58</width>
-                   <height>14</height>
-                  </rect>
-                 </property>
-                 <property name="text">
-                  <string>Nome</string>
-                 </property>
-                </widget>
-                <widget class="QLabel" name="label_41">
-                 <property name="geometry">
-                  <rect>
-                   <x>170</x>
-                   <y>0</y>
-                   <width>58</width>
-                   <height>14</height>
-                  </rect>
-                 </property>
-                 <property name="text">
-                  <string>Tempo</string>
-                 </property>
-                </widget>
-                <widget class="QLineEdit" name="name">
-                 <property name="geometry">
-                  <rect>
-                   <x>50</x>
-                   <y>0</y>
-                   <width>113</width>
-                   <height>22</height>
-                  </rect>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="maxLength">
-                  <number>12</number>
-                 </property>
-                </widget>
-                <widget class="QSpinBox" name="tempo">
-                 <property name="geometry">
-                  <rect>
-                   <x>230</x>
-                   <y>0</y>
-                   <width>51</width>
-                   <height>23</height>
-                  </rect>
-                 </property>
-                 <property name="minimum">
-                  <number>20</number>
-                 </property>
-                 <property name="maximum">
-                  <number>250</number>
-                 </property>
-                 <property name="value">
-                  <number>120</number>
-                 </property>
-                 <property name="displayIntegerBase">
-                  <number>10</number>
-                 </property>
-                </widget>
-                <widget class="QLabel" name="label_40">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>40</y>
-                   <width>81</width>
-                   <height>16</height>
-                  </rect>
-                 </property>
-                 <property name="text">
-                  <string>Categoria</string>
-                 </property>
-                </widget>
-                <widget class="QComboBox" name="patchCategory">
-                 <property name="geometry">
-                  <rect>
-                   <x>80</x>
-                   <y>30</y>
-                   <width>211</width>
-                   <height>31</height>
-                  </rect>
-                 </property>
-                </widget>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QFrame" name="frame_3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_83">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>10</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Octave</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_84">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>40</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Stretch</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_85">
-              <property name="geometry">
-               <rect>
-                <x>170</x>
-                <y>10</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Priority</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_86">
-              <property name="geometry">
-               <rect>
-                <x>170</x>
-                <y>40</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>VelRange</string>
-              </property>
-             </widget>
-             <widget class="QSpinBox" name="octave">
-              <property name="geometry">
-               <rect>
-                <x>100</x>
-                <y>10</y>
-                <width>46</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-             </widget>
-             <widget class="QSpinBox" name="stretchTuneDepth">
-              <property name="geometry">
-               <rect>
-                <x>100</x>
-                <y>40</y>
-                <width>46</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="voicePriority">
-              <property name="geometry">
-               <rect>
-                <x>260</x>
-                <y>10</y>
-                <width>91</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>LAST</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>LOUDEST</string>
-               </property>
-              </item>
-             </widget>
-             <widget class="QPushButton" name="btnVelocityRangeSwitch">
-              <property name="geometry">
-               <rect>
-                <x>260</x>
-                <y>50</y>
-                <width>91</width>
-                <height>22</height>
-               </rect>
-              </property>
-              <property name="accessibleName">
-               <string>toggle-btn</string>
-              </property>
-              <property name="text">
-               <string>ON</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QFrame" name="frame_4">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <widget class="QComboBox" name="structure12">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>10</y>
-                <width>250</width>
-                <height>60</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="structure34">
-              <property name="geometry">
-               <rect>
-                <x>310</x>
-                <y>10</y>
-                <width>250</width>
-                <height>60</height>
-               </rect>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="booster12">
-              <property name="geometry">
-               <rect>
-                <x>260</x>
-                <y>40</y>
-                <width>51</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>0</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>6</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>12</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>18</string>
-               </property>
-              </item>
-             </widget>
-             <widget class="QLabel" name="label">
-              <property name="geometry">
-               <rect>
-                <x>260</x>
-                <y>10</y>
-                <width>51</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Boost</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_2">
-              <property name="geometry">
-               <rect>
-                <x>560</x>
-                <y>10</y>
-                <width>51</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Boost</string>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="booster34">
-              <property name="geometry">
-               <rect>
-                <x>560</x>
-                <y>40</y>
-                <width>51</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>0</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>6</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>12</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>18</string>
-               </property>
-              </item>
-             </widget>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QFrame" name="frame">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <widget class="QLabel" name="label_64">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>10</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Level</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_65">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>40</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Pan</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_66">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>70</y>
-                <width>91</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Analog Feel</string>
-              </property>
-             </widget>
-             <widget class="QSlider" name="patchLevel">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>10</y>
-                <width>160</width>
-                <height>16</height>
-               </rect>
-              </property>
-              <property name="maximum">
-               <number>127</number>
-              </property>
-              <property name="value">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-             <widget class="QSlider" name="patchPan">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>40</y>
-                <width>160</width>
-                <height>16</height>
-               </rect>
-              </property>
-              <property name="maximum">
-               <number>127</number>
-              </property>
-              <property name="value">
-               <number>63</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-             <widget class="QSlider" name="analogFeel">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>70</y>
-                <width>160</width>
-                <height>16</height>
-               </rect>
-              </property>
-              <property name="maximum">
-               <number>127</number>
-              </property>
-              <property name="value">
-               <number>0</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="1" column="1" rowspan="4" colspan="2">
+           <item row="1" column="1" rowspan="3" colspan="2">
             <widget class="QTabWidget" name="tabWidget_2">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -571,8 +711,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>804</width>
-                    <height>303</height>
+                    <width>802</width>
+                    <height>169</height>
                    </rect>
                   </property>
                   <widget class="QLabel" name="label_42">
@@ -1899,8 +2039,34 @@
              </widget>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QFrame" name="frame_2">
+           <item row="3" column="0">
+            <widget class="QGroupBox" name="groupBox_11">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Peak &amp;&amp; Hold</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" rowspan="3">
+            <widget class="QGroupBox" name="groupBox_12">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Portamento</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QFrame" name="frame_4">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
                <horstretch>0</horstretch>
@@ -1913,424 +2079,6 @@
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <widget class="QPushButton" name="btnKeyAssignMode">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>10</y>
-                <width>121</width>
-                <height>22</height>
-               </rect>
-              </property>
-              <property name="accessibleName">
-               <string>toggle-btn</string>
-              </property>
-              <property name="text">
-               <string>SOLO</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="btnSoloLegato">
-              <property name="geometry">
-               <rect>
-                <x>180</x>
-                <y>10</y>
-                <width>121</width>
-                <height>22</height>
-               </rect>
-              </property>
-              <property name="accessibleName">
-               <string>toggle-btn</string>
-              </property>
-              <property name="text">
-               <string>LEGATO</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_67">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>50</y>
-                <width>91</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Bend Range</string>
-              </property>
-             </widget>
-             <widget class="QSpinBox" name="bendMin">
-              <property name="geometry">
-               <rect>
-                <x>180</x>
-                <y>50</y>
-                <width>46</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="minimum">
-               <number>-48</number>
-              </property>
-              <property name="maximum">
-               <number>0</number>
-              </property>
-              <property name="value">
-               <number>-2</number>
-              </property>
-             </widget>
-             <widget class="QSpinBox" name="benMax">
-              <property name="geometry">
-               <rect>
-                <x>250</x>
-                <y>50</y>
-                <width>46</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="minimum">
-               <number>0</number>
-              </property>
-              <property name="maximum">
-               <number>12</number>
-              </property>
-              <property name="value">
-               <number>2</number>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QGroupBox" name="groupBox_12">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="title">
-              <string>Portamento</string>
-             </property>
-             <widget class="QPushButton" name="btnPortamentoSwitch_2">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>40</y>
-                <width>121</width>
-                <height>22</height>
-               </rect>
-              </property>
-              <property name="focusPolicy">
-               <enum>Qt::StrongFocus</enum>
-              </property>
-              <property name="accessibleName">
-               <string>toggle-btn</string>
-              </property>
-              <property name="text">
-               <string>ON</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="btnPortamentoMode_2">
-              <property name="geometry">
-               <rect>
-                <x>180</x>
-                <y>40</y>
-                <width>121</width>
-                <height>22</height>
-               </rect>
-              </property>
-              <property name="accessibleName">
-               <string>toggle-btn</string>
-              </property>
-              <property name="text">
-               <string>LEGATO</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_87">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>70</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Tempo</string>
-              </property>
-             </widget>
-             <widget class="QSlider" name="portamentoTime_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>80</y>
-                <width>160</width>
-                <height>16</height>
-               </rect>
-              </property>
-              <property name="maximum">
-               <number>127</number>
-              </property>
-              <property name="value">
-               <number>18</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_88">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>100</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Tipo</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_89">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>130</y>
-                <width>75</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Início</string>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="portamentoType_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>100</y>
-                <width>161</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>RATE</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>TIME</string>
-               </property>
-              </item>
-             </widget>
-             <widget class="QComboBox" name="portamentoStart_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>130</y>
-                <width>161</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>PITCH</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>NOTE</string>
-               </property>
-              </item>
-             </widget>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QGroupBox" name="groupBox_11">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="title">
-              <string>Peak &amp;&amp; Hold</string>
-             </property>
-             <widget class="QLabel" name="label_75">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>30</y>
-                <width>101</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>EFX Control</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_76">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>60</y>
-                <width>101</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Control 1</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_77">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>90</y>
-                <width>101</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Control 2</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_78">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>120</y>
-                <width>101</width>
-                <height>23</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Control 3</string>
-              </property>
-             </widget>
-             <widget class="QComboBox" name="efxControl_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>30</y>
-                <width>161</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>OFF</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>HOLD</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PEAK</string>
-               </property>
-              </item>
-             </widget>
-             <widget class="QComboBox" name="control1_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>60</y>
-                <width>161</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>OFF</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>HOLD</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PEAK</string>
-               </property>
-              </item>
-             </widget>
-             <widget class="QComboBox" name="control2_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>90</y>
-                <width>161</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>OFF</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>HOLD</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PEAK</string>
-               </property>
-              </item>
-             </widget>
-             <widget class="QComboBox" name="control3_2">
-              <property name="geometry">
-               <rect>
-                <x>140</x>
-                <y>120</y>
-                <width>161</width>
-                <height>21</height>
-               </rect>
-              </property>
-              <item>
-               <property name="text">
-                <string>OFF</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>HOLD</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PEAK</string>
-               </property>
-              </item>
-             </widget>
             </widget>
            </item>
           </layout>
