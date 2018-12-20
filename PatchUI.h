@@ -35,7 +35,7 @@ private:
      * Patch Tone
      * */
     QList<QPushButton*> *toneSwitchList = new QList<QPushButton*>();
-    //TODO waves ...
+    QList<QComboBox*> *waveIdList = new QList<QComboBox*>();
     QList<QComboBox*> *waveGainList = new QList<QComboBox*>();
     QList<QSpinBox*> *fxmColorList = new QList<QSpinBox*>();
     QList<QSpinBox*> *fxmDepthList = new QList<QSpinBox*>();
@@ -49,7 +49,7 @@ private:
     QList<QComboBox*> *keyboardRangeUpperList = new QList<QComboBox*>();
 
     QList<QPushButton*> *fxmSwitchList = new QList<QPushButton*>();
-    QList<QPushButton*> *tedamperControlSwitchList = new QList<QPushButton*>();
+    QList<QPushButton*> *redamperControlSwitchList = new QList<QPushButton*>();
     QList<QPushButton*> *volumeControlSwitchList = new QList<QPushButton*>();
     QList<QPushButton*> *hold1ControlSwitchList = new QList<QPushButton*>();
     QList<QPushButton*> *pitchBendControlSwitchList = new QList<QPushButton*>();
@@ -158,7 +158,7 @@ private:
     QList<QSlider*> *ChorusSendLevelList = new QList<QSlider*>();
     QList<QSlider*> *ReverbSendLevelList = new QList<QSlider*>();
 
-
+    void drawPatchTone();
 };
 
 #endif // PATCHUI_H
