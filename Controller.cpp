@@ -66,3 +66,24 @@ void Controller::updateMusicaTag(int musicaId, QRgb tag) throw (std::exception){
     query.bind(2, musicaId);
     query.exec();
 }
+
+QList<Waveform*> Controller::queryWaveforms() throw (std::exception){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT id, nome, groupType, groupId, waveGroup, oneShot, number FROM waveforms ORDER BY id ASC");
+
+    QList<Waveform*> rs;
+    while (query.executeStep())
+    {
+        int id            = query.getColumn(0);
+        const char* nome= query.getColumn(1);
+        int groupType = query.getColumn(2);
+        int groupId = query.getColumn(3);
+        const char* waveGroup = query.getColumn(4);
+        int oneShot = query.getColumn(5);
+        int  number = query.getColumn(6);
+
+        Waveform *w = new Waveform(id, QString(nome),groupType, groupId, QString(waveGroup), oneShot, number);
+        rs.append(w);
+    }
+    return rs;
+}

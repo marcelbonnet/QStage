@@ -4,6 +4,9 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <QMap>
 #include <QRgb>
+#include <QList>
+
+#include "Waveform.h"
 
 class Controller
 {
@@ -17,6 +20,8 @@ public:
 
     static QMap<int, QString> queryPlaylists() throw (std::exception);
     static void updateMusicaTag(int musicaId, QRgb tag) throw (std::exception);
+
+    static QList<Waveform*> queryWaveforms() throw (std::exception);
 };
 
 #endif // CONTROLLER_H

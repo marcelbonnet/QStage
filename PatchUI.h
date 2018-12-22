@@ -106,8 +106,8 @@ private:
     QList<QComboBox*> *filterTypeList = new QList<QComboBox*>();
     QList<QSlider*> *CutoffFrequencyList = new QList<QSlider*>();
     QList<QComboBox*> *CutoffKeyfollowList = new QList<QComboBox*>();
-    QList<QSlider*> *ReasonanceList = new QList<QSlider*>();
-    QList<QSlider*> *ReasonanceVelocitySensList = new QList<QSlider*>();
+    QList<QSlider*> *resonanceList = new QList<QSlider*>();
+    QList<QSlider*> *resonanceVelocitySensList = new QList<QSlider*>();
     QList<QSlider*> *filterEnvelopeDepthList = new QList<QSlider*>();
     QList<QComboBox*> *filterEnvelopeVelocityCurveList = new QList<QComboBox*>();
     QList<QSlider*> *filterEnvelopeVelocitySensList = new QList<QSlider*>();

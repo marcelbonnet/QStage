@@ -59,7 +59,8 @@ SOURCES += main.cpp\
     PerformanceCommon.cpp \
     PerformancePart.cpp \
     PatchUI.cpp \
-    MainWindow2.cpp
+    MainWindow2.cpp \
+    Waveform.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -84,7 +85,8 @@ HEADERS  += Mainwindow.h \
     PerformancePart.h \
     PatchUI.h \
     defaults.h \
-    MainWindow2.h
+    MainWindow2.h \
+    Waveform.h
 
 
 FORMS    += Mainwindow.ui \

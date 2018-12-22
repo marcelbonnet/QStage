@@ -151,5 +151,12 @@
         <file>ui_PatchUI.h</file>
         <file>WidgetPrincipal.cpp</file>
         <file>WidgetPrincipal.h</file>
+        <file>icones/patchtone/tvf/v-curve-1.png</file>
+        <file>icones/patchtone/tvf/v-curve-2.png</file>
+        <file>icones/patchtone/tvf/v-curve-3.png</file>
+        <file>icones/patchtone/tvf/v-curve-4.png</file>
+        <file>icones/patchtone/tvf/v-curve-5.png</file>
+        <file>icones/patchtone/tvf/v-curve-6.png</file>
+        <file>icones/patchtone/tvf/v-curve-7.png</file>
     </qresource>
 </RCC>

@@ -181,6 +181,7 @@ void addPatchToneControllerDestinations(QComboBox *c){
         c->addItem(CONTROLES_DEST_DEPTH[i]);
 }
 
+
 void setSliderRange(QSlider *w, int min, int max){
     w->setMinimum(min);
     w->setMaximum(max);
@@ -189,6 +190,7 @@ void setSliderRange(QSlider *w, int min, int max){
 void setSpinRange(QSpinBox *w, int min, int max){
     w->setMinimum(min);
     w->setMaximum(max);
+
 }
 
 void setLfoOffset(QComboBox *c){
@@ -205,11 +207,95 @@ void setLfoFadeMode(QComboBox *c){
     c->addItem("Key Off In");
     c->addItem("Key Off Out");
 }
+
 void setExternalSync(QComboBox *c){
     c->addItem("Off");
     c->addItem("Clock");
     c->addItem("Tap");
 }
+
+void setRandomPitchDepth(QComboBox *c){
+    for(int i=0; i<=9; i++){
+        c->addItem(QString::number(i));
+    }
+    for(int i=10; i<=90; i=i+10){
+        c->addItem(QString::number(i));
+    }
+    for(int i=100; i<=1200; i=i+100){
+        c->addItem(QString::number(i));
+    }
+
+}
+
+void setKeyfollow15(QComboBox *c){
+    int v[16] = {
+      -100,-70,-50,-30,-10,0,10,20,30,40,50,70,100,120,150,200
+    };
+
+    for(int i=0; i<16; i++){
+        c->addItem(QString::number(v[i]));
+    }
+}
+
+void setTime17(QComboBox *c){
+    int v[15] = {
+        -100,-70,-50,-40,-30,-20,-10,0,10,20,30,40,50,70,100
+    };
+
+    for(int i=0; i<15; i++){
+        c->addItem(QString::number(v[i]));
+    }
+}
+
+void setFilterType18(QComboBox *c){
+    QString l[5] = {
+        "OFF",
+        "Low Pass Filter",
+        "Band Pass Filter",
+        "Hi Pass Filter",
+        "Peaking Filter (ênfase)"
+    };
+
+    for(int i=0; i<5; i++){
+        c->addItem(l[i]);
+    }
+    c->setMaximumWidth(120);
+}
+
+/**
+  Bias direction
+ * @brief setPatchTone19
+ * @param c
+ */
+void setPatchTone19(QComboBox *c){
+    QString l[5] = {
+        "Lower",
+        "Upper",
+        "Lower/Upper",
+        "All (Cruzado)"
+    };
+
+    for(int i=0; i<5; i++){
+        c->addItem(l[i]);
+    }
+    c->setMaximumWidth(120);
+}
+
+void setOutputAssign(QComboBox *c){
+    QString l[5] = {
+        "MIX",
+        "EFX",
+        "<DIRECT-1>",
+        "<DIRECT-2>"
+    };
+
+    for(int i=0; i<5; i++){
+        c->addItem(l[i]);
+    }
+    c->setMaximumWidth(120);
+}
+
+
 
 void setLfoWaveform(QComboBox *c){
     QString icons[8] = {
@@ -230,6 +316,16 @@ void setLfoWaveform(QComboBox *c){
         c->setMaximumSize(120,60);
     }
 
+}
+
+void setVelocityCurves(QComboBox *c){
+    for(int i=1; i<=7; i++){
+        QPixmap pixmap(QString(":/icones/patchtone/tvf/v-curve-%1.png").arg(i));
+        QIcon icon(pixmap);
+        c->addItem(icon, QString::number(i));
+        c->setIconSize(QSize(50,50));
+    }
+    c->setMaximumWidth(120);
 }
 
 /**

@@ -1,13 +1,16 @@
-#include "PatchUI.h"
-#include "ui_PatchUI.h"
 #include <QIcon>
 #include <QPixmap>
-#include "defaults.h"
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QFrame>
 #include <QDebug>
+
+
 #include "defaults.h"
+#include "PatchUI.h"
+#include "ui_PatchUI.h"
+#include "Waveform.h"
+#include "Controller.h"
 
 PatchUI::PatchUI(QWidget *parent) :
     QWidget(parent),
@@ -29,78 +32,7 @@ PatchUI::PatchUI(QWidget *parent) :
         ui->structure34->setIconSize(QSize(250,60));
     }
 
-    /*
-     * Adiciona ícone
-     * */
-    QComboBox *combo = ui->patchCategory;
-    QComboBox *comboTone1Categ = ui->tone1WaveGroup;
-    QComboBox *comboTone2Categ = ui->tone2WaveGroup;
-    QComboBox *comboTone3Categ = ui->tone3WaveGroup;
-    QComboBox *comboTone4Categ = ui->tone4WaveGroup;
-    combo->setMinimumSize(QSize(100,60));
-    for(int i=0; i<39; i++){
-        QIcon icon(QString(":/icones/icons/%1.ico").arg(i));
-        combo->addItem(icon, categorias[i]);
-        combo->setIconSize(QSize(60,60));
-        /*
-         * Wave group nome e type adicionar do banco de dados
-        comboTone1Categ->addItem(icon, categorias[i]);
-        comboTone2Categ->addItem(icon, categorias[i]);
-        comboTone3Categ->addItem(icon, categorias[i]);
-        comboTone4Categ->addItem(icon, categorias[i]);
-        */
-    }
 
-
-
-
-    /*
-     * Adiciona uma nova TabPage ao TabWidget
-     * Controles de Destino e Depth
-     * */
-    /*
-    QTabWidget *tab = ui->tabWidget_2;
-    scrollArea = new QScrollArea();
-    QFrame *frameControles = new QFrame();
-    grid = new QGridLayout();
-    int row=0;
-    for(int ig=0; ig<3; ig++){
-        int col = 0;
-        QFrame *frame = new QFrame();
-        for(int ic=0; ic<4; ic++){
-            QComboBox *dest = new QComboBox();
-
-            for(int opt=0; opt<19; opt++){
-                dest->addItem(CONTROLES_DEST_DEPTH[opt]);
-            }
-
-            QSlider *depth = new QSlider(Qt::Horizontal);
-            depth->setMinimum(0);
-            depth->setMaximum(126);
-            depth->setValue(63);
-
-            lista->append(dest);
-            lista->append(depth);
-
-            /
-            grid->addWidget(dest,row, ic, 1, 1, Qt::AlignTop);
-            row++;
-            grid->addWidget(depth,row, ic, 1, 1, Qt::AlignTop);
-            row--;
-        }
-        row+=2;
-    }
-
-    frameControles->setLayout(grid);
-    scrollArea->setWidget(frameControles);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
-    //    QVBoxLayout *vbox = new QVBoxLayout(tab);
-    //    tab->setLayout(vbox);
-    //    scrollArea->setViewport(grid);
-    tab->addTab(scrollArea,"Controles");
-*/
     /*
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
      */
@@ -146,10 +78,10 @@ void PatchUI::drawPatchTone(){
         fxmSwitch->setCheckable(true);
 
         QSpinBox *fxmColor = new QSpinBox();
-        fxmColor->setMinimum(1);         fxmColor->setMaximum(4);
+        setSpinRange(fxmColor, 1, 4);
 
         QSpinBox *fxmDepth = new QSpinBox();
-        fxmDepth->setMinimum(1);         fxmDepth->setMaximum(16);
+        setSpinRange(fxmDepth,1,16);
 
         QComboBox *toneDelayMode = new QComboBox();
         toneDelayMode->addItem("NORMAL");        toneDelayMode->addItem("HOLD");
@@ -159,20 +91,17 @@ void PatchUI::drawPatchTone(){
         toneDelayMode->setCurrentIndex(0);
 
         QSpinBox *toneDelayTime = new QSpinBox();
-        toneDelayTime->setMinimum(0);           toneDelayTime->setMaximum(127);
+        setSpinRange(toneDelayTime,0,127);
         toneDelayTime->setValue(0);
 
         QSpinBox *veocityRangeCrossFade = new QSpinBox();
-        veocityRangeCrossFade->setMinimum(0);
-        veocityRangeCrossFade->setMaximum(127);
+        setSpinRange(veocityRangeCrossFade,0,127);
 
         QSpinBox *veocityRangeLower = new QSpinBox();
-        veocityRangeLower->setMinimum(1);
-        veocityRangeLower->setMaximum(127);
+        setSpinRange(veocityRangeLower,1,127);
 
         QSpinBox *veocityRangeUpper = new QSpinBox();
-        veocityRangeUpper->setMinimum(1);
-        veocityRangeUpper->setMaximum(127);
+        setSpinRange(veocityRangeUpper,1,127);
 
         QComboBox *keyboardRangeLower = new QComboBox();
         addNotas(keyboardRangeLower);
@@ -244,8 +173,7 @@ void PatchUI::drawPatchTone(){
             addPatchToneControllerDestinations(controlerDestination);
             controlerDestination->setMaximumSize(QSize(120,60));
             QSpinBox *controlerDepth = new QSpinBox();
-            controlerDepth->setMinimum(0);
-            controlerDepth->setMaximum(126);
+            setSpinRange(controlerDepth,0,126);
             controlerDepth->setValue(63);
 
             controlerDestinationList->append(controlerDestination);
@@ -371,12 +299,12 @@ void PatchUI::drawPatchTone(){
         QComboBox *CutoffKeyfollow = new QComboBox();
         CutoffKeyfollowList->append(CutoffKeyfollow );
         grid->addWidget(CutoffKeyfollow , r++, toneid, 1, 1, Qt::AlignTop);
-        QSlider *Reasonance = new QSlider(Qt::Horizontal);
-        ReasonanceList->append(Reasonance );
-        grid->addWidget(Reasonance , r++, toneid, 1, 1, Qt::AlignTop);
-        QSlider *ReasonanceVelocitySens = new QSlider(Qt::Horizontal);
-        ReasonanceVelocitySensList->append(ReasonanceVelocitySens );
-        grid->addWidget(ReasonanceVelocitySens , r++, toneid, 1, 1, Qt::AlignTop);
+        QSlider *resonance = new QSlider(Qt::Horizontal);
+        resonanceList->append(resonance );
+        grid->addWidget(resonance , r++, toneid, 1, 1, Qt::AlignTop);
+        QSlider *resonanceVelocitySens = new QSlider(Qt::Horizontal);
+        resonanceVelocitySensList->append(resonanceVelocitySens );
+        grid->addWidget(resonanceVelocitySens , r++, toneid, 1, 1, Qt::AlignTop);
         QSlider *filterEnvelopeDepth = new QSlider(Qt::Horizontal);
         filterEnvelopeDepthList->append(filterEnvelopeDepth );
         grid->addWidget(filterEnvelopeDepth , r++, toneid, 1, 1, Qt::AlignTop);
@@ -527,6 +455,103 @@ void PatchUI::drawPatchTone(){
         setSliderRange(lfo2FadeTime, 0, 127);
         setExternalSync(lfo1ExternalSync);
         setExternalSync(lfo2ExternalSync);
+        setSpinRange(coarseTune,-48, 48);
+        coarseTune->setValue(0);
+        setSpinRange(fineTune, -50, 50);
+        fineTune->setValue(0);
+        setRandomPitchDepth(randomPitchDepth);
+        setKeyfollow15(pitchKeyfollow);
+        pitchKeyfollow->setCurrentIndex(5);
+        setSpinRange(pitchEnvelopeDepth,-12,12);
+        pitchEnvelopeDepth->setValue(0);
+        setSliderRange(pitchEnvelopeVelocitySens,0,125);
+        setTime17(pitchEnvelopeVelocityTime1);
+        pitchEnvelopeVelocityTime1->setCurrentIndex(7);
+        setTime17(pitchEnvelopeVelocityTime4);
+        pitchEnvelopeVelocityTime4->setCurrentIndex(7);
+        setTime17(pitchEnvelopeTimeKeyfollow);
+        pitchEnvelopeTimeKeyfollow->setCurrentIndex(7);
+        setSliderRange(pitchEnvelopeTime1,0,127);
+        setSliderRange(pitchEnvelopeTime2,0,127);
+        setSliderRange(pitchEnvelopeTime3,0,127);
+        setSliderRange(pitchEnvelopeTime4,0,127);
+        setSliderRange(pitchEnvelopeLevel1,0,126);
+        setSliderRange(pitchEnvelopeLevel2,0,126);
+        setSliderRange(pitchEnvelopeLevel3,0,126);
+        setSliderRange(pitchEnvelopeLevel4,0,126);
+        pitchEnvelopeLevel1->setValue(63);
+        pitchEnvelopeLevel2->setValue(63);
+        pitchEnvelopeLevel3->setValue(63);
+        pitchEnvelopeLevel4->setValue(63);
+        setSliderRange(pitchLfo1Depth,0,126);
+        setSliderRange(pitchLfo2Depth,0,126);
+        pitchLfo1Depth->setValue(63);
+        pitchLfo2Depth->setValue(63);
+        setFilterType18(filterType);
+        setSliderRange(CutoffFrequency,0,127);
+        setKeyfollow15(CutoffKeyfollow);
+        setSliderRange(resonance,0,127);
+        setSliderRange(resonanceVelocitySens,0,125);
+        setSliderRange(filterEnvelopeDepth, -63,63);
+        filterEnvelopeDepth->setValue(0);
+        setVelocityCurves(filterEnvelopeVelocityCurve);
+        setSliderRange(filterEnvelopeVelocitySens,0,125);
+        setTime17(filterEnvelopeVelocityTime1);
+        setTime17(filterEnvelopeVelocityTime4);
+        setTime17(filterEnvelopeTimeKeyfollow);
+        setSliderRange(filterEnvelopeTime1,0,127);
+        setSliderRange(filterEnvelopeTime2,0,127);
+        setSliderRange(filterEnvelopeTime3,0,127);
+        setSliderRange(filterEnvelopeTime4,0,127);
+        setSliderRange(filterEnvelopeLevel1,0,127);
+        setSliderRange(filterEnvelopeLevel2,0,127);
+        setSliderRange(filterEnvelopeLevel3,0,127);
+        setSliderRange(filterEnvelopeLevel4,0,127);
+        setSliderRange(filterLfo1Depth,-63,63);
+        filterLfo1Depth->setValue(0);
+        setSliderRange(filterLfo2Depth,-63,63);
+        filterLfo2Depth->setValue(0);
+        setSliderRange(toneLevel,0,127);
+        toneLevel->setValue(100);
+        setPatchTone19(biasDirection);
+        addNotas(biasPosition);
+        setTime17(biasLevel);
+        biasLevel->setCurrentIndex(7);
+        setVelocityCurves(levelEnvelopeVelocityCurve);
+        setSliderRange(levelEnvelopeVelocitySens,0,125);
+        setTime17(levelEnvelopeVelocityTime1);
+        setTime17(levelEnvelopeVelocityTime4);
+        setTime17(levelEnvelopeTimeKeyfollow);
+        setSliderRange(levelEnvelopeTime1,0,127);
+        setSliderRange(levelEnvelopeTime2,0,127);
+        setSliderRange(levelEnvelopeTime3,0,127);
+        setSliderRange(levelEnvelopeTime4,0,127);
+        setSliderRange(levelEnvelopeLevel1,0,127);
+        setSliderRange(levelEnvelopeLevel2,0,127);
+        setSliderRange(levelEnvelopeLevel3,0,127);
+        setSliderRange(levelLfo1Depth,0,126);
+        levelLfo1Depth->setValue(63);
+        setSliderRange(levelLfo2Depth,0,126);
+        levelLfo2Depth->setValue(63);
+        setOutputAssign(outputAssign);
+        setSliderRange(mixEfxSendLevel,0,127);
+        setSliderRange(ChorusSendLevel,0,127);
+        setSliderRange(ReverbSendLevel,0,127);
+
+        try {
+            foreach (Waveform *w, Controller::queryWaveforms()) {
+                QString nome = QString("[%1 %2] %3 %4")
+                        .arg(w->waveGroup)
+                        .arg(QString::number(w->number))
+                        .arg(w->nome)
+                        .arg((w->oneShot == 1? "*" : ""))
+                        ;
+                waveId->addItem(nome, QVariant::fromValue(w));
+            }
+        } catch (std::exception& e)
+        {
+            qDebug() << "exception: " << e.what();
+        }
 
 
 
