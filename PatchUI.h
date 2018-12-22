@@ -147,6 +147,7 @@ private:
     QList<QSlider*> *levelLfo2DepthList = new QList<QSlider*>();
     QList<QSlider*> *tonePanList = new QList<QSlider*>();
     QList<QComboBox*> *panKeyfollowList = new QList<QComboBox*>();
+    QList<QSlider*> *randomPanDepthList = new QList<QSlider*>();
     QList<QSlider*> *alternatePanDepthList = new QList<QSlider*>();
     QList<QSlider*> *panLfo1DepthList = new QList<QSlider*>();
     QList<QSlider*> *panLfo2DepthList = new QList<QSlider*>();

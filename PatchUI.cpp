@@ -413,6 +413,9 @@ void PatchUI::drawPatchTone(){
         QComboBox *panKeyfollow = new QComboBox();
         panKeyfollowList->append(panKeyfollow );
         grid->addWidget(panKeyfollow , r++, toneid, 1, 1, Qt::AlignTop);
+        QSlider *randomPanDepth = new QSlider(Qt::Horizontal);
+        randomPanDepthList->append(randomPanDepth );
+        grid->addWidget(randomPanDepth , r++, toneid, 1, 1, Qt::AlignTop);
         QSlider *alternatePanDepth = new QSlider(Qt::Horizontal);
         alternatePanDepthList->append(alternatePanDepth );
         grid->addWidget(alternatePanDepth , r++, toneid, 1, 1, Qt::AlignTop);
@@ -533,6 +536,13 @@ void PatchUI::drawPatchTone(){
         levelLfo1Depth->setValue(63);
         setSliderRange(levelLfo2Depth,0,126);
         levelLfo2Depth->setValue(63);
+        setSliderRange(tonePan,0,127);
+        tonePan->setValue(63);
+        setTime17(panKeyfollow);
+        panKeyfollow->setCurrentIndex(7);
+        setSliderRange(randomPanDepth,0,63);
+        setSliderRange(alternatePanDepth,1,127);
+        alternatePanDepth->setValue(63);
         setOutputAssign(outputAssign);
         setSliderRange(mixEfxSendLevel,0,127);
         setSliderRange(ChorusSendLevel,0,127);
@@ -540,7 +550,7 @@ void PatchUI::drawPatchTone(){
 
         try {
             foreach (Waveform *w, Controller::queryWaveforms()) {
-                QString nome = QString("[%1 %2] %3 %4")
+                QString nome = QString("%3 [%1 %2] %4")
                         .arg(w->waveGroup)
                         .arg(QString::number(w->number))
                         .arg(w->nome)
@@ -548,6 +558,7 @@ void PatchUI::drawPatchTone(){
                         ;
                 waveId->addItem(nome, QVariant::fromValue(w));
             }
+            waveId->setMaximumWidth(120);
         } catch (std::exception& e)
         {
             qDebug() << "exception: " << e.what();

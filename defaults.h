@@ -15,7 +15,7 @@ QString notas[12] = {
     "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
 };
 
-const int PATCH_TONE_LABELS_COUNT = 126;
+const int PATCH_TONE_LABELS_COUNT = 127;
 QString PATCH_TONE_LABELS[PATCH_TONE_LABELS_COUNT] = {
     "ON/OFF",
     "Wave",
@@ -136,6 +136,7 @@ QString PATCH_TONE_LABELS[PATCH_TONE_LABELS_COUNT] = {
     "Tone Pan",
     "Pan Keyfollow",
     "Random Pan Depth",
+    "Alternate Pan Depth",
     "Pan LFO1 Depth",
     "Pan LFO2 Depth",
     "Ouput Assign",
