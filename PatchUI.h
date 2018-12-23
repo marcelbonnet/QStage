@@ -37,6 +37,7 @@ private:
     void enviarMensagem(PatchTone *patchTone, int data);
     void conectarWidgets();
     void desconectarWidgets();
+    void setupProperties();
 
 
     QGridLayout *grid;

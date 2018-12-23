@@ -47,9 +47,6 @@ PatchUI::~PatchUI()
 
 void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-//    PatchTone pt(func);
-//    PatchTone pt(PatchTone::Wave_Gain);
-//    data = 0x03;
     dados->append(
                 new SysExMessage(
                     BaseAddress(BaseAddress::PatchModeTempPatch),
@@ -69,6 +66,117 @@ void PatchUI::conectarWidgets()
 }
 
 void PatchUI::desconectarWidgets(){
+
+}
+
+void PatchUI::setupProperties(){
+    /*
+     * Falta:
+     * - waveId
+     * - controles de destination e depth
+     */
+    for(int i=0; i<toneSwitchList->count(); i++) toneSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, i+1)));
+    for(int i=0; i<waveGainList->count(); i++) waveGainList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Gain, i+1)));
+    for(int i=0; i<fxmColorList->count(); i++) fxmColorList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Switch, i+1)));
+    for(int i=0; i<fxmDepthList->count(); i++) fxmDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Color, i+1)));
+    for(int i=0; i<toneDelayModeList->count(); i++) toneDelayModeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Depth, i+1)));
+    for(int i=0; i<toneDelayTimeList->count(); i++) toneDelayTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Delay_Mode, i+1)));
+    for(int i=0; i<veocityRangeCrossFadeList->count(); i++) veocityRangeCrossFadeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Delay_Time, i+1)));
+    for(int i=0; i<veocityRangeLowerList->count(); i++) veocityRangeLowerList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Velocity_Cross_Fade, i+1)));
+    for(int i=0; i<veocityRangeUpperList->count(); i++) veocityRangeUpperList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Velocity_Range_Lower, i+1)));
+    for(int i=0; i<keyboardRangeLowerList->count(); i++) keyboardRangeLowerList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Velocity_Range_Upper, i+1)));
+    for(int i=0; i<keyboardRangeUpperList->count(); i++) keyboardRangeUpperList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Keyboard_Range_Lower, i+1)));
+    for(int i=0; i<fxmSwitchList->count(); i++) fxmSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Keyboard_Range_Upper, i+1)));
+    for(int i=0; i<redamperControlSwitchList->count(); i++) redamperControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Redamper_Control_Switch, i+1)));
+    for(int i=0; i<volumeControlSwitchList->count(); i++) volumeControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Volume_Control_Switch, i+1)));
+    for(int i=0; i<hold1ControlSwitchList->count(); i++) hold1ControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Hold1_Control_Switch, i+1)));
+    for(int i=0; i<pitchBendControlSwitchList->count(); i++) pitchBendControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Bend_Control_Switch, i+1)));
+    for(int i=0; i<panControlSwitchList->count(); i++) panControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pan_Control_Switch, i+1)));
+    for(int i=0; i<lfo1WaveFormList->count(); i++) lfo1WaveFormList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Waveform, i+1)));
+    for(int i=0; i<lfo1KeySyncSwitchList->count(); i++) lfo1KeySyncSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Key_Sync, i+1)));
+    for(int i=0; i<lfo1RateList->count(); i++) lfo1RateList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Rate, i+1)));
+    for(int i=0; i<lfo1OffSetList->count(); i++) lfo1OffSetList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Offset, i+1)));
+    for(int i=0; i<lfo1DelayTimeList->count(); i++) lfo1DelayTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Delay_Time, i+1)));
+    for(int i=0; i<lfo1FadeModeList->count(); i++) lfo1FadeModeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Fade_Mode, i+1)));
+    for(int i=0; i<lfo1FadeTimeList->count(); i++) lfo1FadeTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Fade_Time, i+1)));
+    for(int i=0; i<lfo1ExternalSyncList->count(); i++) lfo1ExternalSyncList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_External_Sync, i+1)));
+    for(int i=0; i<lfo2WaveFormList->count(); i++) lfo2WaveFormList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Waveform, i+1)));
+    for(int i=0; i<lfo2KeySyncSwitchList->count(); i++) lfo2KeySyncSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Key_Sync, i+1)));
+    for(int i=0; i<lfo2RateList->count(); i++) lfo2RateList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Rate, i+1)));
+    for(int i=0; i<lfo2OffSetList->count(); i++) lfo2OffSetList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Offset, i+1)));
+    for(int i=0; i<lfo2DelayTimeList->count(); i++) lfo2DelayTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Delay_Time, i+1)));
+    for(int i=0; i<lfo2FadeModeList->count(); i++) lfo2FadeModeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Fade_Mode, i+1)));
+    for(int i=0; i<lfo2FadeTimeList->count(); i++) lfo2FadeTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Fade_Time, i+1)));
+    for(int i=0; i<lfo2ExternalSyncList->count(); i++) lfo2ExternalSyncList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_External_Sync, i+1)));
+    for(int i=0; i<coarseTuneList->count(); i++) coarseTuneList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Coarse_Tune, i+1)));
+    for(int i=0; i<fineTuneList->count(); i++) fineTuneList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Fine_Tune, i+1)));
+    for(int i=0; i<randomPitchDepthList->count(); i++) randomPitchDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Random_Pitch_Depth, i+1)));
+    for(int i=0; i<pitchKeyfollowList->count(); i++) pitchKeyfollowList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Keyfollow, i+1)));
+    for(int i=0; i<pitchEnvelopeDepthList->count(); i++) pitchEnvelopeDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Depth, i+1)));
+    for(int i=0; i<pitchEnvelopeVelocitySensList->count(); i++) pitchEnvelopeVelocitySensList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Velocity_Sens, i+1)));
+    for(int i=0; i<pitchEnvelopeVelocityTime1List->count(); i++) pitchEnvelopeVelocityTime1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Velocity_Time1, i+1)));
+    for(int i=0; i<pitchEnvelopeVelocityTime4List->count(); i++) pitchEnvelopeVelocityTime4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Velocity_Time4, i+1)));
+    for(int i=0; i<pitchEnvelopeTimeKeyfollowList->count(); i++) pitchEnvelopeTimeKeyfollowList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Time_Keyfollow, i+1)));
+    for(int i=0; i<pitchEnvelopeTime1List->count(); i++) pitchEnvelopeTime1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Time_1, i+1)));
+    for(int i=0; i<pitchEnvelopeTime2List->count(); i++) pitchEnvelopeTime2List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Time_2, i+1)));
+    for(int i=0; i<pitchEnvelopeTime3List->count(); i++) pitchEnvelopeTime3List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Time_3, i+1)));
+    for(int i=0; i<pitchEnvelopeTime4List->count(); i++) pitchEnvelopeTime4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Time_4, i+1)));
+    for(int i=0; i<pitchEnvelopeLevel1List->count(); i++) pitchEnvelopeLevel1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Level_1, i+1)));
+    for(int i=0; i<pitchEnvelopeLevel2List->count(); i++) pitchEnvelopeLevel2List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Level_2, i+1)));
+    for(int i=0; i<pitchEnvelopeLevel3List->count(); i++) pitchEnvelopeLevel3List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Level_3, i+1)));
+    for(int i=0; i<pitchEnvelopeLevel4List->count(); i++) pitchEnvelopeLevel4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Envelope_Level_4, i+1)));
+    for(int i=0; i<pitchLfo1DepthList->count(); i++) pitchLfo1DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_LFO1_Depth, i+1)));
+    for(int i=0; i<pitchLfo2DepthList->count(); i++) pitchLfo2DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_LFO2_Depth, i+1)));
+    for(int i=0; i<filterTypeList->count(); i++) filterTypeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Type, i+1)));
+    for(int i=0; i<CutoffFrequencyList->count(); i++) CutoffFrequencyList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Cutoff_Frequency, i+1)));
+    for(int i=0; i<CutoffKeyfollowList->count(); i++) CutoffKeyfollowList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Cutoff_Keyfollow, i+1)));
+    for(int i=0; i<resonanceList->count(); i++) resonanceList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Resonance, i+1)));
+    for(int i=0; i<resonanceVelocitySensList->count(); i++) resonanceVelocitySensList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Resonance_Velocity_Sens, i+1)));
+    for(int i=0; i<filterEnvelopeDepthList->count(); i++) filterEnvelopeDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Depth, i+1)));
+    for(int i=0; i<filterEnvelopeVelocityCurveList->count(); i++) filterEnvelopeVelocityCurveList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Velocity_Curve, i+1)));
+    for(int i=0; i<filterEnvelopeVelocitySensList->count(); i++) filterEnvelopeVelocitySensList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Velocity_Sens, i+1)));
+    for(int i=0; i<filterEnvelopeVelocityTime1List->count(); i++) filterEnvelopeVelocityTime1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Velocity_Time1, i+1)));
+    for(int i=0; i<filterEnvelopeVelocityTime4List->count(); i++) filterEnvelopeVelocityTime4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Velocity_Time4, i+1)));
+    for(int i=0; i<filterEnvelopeTimeKeyfollowList->count(); i++) filterEnvelopeTimeKeyfollowList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Time_Keyfollow, i+1)));
+    for(int i=0; i<filterEnvelopeTime1List->count(); i++) filterEnvelopeTime1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Time_1, i+1)));
+    for(int i=0; i<filterEnvelopeTime2List->count(); i++) filterEnvelopeTime2List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Time_2, i+1)));
+    for(int i=0; i<filterEnvelopeTime3List->count(); i++) filterEnvelopeTime3List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Time_3, i+1)));
+    for(int i=0; i<filterEnvelopeTime4List->count(); i++) filterEnvelopeTime4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Time_4, i+1)));
+    for(int i=0; i<filterEnvelopeLevel1List->count(); i++) filterEnvelopeLevel1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Level_1, i+1)));
+    for(int i=0; i<filterEnvelopeLevel2List->count(); i++) filterEnvelopeLevel2List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Level_2, i+1)));
+    for(int i=0; i<filterEnvelopeLevel3List->count(); i++) filterEnvelopeLevel3List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Level_3, i+1)));
+    for(int i=0; i<filterEnvelopeLevel4List->count(); i++) filterEnvelopeLevel4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_Envelope_Level_4, i+1)));
+    for(int i=0; i<filterLfo1DepthList->count(); i++) filterLfo1DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_LFO1_Depth, i+1)));
+    for(int i=0; i<filterLfo2DepthList->count(); i++) filterLfo2DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Filter_LFO2_Depth, i+1)));
+    for(int i=0; i<toneLevelList->count(); i++) toneLevelList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Level, i+1)));
+    for(int i=0; i<biasDirectionList->count(); i++) biasDirectionList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Bias_Direction, i+1)));
+    for(int i=0; i<biasPositionList->count(); i++) biasPositionList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Bias_Position, i+1)));
+    for(int i=0; i<biasLevelList->count(); i++) biasLevelList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Bias_Level, i+1)));
+    for(int i=0; i<levelEnvelopeVelocityCurveList->count(); i++) levelEnvelopeVelocityCurveList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Velocity_Curve, i+1)));
+    for(int i=0; i<levelEnvelopeVelocitySensList->count(); i++) levelEnvelopeVelocitySensList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Velocity_Sens, i+1)));
+    for(int i=0; i<levelEnvelopeVelocityTime1List->count(); i++) levelEnvelopeVelocityTime1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Velocity_Time1, i+1)));
+    for(int i=0; i<levelEnvelopeVelocityTime4List->count(); i++) levelEnvelopeVelocityTime4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Velocity_Time4, i+1)));
+    for(int i=0; i<levelEnvelopeTimeKeyfollowList->count(); i++) levelEnvelopeTimeKeyfollowList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Time_Keyfollow, i+1)));
+    for(int i=0; i<levelEnvelopeTime1List->count(); i++) levelEnvelopeTime1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Time_1, i+1)));
+    for(int i=0; i<levelEnvelopeTime2List->count(); i++) levelEnvelopeTime2List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Time_2, i+1)));
+    for(int i=0; i<levelEnvelopeTime3List->count(); i++) levelEnvelopeTime3List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Time_3, i+1)));
+    for(int i=0; i<levelEnvelopeTime4List->count(); i++) levelEnvelopeTime4List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Time_4, i+1)));
+    for(int i=0; i<levelEnvelopeLevel1List->count(); i++) levelEnvelopeLevel1List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Level_1, i+1)));
+    for(int i=0; i<levelEnvelopeLevel2List->count(); i++) levelEnvelopeLevel2List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Level_2, i+1)));
+    for(int i=0; i<levelEnvelopeLevel3List->count(); i++) levelEnvelopeLevel3List->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_Envelope_Level_3, i+1)));
+    for(int i=0; i<levelLfo1DepthList->count(); i++) levelLfo1DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_LFO1_Depth, i+1)));
+    for(int i=0; i<levelLfo2DepthList->count(); i++) levelLfo2DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Level_LFO2_Depth, i+1)));
+    for(int i=0; i<tonePanList->count(); i++) tonePanList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Pan, i+1)));
+    for(int i=0; i<panKeyfollowList->count(); i++) panKeyfollowList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pan_Keyfollow, i+1)));
+    for(int i=0; i<randomPanDepthList->count(); i++) randomPanDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Random_Pan_Depth, i+1)));
+    for(int i=0; i<alternatePanDepthList->count(); i++) alternatePanDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Alternate_Pan_Depth, i+1)));
+    for(int i=0; i<panLfo1DepthList->count(); i++) panLfo1DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pan_LFO1_Depth, i+1)));
+    for(int i=0; i<panLfo2DepthList->count(); i++) panLfo2DepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pan_LFO2_Depth, i+1)));
+    for(int i=0; i<outputAssignList->count(); i++) outputAssignList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Output_Assign, i+1)));
+    for(int i=0; i<mixEfxSendLevelList->count(); i++) mixEfxSendLevelList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::MixEFX_Send_Level, i+1)));
+    for(int i=0; i<ChorusSendLevelList->count(); i++) ChorusSendLevelList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Chorus_Send_Level, i+1)));
+    for(int i=0; i<ReverbSendLevelList->count(); i++) ReverbSendLevelList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Reverb_Send_Level, i+1)));
+
 
 }
 
@@ -112,7 +220,7 @@ void PatchUI::drawPatchTone(){
     for(int toneid=1; toneid<5; toneid++){
         QPushButton *toneSwitch = new QPushButton(QString("%1").arg(toneid));
         toneSwitch->setCheckable(true);
-        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, toneid)));
+//        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, toneid)));
 
         QComboBox *waveId = new QComboBox();
 
