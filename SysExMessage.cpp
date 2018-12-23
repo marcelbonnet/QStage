@@ -80,6 +80,35 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PerformancePart part, int da
     qDebug() << QString("Performance Part %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 }
 
+SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data)
+{
+    this->base = baseAddress;
+    this->patchTone = patchTone;
+    this->data = data;
+
+    int addr = base.startAddress + patchTone->address;
+    message.b8 = addr & 0xFF;
+    message.b7 = addr >> 8 & 0xFF;
+    message.b6 = addr >> 16 & 0xFF;
+    message.b5 = addr >> 24 & 0xFF;
+
+    if(!part.is2ByteData){
+        message.b9 = data;
+    } else {
+        int d1 = data & 0xF;
+        int d2 = (data >> 4) & 0xF;
+        message.b9 = d2;
+        message.b10 = d1;
+    }
+
+    message.b11 = calcularChecksum(addr, data);
+
+    qDebug() << QString("Patch Tone %1 = %2    DATA: %3")
+                .arg(QString::number(patchTone->address,16))
+                .arg(QString::number(data,16))
+                .arg(message.getDataRepresentation());
+}
+
 
 int SysExMessage::calcularChecksum(int endereco, int dado)
 {

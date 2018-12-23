@@ -11,10 +11,11 @@
 #include "Waveform.h"
 #include "Controller.h"
 
-PatchUI::PatchUI(QWidget *parent) :
+PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PatchUI)
 {
+    this->jack = jack;
     ui->setupUi(this);
 
     /*
@@ -44,8 +45,18 @@ PatchUI::~PatchUI()
     delete ui;
 }
 
-void PatchUI::enviarMensagem(enum PatchTone::Function func, int data){
-    qDebug() << "ENVIAR: " << func << QString::number(data);
+void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
+    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+//    PatchTone pt(func);
+//    PatchTone pt(PatchTone::Wave_Gain);
+//    data = 0x03;
+    dados->append(
+                new SysExMessage(
+                    BaseAddress(BaseAddress::PatchModeTempPatch),
+                    patchTone,
+                    data));
+    qDebug() << QString("Enviando Patch Tone %1 = %2").arg(patchTone->functionName).arg(QString::number(data,16));
+    jack->tx(dados);
 }
 
 void PatchUI::conectarWidgets()
@@ -75,7 +86,7 @@ void PatchUI::onPatchToneChanged(){
     qDebug() << v.value<PatchTone*>();
 //    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
     PatchTone *patchTone = w->property("function").value<PatchTone*>();
-    enviarMensagem( patchTone->function, w->isChecked()? 1 : 0 );
+    enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
 
 }
 
@@ -101,7 +112,7 @@ void PatchUI::drawPatchTone(){
     for(int toneid=1; toneid<5; toneid++){
         QPushButton *toneSwitch = new QPushButton(QString("%1").arg(toneid));
         toneSwitch->setCheckable(true);
-        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch)));
+        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, toneid)));
 
         QComboBox *waveId = new QComboBox();
 

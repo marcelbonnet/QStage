@@ -5,7 +5,7 @@ PatchTone::PatchTone()
 
 }
 
-PatchTone::PatchTone(Function func)
+PatchTone::PatchTone(Function func, int whichTone)
 {
     functionMap = QMap<Function,QString>();
     //gerado com Vim Macro
@@ -526,6 +526,22 @@ PatchTone::PatchTone(Function func)
         break;
     case	Reverb_Send_Level:
         address = 0x0100;
+        break;
+    }
+
+    switch (whichTone) {
+    //se patch common, não acrescenta offset.
+    case 1:
+        address += 0x1000;
+        break;
+    case 2:
+        address += 0x1200;
+        break;
+    case 3:
+        address += 0x1400;
+        break;
+    case 5:
+        address += 0x1600;
         break;
     }
 

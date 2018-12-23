@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->perfReverbHFDamp->setCurrentIndex(17);//seleciona "BYPASS"
 
     QHBoxLayout *patchLayout = new QHBoxLayout();
-    PatchUI *patchui  = new PatchUI();
+    PatchUI *patchui  = new PatchUI(jack);
     patchui->setLayout(patchLayout);
     ui->tabWidget->addTab(patchui, "Patch");
 

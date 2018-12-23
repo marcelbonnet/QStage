@@ -146,9 +146,10 @@ public:
     };
 
     PatchTone();
-    PatchTone(Function func);
+    PatchTone(Function func, int whichTone);
 
     int address = 0x0000;
+    int whichTone = 0;//0=Patch Common e Patch Tones de 1 a 4
 
     bool is2ByteData = false;
 

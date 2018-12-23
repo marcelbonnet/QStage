@@ -12,7 +12,10 @@
 #include <QPushButton>
 #include <QSpinBox>
 
+#include "MidiControl.h"
 #include "PatchTone.h"
+#include "SysExMessage.h"
+
 
 namespace Ui {
 class PatchUI;
@@ -23,13 +26,15 @@ class PatchUI : public QWidget
     Q_OBJECT
 
 public:
-    explicit PatchUI(QWidget *parent = 0);
+    explicit PatchUI(MidiControl *jack, QWidget *parent = 0);
     ~PatchUI();
 
+protected:
+    MidiControl *jack;
 private:
     Ui::PatchUI *ui;
 
-    void enviarMensagem(enum PatchTone::Function func, int data);
+    void enviarMensagem(PatchTone *patchTone, int data);
     void conectarWidgets();
     void desconectarWidgets();
 
