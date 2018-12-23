@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     PerformancePart.cpp \
     PatchUI.cpp \
     MainWindow2.cpp \
-    Waveform.cpp
+    Waveform.cpp \
+    PatchTone.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -86,7 +87,8 @@ HEADERS  += Mainwindow.h \
     PatchUI.h \
     defaults.h \
     MainWindow2.h \
-    Waveform.h
+    Waveform.h \
+    PatchTone.h
 
 
 FORMS    += Mainwindow.ui \
@@ -114,5 +116,4 @@ INCLUDEPATH += /home/marcelbonnet/devel/cpp/SQLiteCpp-master/include/
 
 
 
-RESOURCES += \
-    recursos.qrc
+RESOURCES += recursos.qrc

@@ -269,28 +269,28 @@ void setFilterType18(QComboBox *c){
  * @param c
  */
 void setPatchTone19(QComboBox *c){
-    QString l[5] = {
+    QString l[4] = {
         "Lower",
         "Upper",
         "Lower/Upper",
         "All (Cruzado)"
     };
 
-    for(int i=0; i<5; i++){
+    for(int i=0; i<4; i++){
         c->addItem(l[i]);
     }
     c->setMaximumWidth(120);
 }
 
 void setOutputAssign(QComboBox *c){
-    QString l[5] = {
+    QString l[4] = {
         "MIX",
         "EFX",
         "<DIRECT-1>",
         "<DIRECT-2>"
     };
 
-    for(int i=0; i<5; i++){
+    for(int i=0; i<4; i++){
         c->addItem(l[i]);
     }
     c->setMaximumWidth(120);

@@ -5,7 +5,6 @@
 #include <QFrame>
 #include <QDebug>
 
-
 #include "defaults.h"
 #include "PatchUI.h"
 #include "ui_PatchUI.h"
@@ -37,11 +36,47 @@ PatchUI::PatchUI(QWidget *parent) :
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
      */
     drawPatchTone();
+    conectarWidgets();
 }
 
 PatchUI::~PatchUI()
 {
     delete ui;
+}
+
+void PatchUI::enviarMensagem(enum PatchTone::Function func, int data){
+    qDebug() << "ENVIAR: " << func << QString::number(data);
+}
+
+void PatchUI::conectarWidgets()
+{
+    //deve ser foreach QWidget, lista
+    //teste
+    for(int i=0; i<toneSwitchList->count(); i++)
+        connect(toneSwitchList->at(i),SIGNAL(clicked()), this, SLOT(onPatchToneChanged()));
+
+}
+
+void PatchUI::desconectarWidgets(){
+
+}
+
+void PatchUI::onPatchToneChanged(){
+    /*
+    //teste:
+    QObject* sender = QObject::sender();
+    qDebug() << sender->metaObject()->className();
+    //============================================
+*/
+//    QWidget *w = qobject_cast<QWidget*>(sender());
+    QPushButton *w = qobject_cast<QPushButton*>(sender());
+    QVariant v = w->property("function");
+    qDebug() << v;
+    qDebug() << v.value<PatchTone*>();
+//    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
+    PatchTone *patchTone = w->property("function").value<PatchTone*>();
+    enviarMensagem( patchTone->function, w->isChecked()? 1 : 0 );
+
 }
 
 void PatchUI::drawPatchTone(){
@@ -66,6 +101,7 @@ void PatchUI::drawPatchTone(){
     for(int toneid=1; toneid<5; toneid++){
         QPushButton *toneSwitch = new QPushButton(QString("%1").arg(toneid));
         toneSwitch->setCheckable(true);
+        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch)));
 
         QComboBox *waveId = new QComboBox();
 
@@ -180,6 +216,9 @@ void PatchUI::drawPatchTone(){
             controlerDepthList->append(controlerDepth);
             grid->addWidget(controlerDestination, r++, toneid, 1, 1, Qt::AlignTop);
             grid->addWidget(controlerDepth, r++, toneid, 1, 1, Qt::AlignTop);
+
+            lista->append(controlerDestination);
+            lista->append(controlerDepth);
         }
 
         /*
@@ -565,7 +604,8 @@ void PatchUI::drawPatchTone(){
         }
 
 
-
+        //adiciona todos Widgets restantes numa Lista de QWidget. Os de Controller Destination e Depth foram inseridos antes, durante sua criação em loop de 24 widgets.
+        lista->append(toneSwitch); /*lista->append(waveId);*/ lista->append(waveGain); lista->append(fxmColor); lista->append(fxmDepth); lista->append(toneDelayMode); lista->append(toneDelayTime); lista->append(veocityRangeCrossFade); lista->append(veocityRangeLower); lista->append(veocityRangeUpper); lista->append(keyboardRangeLower); lista->append(keyboardRangeUpper); lista->append(fxmSwitch); lista->append(redamperControlSwitch); lista->append(volumeControlSwitch); lista->append(hold1ControlSwitch); lista->append(pitchBendControlSwitch); lista->append(panControlSwitch); lista->append(lfo1WaveForm); lista->append(lfo1KeySyncSwitch); lista->append(lfo1Rate); lista->append(lfo1OffSet); lista->append(lfo1DelayTime); lista->append(lfo1FadeMode); lista->append(lfo1FadeTime); lista->append(lfo1ExternalSync); lista->append(lfo2WaveForm); lista->append(lfo2KeySyncSwitch); lista->append(lfo2Rate); lista->append(lfo2OffSet); lista->append(lfo2DelayTime); lista->append(lfo2FadeMode); lista->append(lfo2FadeTime); lista->append(lfo2ExternalSync); lista->append(coarseTune); lista->append(fineTune); lista->append(randomPitchDepth); lista->append(pitchKeyfollow); lista->append(pitchEnvelopeDepth); lista->append(pitchEnvelopeVelocitySens); lista->append(pitchEnvelopeVelocityTime1); lista->append(pitchEnvelopeVelocityTime4); lista->append(pitchEnvelopeTimeKeyfollow); lista->append(pitchEnvelopeTime1); lista->append(pitchEnvelopeTime2); lista->append(pitchEnvelopeTime3); lista->append(pitchEnvelopeTime4); lista->append(pitchEnvelopeLevel1); lista->append(pitchEnvelopeLevel2); lista->append(pitchEnvelopeLevel3); lista->append(pitchEnvelopeLevel4); lista->append(pitchLfo1Depth); lista->append(pitchLfo2Depth); lista->append(filterType); lista->append(CutoffFrequency); lista->append(CutoffKeyfollow); lista->append(resonance); lista->append(resonanceVelocitySens); lista->append(filterEnvelopeDepth); lista->append(filterEnvelopeVelocityCurve); lista->append(filterEnvelopeVelocitySens); lista->append(filterEnvelopeVelocityTime1); lista->append(filterEnvelopeVelocityTime4); lista->append(filterEnvelopeTimeKeyfollow); lista->append(filterEnvelopeTime1); lista->append(filterEnvelopeTime2); lista->append(filterEnvelopeTime3); lista->append(filterEnvelopeTime4); lista->append(filterEnvelopeLevel1); lista->append(filterEnvelopeLevel2); lista->append(filterEnvelopeLevel3); lista->append(filterEnvelopeLevel4); lista->append(filterLfo1Depth); lista->append(filterLfo2Depth); lista->append(toneLevel); lista->append(biasDirection); lista->append(biasPosition); lista->append(biasLevel); lista->append(levelEnvelopeVelocityCurve); lista->append(levelEnvelopeVelocitySens); lista->append(levelEnvelopeVelocityTime1); lista->append(levelEnvelopeVelocityTime4); lista->append(levelEnvelopeTimeKeyfollow); lista->append(levelEnvelopeTime1); lista->append(levelEnvelopeTime2); lista->append(levelEnvelopeTime3); lista->append(levelEnvelopeTime4); lista->append(levelEnvelopeLevel1); lista->append(levelEnvelopeLevel2); lista->append(levelEnvelopeLevel3); lista->append(levelLfo1Depth); lista->append(levelLfo2Depth); lista->append(tonePan); lista->append(panKeyfollow); lista->append(randomPanDepth); lista->append(alternatePanDepth); lista->append(panLfo1Depth); lista->append(panLfo2Depth); lista->append(outputAssign); lista->append(mixEfxSendLevel); lista->append(ChorusSendLevel); lista->append(ReverbSendLevel);
     }//fim for de 1 a 4 tones
 
     QScrollArea *scrollArea = new QScrollArea();

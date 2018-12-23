@@ -27,6 +27,9 @@ BaseAddress::BaseAddress(Edit ed, int param)
         startAddress = 0x01000000;
         //qDebug() << "Selecionado TempPerformance startAddress=" << QString::number(startAddress, 16);
         break;
+    case PatchModeTempPatch:
+            startAddress = 0x03000000;
+            break;
     case PerformanceModeTempPatch:
         //se 10 (0xA) usar temporary rhythm setup
         int offset = (param - 1) << 24;
@@ -40,5 +43,6 @@ BaseAddress::BaseAddress(Edit ed, int param)
         }
         */
         break;
+
     }
 }

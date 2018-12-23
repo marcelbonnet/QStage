@@ -12,6 +12,8 @@
 #include <QPushButton>
 #include <QSpinBox>
 
+#include "PatchTone.h"
+
 namespace Ui {
 class PatchUI;
 }
@@ -27,6 +29,11 @@ public:
 private:
     Ui::PatchUI *ui;
 
+    void enviarMensagem(enum PatchTone::Function func, int data);
+    void conectarWidgets();
+    void desconectarWidgets();
+
+
     QGridLayout *grid;
     QScrollArea *scrollArea;
     QList<QWidget*> *lista = new QList<QWidget*>();
@@ -41,13 +48,11 @@ private:
     QList<QSpinBox*> *fxmDepthList = new QList<QSpinBox*>();
     QList<QComboBox*> *toneDelayModeList = new QList<QComboBox*>();
     QList<QSpinBox*> *toneDelayTimeList = new QList<QSpinBox*>();
-
     QList<QSpinBox*> *veocityRangeCrossFadeList = new QList<QSpinBox*>();
     QList<QSpinBox*> *veocityRangeLowerList = new QList<QSpinBox*>();
     QList<QSpinBox*> *veocityRangeUpperList = new QList<QSpinBox*>();
     QList<QComboBox*> *keyboardRangeLowerList = new QList<QComboBox*>();
     QList<QComboBox*> *keyboardRangeUpperList = new QList<QComboBox*>();
-
     QList<QPushButton*> *fxmSwitchList = new QList<QPushButton*>();
     QList<QPushButton*> *redamperControlSwitchList = new QList<QPushButton*>();
     QList<QPushButton*> *volumeControlSwitchList = new QList<QPushButton*>();
@@ -56,9 +61,6 @@ private:
     QList<QPushButton*> *panControlSwitchList = new QList<QPushButton*>();
     QList<QComboBox*> *controlerDestinationList = new QList<QComboBox*>();
     QList<QSpinBox*> *controlerDepthList = new QList<QSpinBox*>();
-    /*
-     * LFO 1
-     * */
     QList<QComboBox*> *lfo1WaveFormList = new QList<QComboBox*>();
     QList<QPushButton*> *lfo1KeySyncSwitchList = new QList<QPushButton*>();
     QList<QSlider*> *lfo1RateList = new QList<QSlider*>();
@@ -67,9 +69,6 @@ private:
     QList<QComboBox*> *lfo1FadeModeList = new QList<QComboBox*>();
     QList<QSlider*> *lfo1FadeTimeList = new QList<QSlider*>();
     QList<QComboBox*> *lfo1ExternalSyncList = new QList<QComboBox*>();
-    /*
-     * LFO 2
-     * */
     QList<QComboBox*> *lfo2WaveFormList = new QList<QComboBox*>();
     QList<QPushButton*> *lfo2KeySyncSwitchList = new QList<QPushButton*>();
     QList<QSlider*> *lfo2RateList = new QList<QSlider*>();
@@ -78,9 +77,6 @@ private:
     QList<QComboBox*> *lfo2FadeModeList = new QList<QComboBox*>();
     QList<QSlider*> *lfo2FadeTimeList = new QList<QSlider*>();
     QList<QComboBox*> *lfo2ExternalSyncList = new QList<QComboBox*>();
-    /*
-     * Pitch
-     * */
     QList<QSpinBox*> *coarseTuneList = new QList<QSpinBox*>();
     QList<QSpinBox*> *fineTuneList = new QList<QSpinBox*>();
     QList<QComboBox*> *randomPitchDepthList = new QList<QComboBox*>();
@@ -100,9 +96,6 @@ private:
     QList<QSlider*> *pitchEnvelopeLevel4List = new QList<QSlider*>();
     QList<QSlider*> *pitchLfo1DepthList = new QList<QSlider*>();
     QList<QSlider*> *pitchLfo2DepthList = new QList<QSlider*>();
-    /*
-     * Filter
-     * */
     QList<QComboBox*> *filterTypeList = new QList<QComboBox*>();
     QList<QSlider*> *CutoffFrequencyList = new QList<QSlider*>();
     QList<QComboBox*> *CutoffKeyfollowList = new QList<QComboBox*>();
@@ -124,9 +117,6 @@ private:
     QList<QSlider*> *filterEnvelopeLevel4List = new QList<QSlider*>();
     QList<QSlider*> *filterLfo1DepthList = new QList<QSlider*>();
     QList<QSlider*> *filterLfo2DepthList = new QList<QSlider*>();
-    /*
-     * Level/Amplitude (TVA)
-     */
     QList<QSlider*> *toneLevelList = new QList<QSlider*>();
     QList<QComboBox*> *biasDirectionList = new QList<QComboBox*>();
     QList<QComboBox*> *biasPositionList = new QList<QComboBox*>();
@@ -151,15 +141,122 @@ private:
     QList<QSlider*> *alternatePanDepthList = new QList<QSlider*>();
     QList<QSlider*> *panLfo1DepthList = new QList<QSlider*>();
     QList<QSlider*> *panLfo2DepthList = new QList<QSlider*>();
-    /*
-     * mix
-     * */
     QList<QComboBox*> *outputAssignList = new QList<QComboBox*>();
     QList<QSlider*> *mixEfxSendLevelList = new QList<QSlider*>();
     QList<QSlider*> *ChorusSendLevelList = new QList<QSlider*>();
     QList<QSlider*> *ReverbSendLevelList = new QList<QSlider*>();
 
     void drawPatchTone();
+
+private slots:
+    void onPatchToneChanged();
+    /*
+    void onChangeCutoffKeyfollowList(int data);
+    void onChangebiasDirectionList(int data);
+    void onChangebiasLevelList(int data);
+    void onChangebiasPositionList(int data);
+    void onChangecontrolerDestinationList(int data);
+    void onChangefilterEnvelopeTimeKeyfollowList(int data);
+    void onChangefilterEnvelopeVelocityCurveList(int data);
+    void onChangefilterEnvelopeVelocityTime1List(int data);
+    void onChangefilterEnvelopeVelocityTime4List(int data);
+    void onChangefilterTypeList(int data);
+    void onChangekeyboardRangeLowerList(int data);
+    void onChangekeyboardRangeUpperList(int data);
+    void onChangelevelEnvelopeTimeKeyfollowList(int data);
+    void onChangelevelEnvelopeVelocityCurveList(int data);
+    void onChangelevelEnvelopeVelocityTime1List(int data);
+    void onChangelevelEnvelopeVelocityTime4List(int data);
+    void onChangelfo1ExternalSyncList(int data);
+    void onChangelfo1FadeModeList(int data);
+    void onChangelfo1OffSetList(int data);
+    void onChangelfo1WaveFormList(int data);
+    void onChangelfo2ExternalSyncList(int data);
+    void onChangelfo2FadeModeList(int data);
+    void onChangelfo2OffSetList(int data);
+    void onChangelfo2WaveFormList(int data);
+    void onChangeoutputAssignList(int data);
+    void onChangepanKeyfollowList(int data);
+    void onChangepitchEnvelopeTimeKeyfollowList(int data);
+    void onChangepitchEnvelopeVelocityTime1List(int data);
+    void onChangepitchEnvelopeVelocityTime4List(int data);
+    void onChangepitchKeyfollowList(int data);
+    void onChangerandomPitchDepthList(int data);
+    void onChangetoneDelayModeList(int data);
+    void onChangewaveGainList(int data);
+    void onChangewaveIdList(int data);
+    void onChangefxmSwitchList(int data);
+    void onChangehold1ControlSwitchList(int data);
+    void onChangelfo1KeySyncSwitchList(int data);
+    void onChangelfo2KeySyncSwitchList(int data);
+    void onChangepanControlSwitchList(int data);
+    void onChangepitchBendControlSwitchList(int data);
+    void onChangeredamperControlSwitchList(int data);
+    void onChangetoneSwitchList(int data);
+    void onChangevolumeControlSwitchList(int data);
+    void onChangeChorusSendLevelList(int data);
+    void onChangeCutoffFrequencyList(int data);
+    void onChangeReverbSendLevelList(int data);
+    void onChangealternatePanDepthList(int data);
+    void onChangefilterEnvelopeDepthList(int data);
+    void onChangefilterEnvelopeLevel1List(int data);
+    void onChangefilterEnvelopeLevel2List(int data);
+    void onChangefilterEnvelopeLevel3List(int data);
+    void onChangefilterEnvelopeLevel4List(int data);
+    void onChangefilterEnvelopeTime1List(int data);
+    void onChangefilterEnvelopeTime2List(int data);
+    void onChangefilterEnvelopeTime3List(int data);
+    void onChangefilterEnvelopeTime4List(int data);
+    void onChangefilterEnvelopeVelocitySensList(int data);
+    void onChangefilterLfo1DepthList(int data);
+    void onChangefilterLfo2DepthList(int data);
+    void onChangelevelEnvelopeLevel1List(int data);
+    void onChangelevelEnvelopeLevel2List(int data);
+    void onChangelevelEnvelopeLevel3List(int data);
+    void onChangelevelEnvelopeTime1List(int data);
+    void onChangelevelEnvelopeTime2List(int data);
+    void onChangelevelEnvelopeTime3List(int data);
+    void onChangelevelEnvelopeTime4List(int data);
+    void onChangelevelEnvelopeVelocitySensList(int data);
+    void onChangelevelLfo1DepthList(int data);
+    void onChangelevelLfo2DepthList(int data);
+    void onChangelfo1DelayTimeList(int data);
+    void onChangelfo1FadeTimeList(int data);
+    void onChangelfo1RateList(int data);
+    void onChangelfo2DelayTimeList(int data);
+    void onChangelfo2FadeTimeList(int data);
+    void onChangelfo2RateList(int data);
+    void onChangemixEfxSendLevelList(int data);
+    void onChangepanLfo1DepthList(int data);
+    void onChangepanLfo2DepthList(int data);
+    void onChangepitchEnvelopeLevel1List(int data);
+    void onChangepitchEnvelopeLevel2List(int data);
+    void onChangepitchEnvelopeLevel3List(int data);
+    void onChangepitchEnvelopeLevel4List(int data);
+    void onChangepitchEnvelopeTime1List(int data);
+    void onChangepitchEnvelopeTime2List(int data);
+    void onChangepitchEnvelopeTime3List(int data);
+    void onChangepitchEnvelopeTime4List(int data);
+    void onChangepitchEnvelopeVelocitySensList(int data);
+    void onChangepitchLfo1DepthList(int data);
+    void onChangepitchLfo2DepthList(int data);
+    void onChangerandomPanDepthList(int data);
+    void onChangeresonanceList(int data);
+    void onChangeresonanceVelocitySensList(int data);
+    void onChangetoneLevelList(int data);
+    void onChangetonePanList(int data);
+    void onChangecoarseTuneList(int data);
+    void onChangecontrolerDepthList(int data);
+    void onChangefineTuneList(int data);
+    void onChangefxmColorList(int data);
+    void onChangefxmDepthList(int data);
+    void onChangepitchEnvelopeDepthList(int data);
+    void onChangetoneDelayTimeList(int data);
+    void onChangeveocityRangeCrossFadeList(int data);
+    void onChangeveocityRangeLowerList(int data);
+    void onChangeveocityRangeUpperList(int data);
+*/
+
 };
 
 #endif // PATCHUI_H
