@@ -49,7 +49,6 @@ PatchUI::~PatchUI()
 void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
 
-//    qDebug() << QString("Enviar Patch Tone %1 = %2").arg(patchTone->functionName).arg(QString::number(data,16));
     dados->append(
                 new SysExMessage(
                     BaseAddress(BaseAddress::PatchModeTempPatch),
@@ -63,12 +62,223 @@ void PatchUI::conectarWidgets()
 {
     //deve ser foreach QWidget, lista
     //teste
-    for(int i=0; i<toneSwitchList->count(); i++)
-        connect(toneSwitchList->at(i),SIGNAL(clicked()), this, SLOT(onPatchToneChanged()));
+//    for(int i=0; i<toneSwitchList->count(); i++)
+//        connect(toneSwitchList->at(i),SIGNAL( clicked()), this, SLOT(onPatchToneChanged()));
+
+
+    for(int i=0; i<CutoffKeyfollowList->count(); i++) connect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<biasDirectionList->count(); i++) connect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<biasLevelList->count(); i++) connect(biasLevelList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<biasPositionList->count(); i++) connect(biasPositionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<controlerDestinationList->count(); i++) connect(controlerDestinationList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTimeKeyfollowList->count(); i++) connect(filterEnvelopeTimeKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocityCurveList->count(); i++) connect(filterEnvelopeVelocityCurveList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocityTime1List->count(); i++) connect(filterEnvelopeVelocityTime1List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocityTime4List->count(); i++) connect(filterEnvelopeVelocityTime4List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterTypeList->count(); i++) connect(filterTypeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<keyboardRangeLowerList->count(); i++) connect(keyboardRangeLowerList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<keyboardRangeUpperList->count(); i++) connect(keyboardRangeUpperList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTimeKeyfollowList->count(); i++) connect(levelEnvelopeTimeKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocityCurveList->count(); i++) connect(levelEnvelopeVelocityCurveList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocityTime1List->count(); i++) connect(levelEnvelopeVelocityTime1List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocityTime4List->count(); i++) connect(levelEnvelopeVelocityTime4List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1ExternalSyncList->count(); i++) connect(lfo1ExternalSyncList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1FadeModeList->count(); i++) connect(lfo1FadeModeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1OffSetList->count(); i++) connect(lfo1OffSetList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1WaveFormList->count(); i++) connect(lfo1WaveFormList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2ExternalSyncList->count(); i++) connect(lfo2ExternalSyncList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2FadeModeList->count(); i++) connect(lfo2FadeModeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2OffSetList->count(); i++) connect(lfo2OffSetList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2WaveFormList->count(); i++) connect(lfo2WaveFormList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<outputAssignList->count(); i++) connect(outputAssignList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<panKeyfollowList->count(); i++) connect(panKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTimeKeyfollowList->count(); i++) connect(pitchEnvelopeTimeKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeVelocityTime1List->count(); i++) connect(pitchEnvelopeVelocityTime1List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeVelocityTime4List->count(); i++) connect(pitchEnvelopeVelocityTime4List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchKeyfollowList->count(); i++) connect(pitchKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<randomPitchDepthList->count(); i++) connect(randomPitchDepthList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<toneDelayModeList->count(); i++) connect(toneDelayModeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<waveGainList->count(); i++) connect(waveGainList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<waveIdList->count(); i++) connect(waveIdList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fxmSwitchList->count(); i++) connect(fxmSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<hold1ControlSwitchList->count(); i++) connect(hold1ControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<lfo1KeySyncSwitchList->count(); i++) connect(lfo1KeySyncSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<lfo2KeySyncSwitchList->count(); i++) connect(lfo2KeySyncSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<panControlSwitchList->count(); i++) connect(panControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<pitchBendControlSwitchList->count(); i++) connect(pitchBendControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<redamperControlSwitchList->count(); i++) connect(redamperControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<toneSwitchList->count(); i++) connect(toneSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<volumeControlSwitchList->count(); i++) connect(volumeControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<ChorusSendLevelList->count(); i++) connect(ChorusSendLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<CutoffFrequencyList->count(); i++) connect(CutoffFrequencyList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<ReverbSendLevelList->count(); i++) connect(ReverbSendLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<alternatePanDepthList->count(); i++) connect(alternatePanDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeDepthList->count(); i++) connect(filterEnvelopeDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel1List->count(); i++) connect(filterEnvelopeLevel1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel2List->count(); i++) connect(filterEnvelopeLevel2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel3List->count(); i++) connect(filterEnvelopeLevel3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel4List->count(); i++) connect(filterEnvelopeLevel4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime1List->count(); i++) connect(filterEnvelopeTime1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime2List->count(); i++) connect(filterEnvelopeTime2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime3List->count(); i++) connect(filterEnvelopeTime3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime4List->count(); i++) connect(filterEnvelopeTime4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocitySensList->count(); i++) connect(filterEnvelopeVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterLfo1DepthList->count(); i++) connect(filterLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterLfo2DepthList->count(); i++) connect(filterLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeLevel1List->count(); i++) connect(levelEnvelopeLevel1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeLevel2List->count(); i++) connect(levelEnvelopeLevel2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeLevel3List->count(); i++) connect(levelEnvelopeLevel3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime1List->count(); i++) connect(levelEnvelopeTime1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime2List->count(); i++) connect(levelEnvelopeTime2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime3List->count(); i++) connect(levelEnvelopeTime3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime4List->count(); i++) connect(levelEnvelopeTime4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocitySensList->count(); i++) connect(levelEnvelopeVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelLfo1DepthList->count(); i++) connect(levelLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelLfo2DepthList->count(); i++) connect(levelLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1DelayTimeList->count(); i++) connect(lfo1DelayTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1FadeTimeList->count(); i++) connect(lfo1FadeTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1RateList->count(); i++) connect(lfo1RateList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2DelayTimeList->count(); i++) connect(lfo2DelayTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2FadeTimeList->count(); i++) connect(lfo2FadeTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2RateList->count(); i++) connect(lfo2RateList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<mixEfxSendLevelList->count(); i++) connect(mixEfxSendLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<panLfo1DepthList->count(); i++) connect(panLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<panLfo2DepthList->count(); i++) connect(panLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel1List->count(); i++) connect(pitchEnvelopeLevel1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel2List->count(); i++) connect(pitchEnvelopeLevel2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel3List->count(); i++) connect(pitchEnvelopeLevel3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel4List->count(); i++) connect(pitchEnvelopeLevel4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime1List->count(); i++) connect(pitchEnvelopeTime1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime2List->count(); i++) connect(pitchEnvelopeTime2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime3List->count(); i++) connect(pitchEnvelopeTime3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime4List->count(); i++) connect(pitchEnvelopeTime4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeVelocitySensList->count(); i++) connect(pitchEnvelopeVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchLfo1DepthList->count(); i++) connect(pitchLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchLfo2DepthList->count(); i++) connect(pitchLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<randomPanDepthList->count(); i++) connect(randomPanDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<resonanceList->count(); i++) connect(resonanceList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<resonanceVelocitySensList->count(); i++) connect(resonanceVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<toneLevelList->count(); i++) connect(toneLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<tonePanList->count(); i++) connect(tonePanList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<coarseTuneList->count(); i++) connect(coarseTuneList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<controlerDepthList->count(); i++) connect(controlerDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fineTuneList->count(); i++) connect(fineTuneList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fxmColorList->count(); i++) connect(fxmColorList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fxmDepthList->count(); i++) connect(fxmDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeDepthList->count(); i++) connect(pitchEnvelopeDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<toneDelayTimeList->count(); i++) connect(toneDelayTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<veocityRangeCrossFadeList->count(); i++) connect(veocityRangeCrossFadeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<veocityRangeLowerList->count(); i++) connect(veocityRangeLowerList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<veocityRangeUpperList->count(); i++) connect(veocityRangeUpperList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+
 
 }
 
 void PatchUI::desconectarWidgets(){
+    for(int i=0; i<CutoffKeyfollowList->count(); i++) disconnect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<biasDirectionList->count(); i++) disconnect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<biasLevelList->count(); i++) disconnect(biasLevelList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<biasPositionList->count(); i++) disconnect(biasPositionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<controlerDestinationList->count(); i++) disconnect(controlerDestinationList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTimeKeyfollowList->count(); i++) disconnect(filterEnvelopeTimeKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocityCurveList->count(); i++) disconnect(filterEnvelopeVelocityCurveList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocityTime1List->count(); i++) disconnect(filterEnvelopeVelocityTime1List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocityTime4List->count(); i++) disconnect(filterEnvelopeVelocityTime4List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterTypeList->count(); i++) disconnect(filterTypeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<keyboardRangeLowerList->count(); i++) disconnect(keyboardRangeLowerList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<keyboardRangeUpperList->count(); i++) disconnect(keyboardRangeUpperList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTimeKeyfollowList->count(); i++) disconnect(levelEnvelopeTimeKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocityCurveList->count(); i++) disconnect(levelEnvelopeVelocityCurveList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocityTime1List->count(); i++) disconnect(levelEnvelopeVelocityTime1List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocityTime4List->count(); i++) disconnect(levelEnvelopeVelocityTime4List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1ExternalSyncList->count(); i++) disconnect(lfo1ExternalSyncList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1FadeModeList->count(); i++) disconnect(lfo1FadeModeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1OffSetList->count(); i++) disconnect(lfo1OffSetList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1WaveFormList->count(); i++) disconnect(lfo1WaveFormList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2ExternalSyncList->count(); i++) disconnect(lfo2ExternalSyncList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2FadeModeList->count(); i++) disconnect(lfo2FadeModeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2OffSetList->count(); i++) disconnect(lfo2OffSetList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2WaveFormList->count(); i++) disconnect(lfo2WaveFormList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<outputAssignList->count(); i++) disconnect(outputAssignList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<panKeyfollowList->count(); i++) disconnect(panKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTimeKeyfollowList->count(); i++) disconnect(pitchEnvelopeTimeKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeVelocityTime1List->count(); i++) disconnect(pitchEnvelopeVelocityTime1List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeVelocityTime4List->count(); i++) disconnect(pitchEnvelopeVelocityTime4List->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchKeyfollowList->count(); i++) disconnect(pitchKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<randomPitchDepthList->count(); i++) disconnect(randomPitchDepthList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<toneDelayModeList->count(); i++) disconnect(toneDelayModeList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<waveGainList->count(); i++) disconnect(waveGainList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<waveIdList->count(); i++) disconnect(waveIdList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fxmSwitchList->count(); i++) disconnect(fxmSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<hold1ControlSwitchList->count(); i++) disconnect(hold1ControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<lfo1KeySyncSwitchList->count(); i++) disconnect(lfo1KeySyncSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<lfo2KeySyncSwitchList->count(); i++) disconnect(lfo2KeySyncSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<panControlSwitchList->count(); i++) disconnect(panControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<pitchBendControlSwitchList->count(); i++) disconnect(pitchBendControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<redamperControlSwitchList->count(); i++) disconnect(redamperControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<toneSwitchList->count(); i++) disconnect(toneSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<volumeControlSwitchList->count(); i++) disconnect(volumeControlSwitchList->at(i),SIGNAL( clicked() ), this, SLOT(onPatchToneChanged()));
+    for(int i=0; i<ChorusSendLevelList->count(); i++) disconnect(ChorusSendLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<CutoffFrequencyList->count(); i++) disconnect(CutoffFrequencyList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<ReverbSendLevelList->count(); i++) disconnect(ReverbSendLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<alternatePanDepthList->count(); i++) disconnect(alternatePanDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeDepthList->count(); i++) disconnect(filterEnvelopeDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel1List->count(); i++) disconnect(filterEnvelopeLevel1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel2List->count(); i++) disconnect(filterEnvelopeLevel2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel3List->count(); i++) disconnect(filterEnvelopeLevel3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeLevel4List->count(); i++) disconnect(filterEnvelopeLevel4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime1List->count(); i++) disconnect(filterEnvelopeTime1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime2List->count(); i++) disconnect(filterEnvelopeTime2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime3List->count(); i++) disconnect(filterEnvelopeTime3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeTime4List->count(); i++) disconnect(filterEnvelopeTime4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterEnvelopeVelocitySensList->count(); i++) disconnect(filterEnvelopeVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterLfo1DepthList->count(); i++) disconnect(filterLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<filterLfo2DepthList->count(); i++) disconnect(filterLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeLevel1List->count(); i++) disconnect(levelEnvelopeLevel1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeLevel2List->count(); i++) disconnect(levelEnvelopeLevel2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeLevel3List->count(); i++) disconnect(levelEnvelopeLevel3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime1List->count(); i++) disconnect(levelEnvelopeTime1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime2List->count(); i++) disconnect(levelEnvelopeTime2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime3List->count(); i++) disconnect(levelEnvelopeTime3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeTime4List->count(); i++) disconnect(levelEnvelopeTime4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelEnvelopeVelocitySensList->count(); i++) disconnect(levelEnvelopeVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelLfo1DepthList->count(); i++) disconnect(levelLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<levelLfo2DepthList->count(); i++) disconnect(levelLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1DelayTimeList->count(); i++) disconnect(lfo1DelayTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1FadeTimeList->count(); i++) disconnect(lfo1FadeTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo1RateList->count(); i++) disconnect(lfo1RateList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2DelayTimeList->count(); i++) disconnect(lfo2DelayTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2FadeTimeList->count(); i++) disconnect(lfo2FadeTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<lfo2RateList->count(); i++) disconnect(lfo2RateList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<mixEfxSendLevelList->count(); i++) disconnect(mixEfxSendLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<panLfo1DepthList->count(); i++) disconnect(panLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<panLfo2DepthList->count(); i++) disconnect(panLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel1List->count(); i++) disconnect(pitchEnvelopeLevel1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel2List->count(); i++) disconnect(pitchEnvelopeLevel2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel3List->count(); i++) disconnect(pitchEnvelopeLevel3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeLevel4List->count(); i++) disconnect(pitchEnvelopeLevel4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime1List->count(); i++) disconnect(pitchEnvelopeTime1List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime2List->count(); i++) disconnect(pitchEnvelopeTime2List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime3List->count(); i++) disconnect(pitchEnvelopeTime3List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeTime4List->count(); i++) disconnect(pitchEnvelopeTime4List->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeVelocitySensList->count(); i++) disconnect(pitchEnvelopeVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchLfo1DepthList->count(); i++) disconnect(pitchLfo1DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchLfo2DepthList->count(); i++) disconnect(pitchLfo2DepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<randomPanDepthList->count(); i++) disconnect(randomPanDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<resonanceList->count(); i++) disconnect(resonanceList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<resonanceVelocitySensList->count(); i++) disconnect(resonanceVelocitySensList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<toneLevelList->count(); i++) disconnect(toneLevelList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<tonePanList->count(); i++) disconnect(tonePanList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<coarseTuneList->count(); i++) disconnect(coarseTuneList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<controlerDepthList->count(); i++) disconnect(controlerDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fineTuneList->count(); i++) disconnect(fineTuneList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fxmColorList->count(); i++) disconnect(fxmColorList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<fxmDepthList->count(); i++) disconnect(fxmDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<pitchEnvelopeDepthList->count(); i++) disconnect(pitchEnvelopeDepthList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<toneDelayTimeList->count(); i++) disconnect(toneDelayTimeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<veocityRangeCrossFadeList->count(); i++) disconnect(veocityRangeCrossFadeList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<veocityRangeLowerList->count(); i++) disconnect(veocityRangeLowerList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
+    for(int i=0; i<veocityRangeUpperList->count(); i++) disconnect(veocityRangeUpperList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
 
 }
 
@@ -193,12 +403,36 @@ void PatchUI::onPatchToneChanged(){
 //    QWidget *w = qobject_cast<QWidget*>(sender());
     QPushButton *w = qobject_cast<QPushButton*>(sender());
     QVariant v = w->property("function");
-    qDebug() << v;
-    qDebug() << v.value<PatchTone*>();
+
 //    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
     PatchTone *patchTone = w->property("function").value<PatchTone*>();
     enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
 
+}
+void PatchUI::onPatchToneChanged(int i){
+    QObject* o = QObject::sender();
+    PatchTone *patchTone = o->property("function").value<PatchTone*>();
+    int offset = 0;
+
+    if(patchTone->function == PatchTone::Coarse_Tune)
+        offset = 48;
+    if(patchTone->function == PatchTone::Fine_Tune)
+        offset = 50;
+    if(patchTone->function == PatchTone::Filter_Envelope_Depth)
+        offset = 24;
+
+    if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
+        QComboBox *c = qobject_cast<QComboBox*>(o);
+        enviarMensagem( patchTone, c->currentIndex() );
+    }
+    if(QString::compare(o->metaObject()->className(), "QSpinBox") == 0){
+        QSpinBox *s = qobject_cast<QSpinBox*>(o);
+        enviarMensagem( patchTone, s->value() + offset );
+    }
+    if(QString::compare(o->metaObject()->className(), "QSlider") == 0){
+        QSlider *s = qobject_cast<QSlider*>(o);
+        enviarMensagem( patchTone, s->value() + offset );
+    }
 }
 
 void PatchUI::drawPatchTone(){
@@ -236,10 +470,10 @@ void PatchUI::drawPatchTone(){
         fxmSwitch->setCheckable(true);
 
         QSpinBox *fxmColor = new QSpinBox();
-        setSpinRange(fxmColor, 1, 4);
+        setSpinRange(fxmColor, 0, 3);
 
         QSpinBox *fxmDepth = new QSpinBox();
-        setSpinRange(fxmDepth,1,16);
+        setSpinRange(fxmDepth,0,15);
 
         QComboBox *toneDelayMode = new QComboBox();
         toneDelayMode->addItem("NORMAL");        toneDelayMode->addItem("HOLD");
@@ -656,8 +890,8 @@ void PatchUI::drawPatchTone(){
         setKeyfollow15(CutoffKeyfollow);
         setSliderRange(resonance,0,127);
         setSliderRange(resonanceVelocitySens,0,125);
-        setSliderRange(filterEnvelopeDepth, -63,63);
-        filterEnvelopeDepth->setValue(0);
+        setSliderRange(filterEnvelopeDepth, 0,126);
+        filterEnvelopeDepth->setValue(63);
         setVelocityCurves(filterEnvelopeVelocityCurve);
         setSliderRange(filterEnvelopeVelocitySens,0,125);
         setTime17(filterEnvelopeVelocityTime1);
@@ -671,10 +905,10 @@ void PatchUI::drawPatchTone(){
         setSliderRange(filterEnvelopeLevel2,0,127);
         setSliderRange(filterEnvelopeLevel3,0,127);
         setSliderRange(filterEnvelopeLevel4,0,127);
-        setSliderRange(filterLfo1Depth,-63,63);
-        filterLfo1Depth->setValue(0);
-        setSliderRange(filterLfo2Depth,-63,63);
-        filterLfo2Depth->setValue(0);
+        setSliderRange(filterLfo1Depth,0,126);
+        filterLfo1Depth->setValue(63);
+        setSliderRange(filterLfo2Depth,0,126);
+        filterLfo2Depth->setValue(63);
         setSliderRange(toneLevel,0,127);
         toneLevel->setValue(100);
         setPatchTone19(biasDirection);

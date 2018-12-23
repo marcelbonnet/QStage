@@ -156,6 +156,7 @@ private:
 
 private slots:
     void onPatchToneChanged();
+    void onPatchToneChanged(int i);
     /*
     void onChangeCutoffKeyfollowList(int data);
     void onChangebiasDirectionList(int data);

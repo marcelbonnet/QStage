@@ -103,10 +103,11 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int da
 
     message.b11 = calcularChecksum(addr, data);
 
-    qDebug() << QString("Patch Tone %1 = %2    DATA: %3")
+    qDebug() << QString("Patch Tone %4 %1 = %2    DATA: %3")
                 .arg(QString::number(patchTone->address,16))
                 .arg(QString::number(data,16))
-                .arg(message.getDataRepresentation());
+                .arg(message.getDataRepresentation())
+                .arg(patchTone->functionName);
 }
 
 
