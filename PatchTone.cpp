@@ -1,4 +1,5 @@
 #include "PatchTone.h"
+#include <QDebug>
 
 PatchTone::PatchTone()
 {
@@ -140,6 +141,7 @@ PatchTone::PatchTone(Function func, int whichTone)
 
     functionName = functionMap.value(func);
     function = func;
+    this->whichTone = whichTone;
 
     switch (func) {
     //gerado com Vim Macro
@@ -540,10 +542,11 @@ PatchTone::PatchTone(Function func, int whichTone)
     case 3:
         address += 0x1400;
         break;
-    case 5:
+    case 4:
         address += 0x1600;
         break;
     }
 
+    qDebug() << "ADDRESS: " << QString::number(address,16);
 
 }

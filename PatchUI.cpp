@@ -37,6 +37,7 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
      */
     drawPatchTone();
+    setupProperties();
     conectarWidgets();
 }
 
@@ -47,12 +48,14 @@ PatchUI::~PatchUI()
 
 void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+
+//    qDebug() << QString("Enviar Patch Tone %1 = %2").arg(patchTone->functionName).arg(QString::number(data,16));
     dados->append(
                 new SysExMessage(
                     BaseAddress(BaseAddress::PatchModeTempPatch),
                     patchTone,
                     data));
-    qDebug() << QString("Enviando Patch Tone %1 = %2").arg(patchTone->functionName).arg(QString::number(data,16));
+
     jack->tx(dados);
 }
 
