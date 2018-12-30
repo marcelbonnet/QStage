@@ -433,6 +433,15 @@ void PatchUI::onPatchToneChanged(int i){
         QSlider *s = qobject_cast<QSlider*>(o);
         enviarMensagem( patchTone, s->value() + offset );
     }
+
+    /*
+     * Workarounds para comportamentos inesperados do
+     * Teclado depois de receber certas mensagens
+     * */
+    //FXM Color => Depth
+    if(patchTone->function == PatchTone::FXM_Color){
+        enviarMensagem( new PatchTone(PatchTone::FXM_Depth, patchTone->whichTone), fxmDepthList->at(patchTone->whichTone - 1)->value() );
+    }
 }
 
 void PatchUI::drawPatchTone(){

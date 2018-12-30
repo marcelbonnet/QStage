@@ -156,6 +156,7 @@ PatchTone::PatchTone(Function func, int whichTone)
         break;
     case	Wave_Number:
         address = 0x0003;
+        is2ByteData = true;
         break;
     case	Wave_Gain:
         address = 0x0005;
