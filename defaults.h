@@ -169,11 +169,13 @@ QString CONTROLES_DEST_DEPTH[19] = {
 };
 
 void addNotas(QComboBox *combo){
-    for(int oitava=-1; oitava<=9; oitava++){
-        for(int nota=0; nota<12 && nota*oitava <= 127  ; nota++){
-            QString notaOit = QString("%1 %2").arg(notas[nota]).arg(oitava) ;
-            combo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
-        }
+    int oitava = -1;
+    int nota=0;
+    for(int i=0; i<=127; i++){
+        QString notaOit = QString("%1 %2").arg(notas[nota]).arg(oitava) ;
+        combo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
+        nota++;
+        if(nota>11) {nota=0; oitava++;}
     }
 }
 

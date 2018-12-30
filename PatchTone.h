@@ -161,6 +161,6 @@ private:
     QMap<Function,QString> functionMap;
 };
 
-Q_DECLARE_METATYPE(PatchTone*);
+Q_DECLARE_METATYPE(PatchTone*)
 
 #endif // PATCHTONE_H

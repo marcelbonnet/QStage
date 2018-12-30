@@ -8,6 +8,7 @@
 #include "SysExMessage.h"
 #include "PerformancePart.h"
 #include "baseaddress.h"
+//#include "defaults.h" //reclama de multiple def de categorias
 
 PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     QWidget(parent),
@@ -22,6 +23,20 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     QString notas[12] = {
         "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
     };
+    int oitava = -1;
+    int nota=0;
+    for(int i=0; i<=127; i++){
+        QString notaOit = QString("%1 %2").arg(notas[nota]).arg(oitava) ;
+        ui->minimo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
+        ui->maximo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
+        nota++;
+        if(nota>11) {nota=0; oitava++;}
+    }
+    /*
+    QString notas[12] = {
+        "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
+    };
+
 
     for(int oitava=-1; oitava<=9; oitava++){
         for(int nota=0; nota<12 && nota*oitava <= 127  ; nota++){
@@ -34,6 +49,8 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     ui->maximo->removeItem(130);
     ui->maximo->removeItem(129);
     ui->maximo->removeItem(128);
+*/
+
 
     ui->minimo->setCurrentIndex(0);
     ui->maximo->setCurrentIndex(127);

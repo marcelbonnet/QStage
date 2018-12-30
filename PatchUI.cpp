@@ -413,6 +413,7 @@ void PatchUI::onPatchToneChanged(int i){
     QObject* o = QObject::sender();
     PatchTone *patchTone = o->property("function").value<PatchTone*>();
     int offset = 0;
+    int theTone = patchTone->whichTone-1;
 
     if(patchTone->function == PatchTone::Coarse_Tune)
         offset = 48;
@@ -420,6 +421,21 @@ void PatchUI::onPatchToneChanged(int i){
         offset = 50;
     if(patchTone->function == PatchTone::Filter_Envelope_Depth)
         offset = 24;
+
+    /*
+     * Validações
+     * */
+    if(patchTone->function == PatchTone::Velocity_Range_Upper
+        && veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() ){
+        veocityRangeUpperList->at(theTone)->setValue(veocityRangeLowerList->at(theTone)->value());
+        return;
+    }
+    if(patchTone->function == PatchTone::Velocity_Range_Lower
+            && veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() ){
+        veocityRangeLowerList->at(theTone)->setValue(veocityRangeUpperList->at(theTone)->value());
+        return;
+    }
+
 
     if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
         QComboBox *c = qobject_cast<QComboBox*>(o);
@@ -439,9 +455,26 @@ void PatchUI::onPatchToneChanged(int i){
      * Teclado depois de receber certas mensagens
      * */
     //FXM Color => Depth
-    if(patchTone->function == PatchTone::FXM_Color){
-        enviarMensagem( new PatchTone(PatchTone::FXM_Depth, patchTone->whichTone), fxmDepthList->at(patchTone->whichTone - 1)->value() );
+    if(patchTone->function == PatchTone::FXM_Color)
+        enviarMensagem( new PatchTone(PatchTone::FXM_Depth, theTone+1), fxmDepthList->at(theTone)->value() );
+
+    //Delay Mode => Time. Vou seguir o Teclado até saber o que é melhor
+    if(patchTone->function == PatchTone::Tone_Delay_Mode){
+        desconectarWidgets();
+        toneDelayTimeList->at(theTone)->setValue(0);
+        conectarWidgets();
     }
+
+    //Tone Delay Time zera o Velocity Cross Fade
+    if(patchTone->function == PatchTone::Tone_Delay_Time){
+        enviarMensagem( new PatchTone(PatchTone::Velocity_Cross_Fade, theTone+1), veocityRangeCrossFadeList->at(theTone)->value() );
+    }
+
+    //Velocity Hi zera Keyboard Range Lower
+    if(patchTone->function == PatchTone::Velocity_Range_Upper){
+        enviarMensagem( new PatchTone(PatchTone::Keyboard_Range_Lower, theTone+1), keyboardRangeLowerList->at(theTone)->currentIndex() );
+    }
+
 }
 
 void PatchUI::drawPatchTone(){
