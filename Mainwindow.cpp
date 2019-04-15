@@ -246,8 +246,11 @@ void MainWindow::on_perfBtnEnviar_clicked()
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusFeedback),ui->perfChorusFeedback->value()));
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ChorusOutput),ui->perfChorusOut->currentIndex()));
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbType),ui->perfReverbType->currentIndex()));
-    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbTime),ui->perfReverbLevel->value()));
-    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbLevel),ui->perfReverbTime->value()));
+
+    //nesta ordem para funcionar:
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbLevel),ui->perfReverbLevel->value()));
+    mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbTime),ui->perfReverbTime->value()));
+
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::ReverbHFDamp),ui->perfReverbHFDamp->currentIndex()));
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::DelayFeedback),ui->perfReverbDelayFeedback->value()));
     mensagens->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformanceCommon(PerformanceCommon::PerformanceTempo),ui->perfTempo->value()));

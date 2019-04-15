@@ -286,8 +286,14 @@ void PatchUI::setupProperties(){
     /*
      * Falta:
      * - waveId
+     */
+    for(int i=0; i<waveIdList->count(); i++) waveIdList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Number, i+1)));
+    /*
+     * Falta:
      * - controles de destination e depth
      */
+
+
     for(int i=0; i<toneSwitchList->count(); i++) toneSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, i+1)));
     for(int i=0; i<waveGainList->count(); i++) waveGainList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Gain, i+1)));
     for(int i=0; i<fxmColorList->count(); i++) fxmColorList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Color, i+1)));
@@ -400,6 +406,7 @@ void PatchUI::onPatchToneChanged(){
     qDebug() << sender->metaObject()->className();
     //============================================
 */
+
 //    QWidget *w = qobject_cast<QWidget*>(sender());
     QPushButton *w = qobject_cast<QPushButton*>(sender());
     QVariant v = w->property("function");
@@ -408,12 +415,27 @@ void PatchUI::onPatchToneChanged(){
     PatchTone *patchTone = w->property("function").value<PatchTone*>();
     enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
 
+    /*
+     * WORKAROUNDS
+    */
+    //Tone Switch 1 e 2: quando mudam de estado desconfiguram o respectivo Wave
+    if(patchTone->function == PatchTone::Tone_Switch && (patchTone->whichTone == 1 || patchTone->whichTone == 2) ){
+        qDebug() << "****************************";
+        qDebug() << "       BUG do patch tone #" << patchTone->whichTone-1;
+        qDebug() << "****************************";
+        Waveform *w = waveIdList->at(patchTone->whichTone-1)->currentData().value<Waveform*>();
+        enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
+        enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
+        enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
+    }
+
 }
 void PatchUI::onPatchToneChanged(int i){
     QObject* o = QObject::sender();
     PatchTone *patchTone = o->property("function").value<PatchTone*>();
     int offset = 0;
     int theTone = patchTone->whichTone-1;
+    bool isTxDiferenciada = false;
 
     if(patchTone->function == PatchTone::Coarse_Tune)
         offset = 48;
@@ -436,20 +458,40 @@ void PatchUI::onPatchToneChanged(int i){
         return;
     }
 
-
-    if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
+    /*
+     * Três envios quando selecionada a forma de onda:
+     */
+    if(patchTone->function == PatchTone::Wave_Number){
+        isTxDiferenciada = true;
         QComboBox *c = qobject_cast<QComboBox*>(o);
-        enviarMensagem( patchTone, c->currentIndex() );
-    }
-    if(QString::compare(o->metaObject()->className(), "QSpinBox") == 0){
-        QSpinBox *s = qobject_cast<QSpinBox*>(o);
-        enviarMensagem( patchTone, s->value() + offset );
-    }
-    if(QString::compare(o->metaObject()->className(), "QSlider") == 0){
-        QSlider *s = qobject_cast<QSlider*>(o);
-        enviarMensagem( patchTone, s->value() + offset );
+        Waveform *w =  c->currentData().value<Waveform*>();
+        enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
+        enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
+        enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
+
+        qDebug() <<"======================================";
+        qDebug() << "WAVE GROUP TYPE: " << w->groupType ;
+        qDebug() << "WAVE GROUP ID  : " << w->groupId;
+        qDebug() << "WAVE NUMBER    # " << w->number ;
+        qDebug() << "WAVE NOME      : " << w->nome ;
+        qDebug() <<"======================================";
     }
 
+
+    if(!isTxDiferenciada){
+        if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
+            QComboBox *c = qobject_cast<QComboBox*>(o);
+            enviarMensagem( patchTone, c->currentIndex() );
+        }
+        if(QString::compare(o->metaObject()->className(), "QSpinBox") == 0){
+            QSpinBox *s = qobject_cast<QSpinBox*>(o);
+            enviarMensagem( patchTone, s->value() + offset );
+        }
+        if(QString::compare(o->metaObject()->className(), "QSlider") == 0){
+            QSlider *s = qobject_cast<QSlider*>(o);
+            enviarMensagem( patchTone, s->value() + offset );
+        }
+    }
     /*
      * Workarounds para comportamentos inesperados do
      * Teclado depois de receber certas mensagens
@@ -474,6 +516,8 @@ void PatchUI::onPatchToneChanged(int i){
     if(patchTone->function == PatchTone::Velocity_Range_Upper){
         enviarMensagem( new PatchTone(PatchTone::Keyboard_Range_Lower, theTone+1), keyboardRangeLowerList->at(theTone)->currentIndex() );
     }
+
+
 
 }
 
