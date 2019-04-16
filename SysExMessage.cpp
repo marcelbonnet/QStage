@@ -92,7 +92,7 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int da
     message.b6 = addr >> 16 & 0xFF;
     message.b5 = addr >> 24 & 0xFF;
 
-    if(!part.is2ByteData){
+    if(!patchTone->is2ByteData){
         message.b9 = data;
     } else {
         int d1 = data & 0xF;
