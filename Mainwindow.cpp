@@ -119,6 +119,16 @@ MainWindow::MainWindow(QWidget *parent) :
         tabParts[i] = new PartTab(i+1, this->jack);
         QString name = QString::number(i+1) + "    ";
 
+        /*
+         *  RHYTHM Tab deve ser um outro Objeto
+         * então vou desabilitar essa Tab até
+         * que essa feature seja implementada
+         */
+        if(i==9){
+            tabParts[i]->setEnabled(false);
+            name = QString::number(i+1) + " DRM";
+        }
+
         tab->addTab(tabParts[i], name );
     }
 
