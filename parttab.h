@@ -65,11 +65,11 @@ private slots:
 
     void on_level_valueChanged(int value);
 
-    void on_sendLevel_valueChanged(int value);
+    void on_sendLevel_valueChanged();
 
-    void on_reverb_valueChanged(int value);
+    void on_reverb_valueChanged();
 
-    void on_chorus_valueChanged(int value);
+    void on_chorus_valueChanged();
 
     void on_pan_valueChanged(int value);
 

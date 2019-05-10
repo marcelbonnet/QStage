@@ -288,19 +288,23 @@ void PartTab::on_level_valueChanged(int value)
     enviarMensagem(PerformancePart::PartLevel, ui->level->value() );
 }
 
-void PartTab::on_sendLevel_valueChanged(int value)
+void PartTab::on_sendLevel_valueChanged()
 {
     enviarMensagem(PerformancePart::MixEFXSendLevel, ui->sendLevel->value() );
+    //issue #18
+    on_chorus_valueChanged();
 }
 
-void PartTab::on_reverb_valueChanged(int value)
+void PartTab::on_reverb_valueChanged()
 {
     enviarMensagem(PerformancePart::ReverbSendLevel, ui->reverb->value() );
 }
 
-void PartTab::on_chorus_valueChanged(int value)
+void PartTab::on_chorus_valueChanged()
 {
     enviarMensagem(PerformancePart::ChorusSendLevel, ui->chorus->value() );
+    //issue #18
+    on_reverb_valueChanged();
 }
 
 void PartTab::on_pan_valueChanged(int value)
@@ -318,8 +322,7 @@ void PartTab::on_minimo_currentIndexChanged(int index)
     enviarMensagem(PerformancePart::KeyboardRangeLower, ui->minimo->currentIndex() );
     //issue #18
     on_maximo_currentIndexChanged(ui->maximo->currentIndex());
-    on_oitava_valueChanged();
-    on_btnLocal_clicked();
+
 }
 
 void PartTab::on_maximo_currentIndexChanged(int index)
@@ -327,7 +330,7 @@ void PartTab::on_maximo_currentIndexChanged(int index)
     enviarMensagem(PerformancePart::KeyboardRangeUpper, ui->maximo->currentIndex() );
     //issue #18
     on_oitava_valueChanged();
-    on_btnLocal_clicked();
+
 }
 
 void PartTab::on_oitava_valueChanged()
@@ -350,6 +353,8 @@ void PartTab::on_afinacaoFina_valueChanged(int arg1)
 void PartTab::on_saida_currentIndexChanged(int index)
 {
     enviarMensagem(PerformancePart::OutputAssign, ui->saida->currentIndex() );
+    //issue #18
+    on_sendLevel_valueChanged();
 }
 
 void PartTab::on_btn_clicked()
