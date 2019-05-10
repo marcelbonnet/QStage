@@ -128,8 +128,8 @@ MainWindow::MainWindow(QWidget *parent) :
             tabParts[i]->setEnabled(false);
             name = QString::number(i+1) + " DRM";
         }
-
         tab->addTab(tabParts[i], name );
+        connect(tabParts[i], SIGNAL(partUtilsCopiarPerformancePart(int, int)), this, SLOT(partUtilsCopiarPerformancePartParaPart(int, int)));
     }
 
     //carrega playlists e a primeira lista de músicas da playlist
@@ -1391,4 +1391,38 @@ void MainWindow::on_perfOrigem_currentIndexChanged(int index)
         ui->perfParam_11->setEnabled(true);
         ui->perfParam_12->setEnabled(true);
     }
+
+}
+
+/**
+ * Copia as configurações de uma Parte para Outra
+ * É acionado por SIGNAL emitido de um dos objetos PartTab
+ *
+ * @brief MainWindow::partUtilsCopiarPerformancePartParaPart
+ * @param parteOrigem
+ * @param parteDestino
+ */
+void MainWindow::partUtilsCopiarPerformancePartParaPart(int parteOrigem, int parteDestino)
+{
+    PartTab *o = tabParts[parteOrigem - 1];
+    PartTab *d = tabParts[parteDestino - 1];
+
+    qDebug() << "Copiar performance part " << parteOrigem << " para " << parteDestino;
+
+    d->setPatch(o->getPatchIndex());
+    d->setRegiaoMin(o->getRegiaoMin());
+    d->setRegiaoMax(o->getRegiaoMax());
+    d->setOitava(o->getOitava());
+    d->setVolume(o->getVolume());
+    d->setCanalMidi(o->getCanalMidi());
+    d->setPan(o->getPan());
+    d->setSaida(o->getSaida());
+    d->setChorusLevel(o->getChorusLevel());
+    d->setMixEfxLevel(o->getMixEfxLevel());
+    d->setReverbLevel(o->getReverbLevel());
+    d->setAfinacaoFina(o->getAfinacaoFina());
+    d->setAfinacaoBruta(o->getAfinacaoBruta());
+
+    //d->setLocalOn(o->isLocalOn()); //não sei porque não está ativando. Estou com sono demais. Foda-se isso por enquanto.
+
 }

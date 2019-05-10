@@ -53,6 +53,12 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     }
     this->carregarPatches();
 
+    //Utils: copiar esta part para outra, exceto part 10 (RHYTHM)
+    for(int i=1; i<=16; i++){
+        if(i == parte || i == 10) continue;
+        ui->partUtilDestino->addItem(QString::number(i), QVariant::fromValue(i));
+    }
+
 }
 void PartTab::carregarPatches(QString categoria){
     QComboBox *patch = ui->patch;
@@ -172,6 +178,10 @@ void PartTab::on_btnLocal_clicked()
 Patch *PartTab::getPatch(){
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
     return patch;
+}
+
+int PartTab::getPatchIndex(){
+    return ui->patch->currentIndex();
 }
 
 int PartTab::getRegiaoMin(){
@@ -551,4 +561,14 @@ void PartTab::on_btn_37_clicked()
 void PartTab::on_btn_38_clicked()
 {
     carregarPatches("CMB");
+}
+
+void PartTab::on_partUtilDestinoBtn_clicked()
+{
+    emit partUtilsCopiarPerformancePart(
+                //origem
+                parte,
+                //destino
+                ui->partUtilDestino->currentData().toInt()
+                );
 }

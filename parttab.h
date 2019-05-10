@@ -26,6 +26,7 @@ public:
 
     int getIndexFromPatches(QString nome);
     Patch *getPatch();
+    int getPatchIndex();
     int getRegiaoMin();
     int getRegiaoMax();
     int getOitava();
@@ -164,6 +165,11 @@ private slots:
     void on_btn_37_clicked();
 
     void on_btn_38_clicked();
+
+    void on_partUtilDestinoBtn_clicked();
+
+signals:
+    void partUtilsCopiarPerformancePart(int, int);
 
 protected:
     MidiControl *jack;

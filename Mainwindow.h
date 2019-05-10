@@ -110,6 +110,8 @@ private slots:
 
     void on_perfOrigem_currentIndexChanged(int index);
 
+    void partUtilsCopiarPerformancePartParaPart(int parteOrigem, int parteDestino);
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;
@@ -155,6 +157,8 @@ private:
     QString path;
 
     QList<SysExMessage*> *mensagens = new QList<SysExMessage*>();
+
+
 };
 
 #endif // MAINWINDOW_H
