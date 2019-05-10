@@ -112,7 +112,7 @@ void PartTab::enviar(){
 
 
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value() -1 ));
 
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
     if(ui->patch->currentIndex() > -1){
@@ -310,22 +310,31 @@ void PartTab::on_pan_valueChanged(int value)
 
 void PartTab::on_canal_valueChanged(int arg1)
 {
-    enviarMensagem(PerformancePart::MIDIChannel, ui->canal->value() );
+    enviarMensagem(PerformancePart::MIDIChannel, ui->canal->value()-1 );
 }
 
 void PartTab::on_minimo_currentIndexChanged(int index)
 {
     enviarMensagem(PerformancePart::KeyboardRangeLower, ui->minimo->currentIndex() );
+    //issue #18
+    on_maximo_currentIndexChanged(ui->maximo->currentIndex());
+    on_oitava_valueChanged();
+    on_btnLocal_clicked();
 }
 
 void PartTab::on_maximo_currentIndexChanged(int index)
 {
     enviarMensagem(PerformancePart::KeyboardRangeUpper, ui->maximo->currentIndex() );
+    //issue #18
+    on_oitava_valueChanged();
+    on_btnLocal_clicked();
 }
 
-void PartTab::on_oitava_valueChanged(int arg1)
+void PartTab::on_oitava_valueChanged()
 {
     enviarMensagem(PerformancePart::OctaveShift, ui->oitava->value() + 3);
+    //issue #18
+    on_btnLocal_clicked();
 }
 
 void PartTab::on_afinacaoBruta_valueChanged(int arg1)

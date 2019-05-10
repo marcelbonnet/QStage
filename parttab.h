@@ -79,7 +79,7 @@ private slots:
 
     void on_maximo_currentIndexChanged(int index);
 
-    void on_oitava_valueChanged(int arg1);
+    void on_oitava_valueChanged();
 
     void on_afinacaoBruta_valueChanged(int arg1);
 
