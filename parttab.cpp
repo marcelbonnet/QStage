@@ -283,9 +283,11 @@ void PartTab::setLocalOn(int i){
     ui->btnLocal->setChecked( i == 1 ? true : false);
 }
 
-void PartTab::on_level_valueChanged(int value)
+void PartTab::on_level_valueChanged()
 {
     enviarMensagem(PerformancePart::PartLevel, ui->level->value() );
+    //issue #18
+    on_pan_valueChanged();
 }
 
 void PartTab::on_sendLevel_valueChanged()
@@ -307,9 +309,11 @@ void PartTab::on_chorus_valueChanged()
     on_reverb_valueChanged();
 }
 
-void PartTab::on_pan_valueChanged(int value)
+void PartTab::on_pan_valueChanged()
 {
     enviarMensagem(PerformancePart::PartPan, ui->pan->value() );
+    //issue #18
+    on_afinacaoBruta_valueChanged();
 }
 
 void PartTab::on_canal_valueChanged(int arg1)
@@ -340,12 +344,14 @@ void PartTab::on_oitava_valueChanged()
     on_btnLocal_clicked();
 }
 
-void PartTab::on_afinacaoBruta_valueChanged(int arg1)
+void PartTab::on_afinacaoBruta_valueChanged()
 {
     enviarMensagem(PerformancePart::PartCoarseTune, ui->afinacaoBruta->value() +48 );
+    //issue #18
+    on_afinacaoFina_valueChanged();
 }
 
-void PartTab::on_afinacaoFina_valueChanged(int arg1)
+void PartTab::on_afinacaoFina_valueChanged()
 {
     enviarMensagem(PerformancePart::PartFineTune, ui->afinacaoFina->value() +50 );
 }

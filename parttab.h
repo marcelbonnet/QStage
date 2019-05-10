@@ -63,7 +63,7 @@ private slots:
 
     void on_btnLocal_clicked();
 
-    void on_level_valueChanged(int value);
+    void on_level_valueChanged();
 
     void on_sendLevel_valueChanged();
 
@@ -71,7 +71,7 @@ private slots:
 
     void on_chorus_valueChanged();
 
-    void on_pan_valueChanged(int value);
+    void on_pan_valueChanged();
 
     void on_canal_valueChanged(int arg1);
 
@@ -81,9 +81,9 @@ private slots:
 
     void on_oitava_valueChanged();
 
-    void on_afinacaoBruta_valueChanged(int arg1);
+    void on_afinacaoBruta_valueChanged();
 
-    void on_afinacaoFina_valueChanged(int arg1);
+    void on_afinacaoFina_valueChanged();
 
     void on_saida_currentIndexChanged(int index);
 
