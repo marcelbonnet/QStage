@@ -1296,3 +1296,89 @@ void MainWindow::on_btnController_toggled(bool checked)
         ui->btnLevel->setChecked(false);
     }
 }
+
+void MainWindow::on_perfOrigem_currentIndexChanged(int index)
+{
+
+    if(index>0){
+        /*
+         * selecionamos alguma origem diferente de "PERFORM"
+         * e agora o EFX em uso é aquele vinculado ao PATCH.
+         * Os parâmetros de EFX só podem ser alterados na
+         * edição do PATCH. Essa interface de COMMON se torna
+         * inútil.
+         * */
+
+        ui->perfEfeito->setEnabled(false);
+        ui->perfOA->setEnabled(false);
+        ui->perfCSL->setEnabled(false);
+        ui->perfMSL->setEnabled(false);
+        ui->perfperfRSL->setEnabled(false);
+        ui->label_5->setEnabled(false);
+        ui->label_6->setEnabled(false);
+        ui->label_7->setEnabled(false);
+        ui->label_8->setEnabled(false);
+        ui->label_9->setEnabled(false);
+        ui->perfParamLbl->setEnabled(false);
+        ui->perfParamLbl_2->setEnabled(false);
+        ui->perfParamLbl_3->setEnabled(false);
+        ui->perfParamLbl_4->setEnabled(false);
+        ui->perfParamLbl_5->setEnabled(false);
+        ui->perfParamLbl_6->setEnabled(false);
+        ui->perfParamLbl_7->setEnabled(false);
+        ui->perfParamLbl_8->setEnabled(false);
+        ui->perfParamLbl_9->setEnabled(false);
+        ui->perfParamLbl_10->setEnabled(false);
+        ui->perfParamLbl_11->setEnabled(false);
+        ui->perfParamLbl_12->setEnabled(false);
+        ui->perfParam->setEnabled(false);
+        ui->perfParam_2->setEnabled(false);
+        ui->perfParam_3->setEnabled(false);
+        ui->perfParam_4->setEnabled(false);
+        ui->perfParam_5->setEnabled(false);
+        ui->perfParam_6->setEnabled(false);
+        ui->perfParam_7->setEnabled(false);
+        ui->perfParam_8->setEnabled(false);
+        ui->perfParam_9->setEnabled(false);
+        ui->perfParam_10->setEnabled(false);
+        ui->perfParam_11->setEnabled(false);
+        ui->perfParam_12->setEnabled(false);
+
+
+    } else {
+        ui->perfEfeito->setEnabled(true);
+        ui->perfOA->setEnabled(true);
+        ui->perfCSL->setEnabled(true);
+        ui->perfMSL->setEnabled(true);
+        ui->perfperfRSL->setEnabled(true);
+        ui->label_5->setEnabled(true);
+        ui->label_6->setEnabled(true);
+        ui->label_7->setEnabled(true);
+        ui->label_8->setEnabled(true);
+        ui->label_9->setEnabled(true);
+        ui->perfParamLbl->setEnabled(true);
+        ui->perfParamLbl_2->setEnabled(true);
+        ui->perfParamLbl_3->setEnabled(true);
+        ui->perfParamLbl_4->setEnabled(true);
+        ui->perfParamLbl_5->setEnabled(true);
+        ui->perfParamLbl_6->setEnabled(true);
+        ui->perfParamLbl_7->setEnabled(true);
+        ui->perfParamLbl_8->setEnabled(true);
+        ui->perfParamLbl_9->setEnabled(true);
+        ui->perfParamLbl_10->setEnabled(true);
+        ui->perfParamLbl_11->setEnabled(true);
+        ui->perfParamLbl_12->setEnabled(true);
+        ui->perfParam->setEnabled(true);
+        ui->perfParam_2->setEnabled(true);
+        ui->perfParam_3->setEnabled(true);
+        ui->perfParam_4->setEnabled(true);
+        ui->perfParam_5->setEnabled(true);
+        ui->perfParam_6->setEnabled(true);
+        ui->perfParam_7->setEnabled(true);
+        ui->perfParam_8->setEnabled(true);
+        ui->perfParam_9->setEnabled(true);
+        ui->perfParam_10->setEnabled(true);
+        ui->perfParam_11->setEnabled(true);
+        ui->perfParam_12->setEnabled(true);
+    }
+}
