@@ -30,6 +30,8 @@ extern "C" {
 
 #include "SysExMessage.h"
 
+#include "FormSerialMidi.h"
+
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )			/*inotify event*/
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )		/*inotify events buffer size*/
 
@@ -118,7 +120,7 @@ public:
 
     QList<QString> *listarPortas();
 
-    void startSerialMidi();
+    void startSerialMidi(FormSerialMidi *smidi);
 
     enum Performance {
         //0x00 0x00

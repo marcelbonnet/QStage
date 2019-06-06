@@ -59,7 +59,8 @@ SOURCES += main.cpp\
     PerformanceCommon.cpp \
     PerformancePart.cpp \
     WorkerSerialMidi.cpp \
-    FormSerialMidi.cpp
+    FormSerialMidi.cpp \
+    QStageException.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -83,7 +84,8 @@ HEADERS  += Mainwindow.h \
     PerformanceCommon.h \
     PerformancePart.h \
     WorkerSerialMidi.h \
-    FormSerialMidi.h
+    FormSerialMidi.h \
+    QStageException.h
 
 
 FORMS    += Mainwindow.ui \

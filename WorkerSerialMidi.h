@@ -1,12 +1,14 @@
 #ifndef WORKERSERIALMIDI_H
 #define WORKERSERIALMIDI_H
 #include <QObject>
+#include <QList>
+#include "FormSerialMidi.h"
 
 class WorkerSerialMidi : public QObject
 {
     Q_OBJECT
 public:
-    WorkerSerialMidi();
+    WorkerSerialMidi(FormSerialMidi *smidi);
 
 public slots:
     void process();
@@ -18,6 +20,8 @@ protected:
      */
     int set_interface_attribs (int fd, int speed, int parity);
     void set_blocking (int fd, int should_block);
+    FormSerialMidi *smidi;
+    QList<int> *notasLigadas;
 
 signals:
     void finished();

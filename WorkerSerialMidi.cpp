@@ -6,12 +6,16 @@
 #include <termios.h>
 
 #include "WorkerSerialMidi.h"
-
+#include "QStageException.h"
 #include <QDebug>
 
-WorkerSerialMidi::WorkerSerialMidi()
-{
+#define NOTE_ON 0x90
+#define NOTE_OFF 0x80
 
+WorkerSerialMidi::WorkerSerialMidi(FormSerialMidi *smidi)
+{
+    this->smidi = smidi;
+    notasLigadas = new QList<int>();
 }
 
 
@@ -96,9 +100,9 @@ void WorkerSerialMidi::process(){
     // receive 25:  approx 100 uS per char transmit
 
     char buf [12];
-    char buf_cmd [4];
-    char buf_dt1 [4];
-    char buf_dt2 [5];
+//    char buf_cmd [4];
+//    char buf_dt1 [4];
+//    char buf_dt2 [5];
     //para ler binário precisaria abrir com fopen, depois ler com fread. Mas o termios usa fd e não FILE* nas funções
     for (;;) {
 //        int n = read (fd, buf, sizeof buf);  // read up to 100 characters if ready to read
@@ -107,15 +111,17 @@ void WorkerSerialMidi::process(){
 
 
         int n = read (fd, buf, sizeof (buf));
+        QString buffer = buf;
+        //qDebug() << "A PORRA DO BUFFER: " << buf;
 
-        for(int i=0; i<=2; i++)
-            buf_cmd[i] = buf[i];
+//        for(int i=0; i<=2; i++)
+//            buf_cmd[i] = buf[i];
 
-        for(int i=3; i<=4; i++)
-            buf_dt1[i-3] = buf[i];
+//        for(int i=3; i<=4; i++)
+//            buf_dt1[i-3] = buf[i];
 
-        for(int i=5; i<=7; i++)
-            buf_dt2[i-5] = buf[i];
+//        for(int i=5; i<=7; i++)
+//            buf_dt2[i-5] = buf[i];
 
 //        memcpy(buf_cmd, &buf[0], 3);
 //        buf_cmd[3] = '\0';
@@ -124,14 +130,54 @@ void WorkerSerialMidi::process(){
 //        memcpy(buf_cmd, &buf[0], 3);
 //        buf_cmd[3] = '\0';
 
+        int cmd =   (QStringRef(&buffer,0,3)).toInt();
+        int data1 = (QStringRef(&buffer,3,2)).toInt();
+        int data2 = (QStringRef(&buffer,5,3)).toInt();
 
-        qDebug() << "CMD " << buf_cmd ;
+        qDebug() << "CMD " << cmd;
 //        n = pread (fd, buf_dt1, 2, 3);
-        qDebug() << "DT1 " << buf_dt1[0] << buf_dt1[1];
+        qDebug() << "DT1 "  << data1;
 //        n = pread (fd, buf_dt2, 3, 2);
-        qDebug() << "DT2 " << buf_dt2;
+        qDebug() << "DT2 "  << data2 ;//<< "TESTE: " << buf_dt2[0] << buf_dt2[1] << buf_dt2[2] ;
 
-        usleep ((7 + 25) * 12);
+
+        int qtdeNotasParaEnviar = 0;
+        try{
+            if(cmd == NOTE_ON || cmd == NOTE_OFF && (data1 >=48 && data1 <=60)){ //ignorar outros até corrigir o debounce que gera mensagens indesejadas/erradas
+                //arduino me envia notas de 48 até 60. Mas no QStage uso de 0 a 12.
+
+                if(smidi->ignorarNoteOff() && cmd == NOTE_ON){
+                    //desliga as notas anteriores
+                    for(int d : *notasLigadas)
+                        smidi->queue_message(NOTE_OFF, d, 0);
+                    notasLigadas->clear();
+                }
+
+                QList<int> *notasParaTocar = smidi->getNotas(data1 - 48); //recebe NULL se a nota estiver marcada como OFF
+
+                if(notasParaTocar != NULL){
+                    qtdeNotasParaEnviar = notasParaTocar->count();
+                    qDebug() << "#NOTAS PARA TOCAR: " << qtdeNotasParaEnviar;
+                    for(int nota : *notasParaTocar){
+                        nota = nota + data1;
+                        if(smidi->ignorarNoteOff() && cmd == NOTE_ON){
+                            notasLigadas->append(nota); //guarda as notas que deverão ficar em sustain até receber outras notas
+                            smidi->queue_message(NOTE_ON, nota, data2);
+                        } else
+                            smidi->queue_message(cmd, nota, data2);
+                    }
+                }
+
+
+            }
+        } catch(QStageException *e){
+            qDebug() << e->getMessage();
+        }
+
+//        usleep (( /*recebe char[12] do arduino*/ 12 + /*o que envia*/ qtdeNotasParaEnviar*3  ) );
+//        usleep(10000);
+        usleep(1000);
+
     }
 
     emit finished();

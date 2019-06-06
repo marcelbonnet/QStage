@@ -11,7 +11,10 @@
 #include <QDebug>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QException>
 
+#define CLIENTE "QStagePedal"
+#define OUT_PORT_NAME "Pedal_Out"
 
 FormSerialMidi::FormSerialMidi(QWidget *parent) :
     QWidget(parent),
@@ -92,6 +95,7 @@ QList<int> *FormSerialMidi::getNotas(int notaRaiz){
     QList<int> *notas = new QList<int>();
 
     int prog = cmbProgramas->at(notaRaiz)->currentIndex();
+
     QList<QListWidgetItem*> itens = cmbIntervalos->at(notaRaiz)->selectedItems();
 
 
@@ -100,7 +104,7 @@ QList<int> *FormSerialMidi::getNotas(int notaRaiz){
         return NULL;
     case 1://NOTA
         notas->append(0);
-        return notas;
+        break;
     case 2:// Maior
         notas->append(4);
         notas->append(7);
@@ -128,7 +132,7 @@ QList<int> *FormSerialMidi::getNotas(int notaRaiz){
         if(index == 12)
             notas->append(14); // intervalo de 9
 
-        if(index == 14)
+        if(index == 13)
             notas->append(17); // intervalo de 11
 
     }
@@ -155,7 +159,7 @@ void FormSerialMidi::setIntervalos(int nota, QList<int> *notas){
             cmbIntervalos->at(nota)->setCurrentRow(12);
 
         if(n == 17)
-            cmbIntervalos->at(nota)->setCurrentRow(14);
+            cmbIntervalos->at(nota)->setCurrentRow(13);
 
     }
 }
@@ -164,3 +168,197 @@ FormSerialMidi::~FormSerialMidi()
 {
     delete ui;
 }
+
+void FormSerialMidi::inicializarCliente() noexcept(false){
+    int err;
+
+
+    jack_client = jack_client_open(CLIENTE, JackNoStartServer, NULL);
+
+    if (jack_client == NULL) {
+        throw new QStageException("jack client nulo");
+    }
+
+    ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE*2);
+
+    if (ringbuffer == NULL) {
+        throw new QStageException("ring buffer nulo");
+    }
+
+    jack_ringbuffer_mlock(ringbuffer);
+
+    err = jack_set_process_callback(jack_client, FormSerialMidi::processCallback , this);
+
+    if (err) {
+        throw new QStageException("erro ao processar callback");
+    }
+
+    output_port = jack_port_register(jack_client, OUT_PORT_NAME, JACK_DEFAULT_MIDI_TYPE,
+        JackPortIsOutput, 0);
+
+    if (output_port == NULL) {
+        throw new QStageException("não registrou a porta de saída");
+    }
+
+    if (jack_activate(jack_client)) {
+        throw new QStageException("não conseguiu ativar o cliente");
+    }
+
+}
+
+void FormSerialMidi::conectar(QString nomePortaDestino)noexcept(false){
+    QString nomePortaOrigem =   QString("%1:%2").arg(CLIENTE).arg(OUT_PORT_NAME);
+    int ret = jack_connect(jack_client, nomePortaOrigem.toLatin1().data() , nomePortaDestino.toLatin1().data());
+    if(ret != 0)
+        throw new QStageException("não conectou o cliente na porta");
+}
+
+double FormSerialMidi::nframes_to_ms(jack_nframes_t nframes){
+    jack_nframes_t sr;
+
+    sr = jack_get_sample_rate(jack_client);
+
+    assert(sr > 0);
+
+    return ((nframes * 1000.0) / (double)sr);
+}
+
+struct FormSerialMidi::MidiMessage * FormSerialMidi::midi_message_from_midi_event(jack_midi_event_t event)noexcept(false){
+    FormSerialMidi::MidiMessage * ev = new FormSerialMidi::MidiMessage();
+
+    if (ev == NULL) {
+        throw new QStageException("MidiMessage está nula");
+    }
+
+    assert(event.size >= 1 && event.size <= 3);
+
+    ev->len = event.size;
+    ev->time = event.time;
+
+    memcpy(ev->data, event.buffer, ev->len);
+
+    return (ev);
+}
+void FormSerialMidi::process_midi_output(jack_nframes_t nframes) noexcept(false){
+    int read, t, bytes_remaining;
+    unsigned char *buffer;
+    void *port_buffer;
+    jack_nframes_t last_frame_time;
+    struct FormSerialMidi::MidiMessage ev;
+
+    last_frame_time = jack_last_frame_time(jack_client);
+
+    port_buffer = jack_port_get_buffer(output_port, nframes);
+    if (port_buffer == NULL) {
+        throw new QStageException("port_buffer nulo");
+    }
+
+    jack_midi_clear_buffer(port_buffer);//mandatory call at the begining, only for output callback
+
+    /* We may push at most one byte per 0.32ms to stay below 31.25 Kbaud limit. */
+//    bytes_remaining = nframes_to_ms(nframes) * rate_limit;
+
+    while (jack_ringbuffer_read_space(ringbuffer)) {
+        //inspect data on ringbuffer
+        read = jack_ringbuffer_peek(ringbuffer, (char *)&ev, sizeof(ev));
+
+        if (read != sizeof(ev)) {
+            printf("Short read from the ringbuffer, possible note loss.");
+            jack_ringbuffer_read_advance(ringbuffer, read); //read and advance the buffer pointers
+            continue;
+        }
+
+        bytes_remaining -= ev.len;
+
+//        if (rate_limit > 0.0 && bytes_remaining <= 0) {
+//            printf("Rate limiting in effect.");
+//            break;
+//        }
+
+        //compute Message event time
+        t = ev.time + nframes - last_frame_time;
+
+        /* If computed time is too much into the future, we'll need
+           to send it later. */
+        if (t >= (int)nframes)
+            break;
+
+        /* If computed time is < 0, we missed a cycle because of xrun. */
+        if (t < 0)
+            t = 0;
+
+//        if (time_offsets_are_zero)
+            t = 0;
+
+        jack_ringbuffer_read_advance(ringbuffer, sizeof(ev));//read and advance the buffer pointers
+
+        buffer = jack_midi_event_reserve(port_buffer, t, ev.len);//Clients are to write the actual event data to be written starting at the pointer returned by this function.
+
+        if (buffer == NULL) {
+            throw new QStageException("Buffer nulo");
+        }
+
+        memcpy(buffer, ev.data, ev.len);//write actual event into reserved pointer buffer
+    }
+}
+
+int FormSerialMidi::processCallback(jack_nframes_t nframes, void *arg)noexcept(false)
+{
+    FormSerialMidi * obj = (FormSerialMidi*) arg;
+    /* Check for impossible condition that actually happened to me, caused by some problem between jackd and OSS4. */
+    if (nframes <= 0) {
+        printf("Process callback called with nframes = 0; bug in JACK?");
+        return 0;
+    }
+
+    //process_midi_input(nframes);
+    obj->process_midi_output(nframes);
+    return (0);
+}
+
+void FormSerialMidi::queue_message(int b0, int b1, int b2) noexcept(false)
+{
+    struct FormSerialMidi::MidiMessage ev;
+
+    /* For MIDI messages that specify a channel number, filter the original
+       channel number out and add our own. */
+    /*
+     *
+    if (b0 >= 0x80 && b0 <= 0xEF) {
+        b0 &= 0xF0;
+        b0 += channel;
+    }
+     */
+
+    if (b1 == -1) {
+        ev.len = 1;
+        ev.data[0] = b0;
+
+    } else if (b2 == -1) {
+        ev.len = 2;
+        ev.data[0] = b0;
+        ev.data[1] = b1;
+
+    } else {
+        ev.len = 3;
+        ev.data[0] = b0;
+        ev.data[1] = b1;
+        ev.data[2] = b2;
+    }
+
+    ev.time = jack_frame_time(jack_client);
+
+    int written;
+
+    if (jack_ringbuffer_write_space(ringbuffer) < sizeof(ev)) {
+        throw new QStageException("Sem espaço no ring buffer");
+    }
+
+    written = jack_ringbuffer_write(ringbuffer, (char *)&ev, sizeof(ev));
+
+    if (written != sizeof(ev))
+        throw new QStageException("jack_ringbuffer_write failed, NOTE %i LOST." + ev.data[1] );
+}
+
+
+

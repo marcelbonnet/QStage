@@ -124,7 +124,7 @@ private:
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
-    FormSerialMidi *formSerialMidi;
+    FormSerialMidi *smidi;
 
     /**
      * @brief carregarHTML carrega o HTML no Widget

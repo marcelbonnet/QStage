@@ -439,11 +439,11 @@ QList<QString> *MidiControl::listarPortas(){
     return portas;
 }
 
-void MidiControl::startSerialMidi(){
+void MidiControl::startSerialMidi(FormSerialMidi *smidi){
     qDebug() << "Start Serial MIDI";
 
     QThread* thread = new QThread;
-    WorkerSerialMidi* worker = new WorkerSerialMidi();
+    WorkerSerialMidi* worker = new WorkerSerialMidi(smidi);
     worker->moveToThread(thread);
     // "this" não é um QObject para implementar errorString(QString)
     //QObject::connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));

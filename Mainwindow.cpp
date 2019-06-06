@@ -27,6 +27,7 @@
 #include "Controller.h"
 #include <QAction>
 #include <QColorDialog>
+#include "QStageException.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -135,8 +136,8 @@ MainWindow::MainWindow(QWidget *parent) :
     /*
      * TAB SERIAL MIDI
     */
-    formSerialMidi = new FormSerialMidi(this);
-    tab->addTab(formSerialMidi, "PEDAL");
+    smidi = new FormSerialMidi(this);
+    tab->addTab(smidi, "PEDAL");
 
     //carrega playlists e a primeira lista de músicas da playlist
     this->playlistRecarregar();
@@ -1435,5 +1436,13 @@ void MainWindow::partUtilsCopiarPerformancePartParaPart(int parteOrigem, int par
 
 void MainWindow::on_actionUSB_Serial_MIDI_triggered()
 {
-    jack->startSerialMidi();
+    try {
+        smidi->inicializarCliente();
+        smidi->conectar(getConfig("port")); //auto conexão na porta preferncial configurada
+        jack->startSerialMidi(smidi);
+    } catch (QStageException *e) {
+        QMessageBox msg;
+        msg.setText(e->getMessage());
+        msg.exec();
+    }
 }
