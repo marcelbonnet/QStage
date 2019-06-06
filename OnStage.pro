@@ -57,7 +57,9 @@ SOURCES += main.cpp\
     baseaddress.cpp \
     SystemCommon.cpp \
     PerformanceCommon.cpp \
-    PerformancePart.cpp
+    PerformancePart.cpp \
+    WorkerSerialMidi.cpp \
+    FormSerialMidi.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -79,7 +81,9 @@ HEADERS  += Mainwindow.h \
     baseaddress.h \
     SystemCommon.h \
     PerformanceCommon.h \
-    PerformancePart.h
+    PerformancePart.h \
+    WorkerSerialMidi.h \
+    FormSerialMidi.h
 
 
 FORMS    += Mainwindow.ui \
@@ -88,7 +92,8 @@ FORMS    += Mainwindow.ui \
     dialog_playlist.ui \
     dialogmusica.ui \
     dialogmusicaexistente.ui \
-    dialogdocumenteditor.ui
+    dialogdocumenteditor.ui \
+    FormSerialMidi.ui
 
 
 DISTFILES += \

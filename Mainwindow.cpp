@@ -132,6 +132,12 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(tabParts[i], SIGNAL(partUtilsCopiarPerformancePart(int, int)), this, SLOT(partUtilsCopiarPerformancePartParaPart(int, int)));
     }
 
+    /*
+     * TAB SERIAL MIDI
+    */
+    formSerialMidi = new FormSerialMidi(this);
+    tab->addTab(formSerialMidi, "PEDAL");
+
     //carrega playlists e a primeira lista de músicas da playlist
     this->playlistRecarregar();
 
@@ -1425,4 +1431,9 @@ void MainWindow::partUtilsCopiarPerformancePartParaPart(int parteOrigem, int par
 
     //d->setLocalOn(o->isLocalOn()); //não sei porque não está ativando. Estou com sono demais. Foda-se isso por enquanto.
 
+}
+
+void MainWindow::on_actionUSB_Serial_MIDI_triggered()
+{
+    jack->startSerialMidi();
 }

@@ -118,6 +118,8 @@ public:
 
     QList<QString> *listarPortas();
 
+    void startSerialMidi();
+
     enum Performance {
         //0x00 0x00
         Common,
@@ -144,6 +146,9 @@ protected:
     int ultimaMensagem[13] = { -1, -1, -1,-1, -1, -1,-1, -1, -1,-1, -1, -1, -1 };
     int ultimaMensagemIndex = 0;
     QList<QList<int>> *mensagensTransmitidas = new QList<QList<int>>();
+
+
+
 
 private:
 

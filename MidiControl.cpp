@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <QThread>
+#include <QObject>
+#include "WorkerSerialMidi.h"
+
 MidiControl::MidiControl()
 {
 
@@ -433,4 +437,19 @@ QList<QString> *MidiControl::listarPortas(){
         portas->append((ports[i]));
     }
     return portas;
+}
+
+void MidiControl::startSerialMidi(){
+    qDebug() << "Start Serial MIDI";
+
+    QThread* thread = new QThread;
+    WorkerSerialMidi* worker = new WorkerSerialMidi();
+    worker->moveToThread(thread);
+    // "this" não é um QObject para implementar errorString(QString)
+    //QObject::connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
+    QObject::connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+    QObject::connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
 }

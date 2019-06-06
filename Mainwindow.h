@@ -15,6 +15,7 @@
 #include <QAction>
 #include <QList>
 #include "SysExMessage.h"
+#include "FormSerialMidi.h"
 
 namespace Ui {
 class MainWindow;
@@ -112,6 +113,8 @@ private slots:
 
     void partUtilsCopiarPerformancePartParaPart(int parteOrigem, int parteDestino);
 
+    void on_actionUSB_Serial_MIDI_triggered();
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;
@@ -121,6 +124,7 @@ private:
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
+    FormSerialMidi *formSerialMidi;
 
     /**
      * @brief carregarHTML carrega o HTML no Widget
