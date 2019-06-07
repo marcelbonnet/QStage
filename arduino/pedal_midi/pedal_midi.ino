@@ -8,7 +8,7 @@ lixo a ser interpretado pelo Receptor MIDI
 
 
 //#define LED_PIN 13
-#define WAIT 9  //miliseconds
+#define WAIT 11  //miliseconds
 
 /*
 Ao ler os dados pela serial usb com a biblioteca do termios, preciso
