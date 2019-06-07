@@ -146,15 +146,22 @@ void WorkerSerialMidi::process(){
             if( (cmd == NOTE_ON || cmd == NOTE_OFF) && (data1 >=48 && data1 <=59)){ //ignorar outros até corrigir o debounce que gera mensagens indesejadas/erradas
                 //arduino me envia notas de 48 até 59. Mas no QStage uso de 0 a 11.
 
+                QList<int> *notasParaTocar = smidi->getNotas(data1 - 48); //recebe NULL se a nota estiver marcada como OFF
+
                 if(smidi->ignorarNoteOff() && cmd == NOTE_ON){
                     qDebug() << "EXECUTOU NOTE_OFF DAS NOTAS LIGADAS";
                     //desliga as notas anteriores
                     for(int d : *notasLigadas)
                         smidi->queue_message(NOTE_OFF, d, 0);
                     notasLigadas->clear();
+
+                    //interpretar a repetição da mesma nota como NOTE OFF. Já desligou, vamos emborar para que não ligue no próximo statement
+                    if(data1 == ultimaNotaTocadaComSustain){
+                        ultimaNotaTocadaComSustain = -1;
+                        goto final;
+                    }
                 }
 
-                QList<int> *notasParaTocar = smidi->getNotas(data1 - 48); //recebe NULL se a nota estiver marcada como OFF
 
                 if(notasParaTocar != NULL){
                     qtdeNotasParaEnviar = notasParaTocar->count();
@@ -166,6 +173,7 @@ void WorkerSerialMidi::process(){
                         if(smidi->ignorarNoteOff() && cmd == NOTE_ON){
                             notasLigadas->append(nota); //guarda as notas que deverão ficar em sustain até receber outras notas
                             smidi->queue_message(NOTE_ON, nota, data2);
+                            ultimaNotaTocadaComSustain = data1;
                         }
 
                         if(!smidi->ignorarNoteOff() )
@@ -181,6 +189,7 @@ void WorkerSerialMidi::process(){
 
 //        usleep (( /*recebe char[12] do arduino*/ 12 + /*o que envia*/ qtdeNotasParaEnviar*3  ) );
 //        usleep(10000);
+        final:
         usleep(1000);
 
     }

@@ -22,6 +22,7 @@ protected:
     void set_blocking (int fd, int should_block);
     FormSerialMidi *smidi;
     QList<int> *notasLigadas;
+    int ultimaNotaTocadaComSustain = -1;
 
 signals:
     void finished();
