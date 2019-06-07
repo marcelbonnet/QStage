@@ -68,10 +68,14 @@ public:
 
     void setVelocity(int notaRaiz, int velocity) noexcept(false);
     int getVelocity(int notaRaiz) noexcept(false);
+    int getVelocitySemHumanizar(int notaRaiz) noexcept(false);
     void setVelocityHumanize(int notaRaiz, int humanize) noexcept(false);
     void setOitava(int notaRaiz, int val) noexcept(false);
     int getOitava(int notaRaiz) noexcept(false);
-    //int getVelocityHumanize(int notaRaiz) noexcept(false);//o velocity vai retornar o valor normalizado
+    int getVelocityHumanize(int notaRaiz) noexcept(false);
+    int getPrograma(int notaRaiz) noexcept(false);
+    QList<int> *getIntervalos(int notaRaiz) noexcept(false);
+    void reinicializarGUI();
 
     void inicializarCliente() noexcept(false);
     void conectar(QString nomePortaDestino)noexcept(false);

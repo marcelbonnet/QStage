@@ -403,6 +403,23 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
         conf->setValue("transposeVal", ui->sysTransposeVal->value());
         conf->endGroup();
 
+        /*
+         * PEDAL MIDI
+         */
+        conf->beginGroup("PedalMIDI");
+        conf->setValue("sustain", smidi->ignorarNoteOff()? 1 : 0);
+        for(int index=0; index<=11; index++){
+            conf->setValue(QString("programa%1").arg(index), smidi->getPrograma(index));
+            QStringList intervalos;
+            for(int indiceIntervalo : *smidi->getIntervalos(index))
+                intervalos << QString::number(indiceIntervalo);
+            conf->setValue(QString("intervalos%1").arg(index), intervalos );
+            conf->setValue(QString("oitava%1").arg(index), smidi->getOitava(index));
+            conf->setValue(QString("velocity%1").arg(index), smidi->getVelocitySemHumanizar(index));
+            conf->setValue(QString("humanize%1").arg(index), smidi->getVelocityHumanize(index));
+        }
+        conf->endGroup();
+
         conf->sync();
         arquivoTemporario.open(QFile::ReadOnly);//usar para QFile
         QTextStream entrada(&arquivoTemporario);  entrada.seek(0);
@@ -419,7 +436,7 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
     }
     catch (std::exception& e)
     {
-        QMessageBox::warning(this,"Erro ao Remover Música", e.what());
+        QMessageBox::warning(this,"Erro ao Salvar SYSEX", e.what());
         qDebug() << "exception: " << e.what();
     }
 
@@ -494,6 +511,27 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
     conf->beginGroup("System");
     ui->sysBtnTranspose->setChecked(conf->value("transpose").toInt() == 1 ? true : false );
     ui->sysTransposeVal->setValue(conf->value("transposeVal").toInt());
+    conf->endGroup();
+
+    /*
+     * PEDAL MIDI
+    */
+    conf->beginGroup("PedalMIDI");
+    if(conf->contains("sustain")){
+        smidi->reinicializarGUI();
+        smidi->setBtnIgnorarNoteOff(conf->value("sustain").toInt() == 1 ? true : false);
+        for(int index=0; index<=11; index++){
+            smidi->setPrograma(index, conf->value(QString("programa%1").arg(index)).toInt());
+            QList<int> *indicesSelecionados = new QList<int>();
+            for(QString sVal : conf->value(QString("intervalos%1").arg(index)).value<QStringList>() )
+                indicesSelecionados->append(sVal.toInt());
+            smidi->setIntervalos(index, indicesSelecionados);
+            smidi->setOitava(index, conf->value(QString("oitava%1").arg(index)).toInt());
+            smidi->setVelocity(index, conf->value(QString("velocity%1").arg(index)).toInt());
+            smidi->setVelocityHumanize(index, conf->value(QString("humanize%1").arg(index)).toInt());
+        }
+
+    }
     conf->endGroup();
 
     on_perfBtnEnviar_clicked();

@@ -225,12 +225,12 @@ void FormSerialMidi::setVelocityHumanize(int notaRaiz, int humanize) noexcept(fa
     cmbHumanizeVals->at(notaRaiz)->setValue(humanize);
 }
 
-//int FormSerialMidi::getVelocityHumanize(int notaRaiz) noexcept(false){
-//    if(notaRaiz < 0 || notaRaiz > 11)
-//        throw new QStageException("Nota fora do intervalo de 0 a 11");
+int FormSerialMidi::getVelocityHumanize(int notaRaiz) noexcept(false){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
 
-//    return cmbHumanizeVals->at(notaRaiz)->value();
-//}
+    return cmbHumanizeVals->at(notaRaiz)->value();
+}
 
 void FormSerialMidi::setBtnIgnorarNoteOff(bool checked){
     btnIgnoreNoteOff->setChecked(checked);
@@ -238,6 +238,30 @@ void FormSerialMidi::setBtnIgnorarNoteOff(bool checked){
 
 void FormSerialMidi::setPrograma(int nota, int index){
     cmbProgramas->at(nota)->setCurrentIndex(index);
+}
+
+int FormSerialMidi::getPrograma(int notaRaiz){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+
+    return cmbProgramas->at(notaRaiz)->currentIndex();
+}
+
+QList<int>* FormSerialMidi::getIntervalos(int notaRaiz){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+
+    QList<int> *selectedIndexes = new QList<int>();
+
+    int prog = cmbProgramas->at(notaRaiz)->currentIndex();
+
+    QList<QListWidgetItem*> itens = cmbIntervalos->at(notaRaiz)->selectedItems();
+
+    for(QListWidgetItem *item : itens){
+        selectedIndexes->append(item->data(Qt::UserRole).value<int>());
+    }
+
+    return  selectedIndexes;
 }
 
 void FormSerialMidi::setIntervalos(int nota, QList<int> *notas){
@@ -253,6 +277,19 @@ void FormSerialMidi::setIntervalos(int nota, QList<int> *notas){
         if(n == 17)
             cmbIntervalos->at(nota)->setCurrentRow(13);
 
+    }
+}
+
+int FormSerialMidi::getVelocitySemHumanizar(int notaRaiz){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+
+    return cmbVelocityVals->at(notaRaiz)->value();
+}
+
+void FormSerialMidi::reinicializarGUI(){
+    for(QListWidget *w : *cmbIntervalos){
+        w->selectionModel()->reset();
     }
 }
 
