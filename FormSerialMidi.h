@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QListWidget>
+#include <QSpinBox>
 
 extern "C" {
 #include <jack/jack.h>
@@ -65,6 +66,13 @@ public:
       **/
     void setIntervalos(int nota, QList<int> *notas);
 
+    void setVelocity(int notaRaiz, int velocity) noexcept(false);
+    int getVelocity(int notaRaiz) noexcept(false);
+    void setVelocityHumanize(int notaRaiz, int humanize) noexcept(false);
+    void setOitava(int notaRaiz, int val) noexcept(false);
+    int getOitava(int notaRaiz) noexcept(false);
+    //int getVelocityHumanize(int notaRaiz) noexcept(false);//o velocity vai retornar o valor normalizado
+
     void inicializarCliente() noexcept(false);
     void conectar(QString nomePortaDestino)noexcept(false);
     double nframes_to_ms(jack_nframes_t nframes);
@@ -81,6 +89,9 @@ private:
     QPushButton *btnIgnoreNoteOff ;
     QList<QComboBox*> *cmbProgramas;
     QList<QListWidget*> *cmbIntervalos;
+    QList<QSpinBox*> *cmbVelocityVals;
+    QList<QSpinBox*> *cmbHumanizeVals;
+    QList<QSpinBox*> *cmbOitava;
 
     jack_port_t	*output_port;
     jack_port_t	*input_port;

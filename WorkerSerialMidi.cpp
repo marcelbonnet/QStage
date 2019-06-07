@@ -136,17 +136,18 @@ void WorkerSerialMidi::process(){
 
         qDebug() << "CMD " << cmd;
 //        n = pread (fd, buf_dt1, 2, 3);
-        qDebug() << "DT1 "  << data1;
+        qDebug() << "NOTA "  << data1;
 //        n = pread (fd, buf_dt2, 3, 2);
-        qDebug() << "DT2 "  << data2 ;//<< "TESTE: " << buf_dt2[0] << buf_dt2[1] << buf_dt2[2] ;
+//        qDebug() << "VEL "  << data2 ;//<< "TESTE: " << buf_dt2[0] << buf_dt2[1] << buf_dt2[2] ;
 
 
         int qtdeNotasParaEnviar = 0;
         try{
-            if(cmd == NOTE_ON || cmd == NOTE_OFF && (data1 >=48 && data1 <=60)){ //ignorar outros até corrigir o debounce que gera mensagens indesejadas/erradas
-                //arduino me envia notas de 48 até 60. Mas no QStage uso de 0 a 12.
+            if( (cmd == NOTE_ON || cmd == NOTE_OFF) && (data1 >=48 && data1 <=59)){ //ignorar outros até corrigir o debounce que gera mensagens indesejadas/erradas
+                //arduino me envia notas de 48 até 59. Mas no QStage uso de 0 a 11.
 
                 if(smidi->ignorarNoteOff() && cmd == NOTE_ON){
+                    qDebug() << "EXECUTOU NOTE_OFF DAS NOTAS LIGADAS";
                     //desliga as notas anteriores
                     for(int d : *notasLigadas)
                         smidi->queue_message(NOTE_OFF, d, 0);
@@ -157,13 +158,17 @@ void WorkerSerialMidi::process(){
 
                 if(notasParaTocar != NULL){
                     qtdeNotasParaEnviar = notasParaTocar->count();
-                    qDebug() << "#NOTAS PARA TOCAR: " << qtdeNotasParaEnviar;
+                    data2 = smidi->getVelocity(data1-48);
+                    qDebug() << "#NOTAS PARA TOCAR: " << qtdeNotasParaEnviar << "VELOCITY " << data2;
+
                     for(int nota : *notasParaTocar){
-                        nota = nota + data1;
+                        nota = nota + data1-48 + smidi->getOitava(data1-48)*12;
                         if(smidi->ignorarNoteOff() && cmd == NOTE_ON){
                             notasLigadas->append(nota); //guarda as notas que deverão ficar em sustain até receber outras notas
                             smidi->queue_message(NOTE_ON, nota, data2);
-                        } else
+                        }
+
+                        if(!smidi->ignorarNoteOff() )
                             smidi->queue_message(cmd, nota, data2);
                     }
                 }

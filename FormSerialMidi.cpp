@@ -12,6 +12,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QException>
+#include <QRandomGenerator>
 
 #define CLIENTE "QStagePedal"
 #define OUT_PORT_NAME "Pedal_Out"
@@ -39,6 +40,9 @@ FormSerialMidi::FormSerialMidi(QWidget *parent) :
 
     cmbProgramas = new QList<QComboBox*>();
     cmbIntervalos = new QList<QListWidget*>();
+    cmbVelocityVals = new QList<QSpinBox*>();
+    cmbHumanizeVals = new QList<QSpinBox*>();
+    cmbOitava = new QList<QSpinBox*>();
 
     QVBoxLayout *vbox = new QVBoxLayout(parent);
     QScrollArea *scroll = new QScrollArea();
@@ -77,6 +81,35 @@ FormSerialMidi::FormSerialMidi(QWidget *parent) :
 
         cmbIntervalos->append(lstAdds);
 
+        //Oitava
+        QSpinBox *oitava = new QSpinBox();
+        oitava->setMinimum(-1);
+        oitava->setMaximum(9);
+        oitava->setValue(4);
+
+        grid->addWidget(new QLabel("Oitava"),y,3,1,1,Qt::AlignTop);
+        grid->addWidget(oitava,y,4,1,1,Qt::AlignTop);
+        cmbOitava->append(oitava);
+        //Velocity
+        QSpinBox *velocity = new QSpinBox();
+        velocity->setMinimum(0);
+        velocity->setMaximum(127);
+        velocity->setValue(100);
+
+        grid->addWidget(new QLabel("Velocity"),y,5,1,1,Qt::AlignTop);
+        grid->addWidget(velocity,y,6,1,1,Qt::AlignTop);
+        cmbVelocityVals->append(velocity);
+
+        //Humanize
+        QSpinBox *humanize = new QSpinBox();
+        humanize->setMinimum(0);
+        humanize->setMaximum(100);
+        humanize->setValue(10);
+
+        grid->addWidget(new QLabel("Humanize"),y,7,1,1,Qt::AlignTop);
+        grid->addWidget(humanize,y,8,1,1,Qt::AlignTop);
+        cmbHumanizeVals->append(humanize);
+
         y++;
     }
 
@@ -95,6 +128,7 @@ QList<int> *FormSerialMidi::getNotas(int notaRaiz){
     QList<int> *notas = new QList<int>();
 
     int prog = cmbProgramas->at(notaRaiz)->currentIndex();
+
 
     QList<QListWidgetItem*> itens = cmbIntervalos->at(notaRaiz)->selectedItems();
 
@@ -139,6 +173,64 @@ QList<int> *FormSerialMidi::getNotas(int notaRaiz){
 
     return  notas;
 }
+
+void FormSerialMidi::setOitava(int notaRaiz, int val) noexcept(false){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+    if(val < -1 || val > 9)
+        throw new QStageException("Oitava fora do intervalo de -1 a 9");
+
+    cmbOitava->at(notaRaiz)->setValue(val);
+}
+
+int FormSerialMidi::getOitava(int notaRaiz) noexcept(false){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+
+    return cmbOitava->at(notaRaiz)->value();
+}
+
+void FormSerialMidi::setVelocity(int notaRaiz, int velocity) noexcept(false){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+    if(velocity < 0 || velocity > 127)
+        throw new QStageException("Velocity fora do intervalo de 0 a 127");
+
+    cmbVelocityVals->at(notaRaiz)->setValue(velocity);
+}
+
+int FormSerialMidi::getVelocity(int notaRaiz) noexcept(false){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+
+    QRandomGenerator qr;
+    double r = qr.system()->generateDouble();
+    int humanize = cmbHumanizeVals->at(notaRaiz)->value() / 2;
+    qDebug() << "HUMANIZE: " << r << humanize << (r>0.5);
+    int velocity = 127;
+    if(r>=0.5)
+        velocity = cmbVelocityVals->at(notaRaiz)->value() * ( 1 + (humanize/2 + r/2)/100 );
+    else
+        velocity = cmbVelocityVals->at(notaRaiz)->value() * ( 1 - (humanize/2 - r/2)/100 );
+
+    return velocity > 127 ? 127 : velocity;
+}
+
+void FormSerialMidi::setVelocityHumanize(int notaRaiz, int humanize) noexcept(false){
+    if(notaRaiz < 0 || notaRaiz > 11)
+        throw new QStageException("Nota fora do intervalo de 0 a 11");
+    if(humanize < 0 || humanize > 100)
+        throw new QStageException("Humanize fora do intervalo de 0 a 100");
+
+    cmbHumanizeVals->at(notaRaiz)->setValue(humanize);
+}
+
+//int FormSerialMidi::getVelocityHumanize(int notaRaiz) noexcept(false){
+//    if(notaRaiz < 0 || notaRaiz > 11)
+//        throw new QStageException("Nota fora do intervalo de 0 a 11");
+
+//    return cmbHumanizeVals->at(notaRaiz)->value();
+//}
 
 void FormSerialMidi::setBtnIgnorarNoteOff(bool checked){
     btnIgnoreNoteOff->setChecked(checked);
