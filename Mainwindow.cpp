@@ -28,6 +28,7 @@
 #include <QAction>
 #include <QColorDialog>
 #include "QStageException.h"
+#include "DialogTemaEditor.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -73,7 +74,13 @@ MainWindow::MainWindow(QWidget *parent) :
             act->setData(QVariant::fromValue(css));
 
         }
+        QAction *actDialogTemaEditor = menuVisual->addAction("Editor de Temas");
+        actDialogTemaEditor->setStatusTip("Editar temas");
+        actDialogTemaEditor->setData("editarTema");
+
         connect(menuVisual, SIGNAL(triggered(QAction*)), this, SLOT(setTema(QAction*)));
+
+
     } catch (std::exception &e) {
         QMessageBox::warning(this,"Erro ao Configurar Tema", e.what());
     }
@@ -164,6 +171,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::setTema(QAction * action){
     QString css = action->data().toString();
+
+    if(css.compare("editarTema") == 0){
+        DialogTemaEditor *dlg = new DialogTemaEditor(this, this);
+        dlg->show();
+        return;
+    }
+
+
     setStyleSheet(css);
 
     try {
@@ -171,6 +186,10 @@ void MainWindow::setTema(QAction * action){
     } catch (std::exception &e) {
         QMessageBox::warning(this, "Erro ao Atualizar Último Tema Usado", e.what());
     }
+}
+
+void MainWindow::setTema(QString css){
+    setStyleSheet(css);
 }
 
 void MainWindow::carregarHTML()

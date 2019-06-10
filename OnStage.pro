@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     PerformancePart.cpp \
     WorkerSerialMidi.cpp \
     FormSerialMidi.cpp \
-    QStageException.cpp
+    QStageException.cpp \
+    DialogTemaEditor.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -85,7 +86,8 @@ HEADERS  += Mainwindow.h \
     PerformancePart.h \
     WorkerSerialMidi.h \
     FormSerialMidi.h \
-    QStageException.h
+    QStageException.h \
+    DialogTemaEditor.h
 
 
 FORMS    += Mainwindow.ui \
@@ -95,7 +97,8 @@ FORMS    += Mainwindow.ui \
     dialogmusica.ui \
     dialogmusicaexistente.ui \
     dialogdocumenteditor.ui \
-    FormSerialMidi.ui
+    FormSerialMidi.ui \
+    DialogTemaEditor.ui
 
 
 DISTFILES += \

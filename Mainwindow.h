@@ -147,7 +147,7 @@ private:
     void editarHTML(QString binPath);
     void reordenar(int posicao);
     bool tentarAutoConectar(QString porta);
-
+    void setTema(QString css);
 
 
     PartTab *tabParts[16];    //Tab
