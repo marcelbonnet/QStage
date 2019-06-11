@@ -579,61 +579,290 @@ void PatchUI::onPatchToneChanged(int i){
 
 
     enviarGrupoDeMensagens(patchTone->function, theTone);
-    //    if(patchTone->function == PatchTone::LFO1_Rate
-    //            || patchTone->function == PatchTone::LFO1_Offset
-    //            || patchTone->function == PatchTone::LFO1_Waveform
-    //            || patchTone->function == PatchTone::LFO1_Fade_Mode
-    //            || patchTone->function == PatchTone::LFO1_Fade_Time
-    //            || patchTone->function == PatchTone::LFO1_Delay_Time
-    //            || patchTone->function == PatchTone::LFO1_External_Sync
-    //            ){
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Waveform, theTone+1), lfo1WaveFormList->at(theTone)->currentIndex() );
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Key_Sync, theTone+1), lfo1KeySyncSwitchList->at(theTone)->isChecked() ? 1 : 0 );
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, theTone+1), lfo1RateList->at(theTone)->value() );
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_External_Sync, theTone+1), lfo1ExternalSyncList->at(theTone)->currentIndex() );
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Mode, theTone+1), lfo1FadeModeList->at(theTone)->currentIndex() );
-    ////        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, theTone+1), lfo1FadeTimeList->at(theTone)->value() );
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, theTone+1), lfo1OffSetList->at(theTone)->currentIndex() );
 
-    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
-    //    }
+    /*
+     * PITCH
+     */
+    if( patchTone->function == PatchTone::Coarse_Tune
+            || patchTone->function == PatchTone::Fine_Tune
+            || patchTone->function == PatchTone::Random_Pitch_Depth
+            || patchTone->function == PatchTone::Pitch_Keyfollow
+            ){
+        enviarMensagem( new PatchTone(PatchTone::Coarse_Tune, theTone+1),
+                        coarseTuneList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Fine_Tune, theTone+1),
+                        fineTuneList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Random_Pitch_Depth, theTone+1),
+                        randomPitchDepthList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Keyfollow, theTone+1),
+                        pitchKeyfollowList->at(theTone)->currentIndex() );
+    }
+
+    /*
+     * PITCH ENVELOPE
+     */
+    if( patchTone->function == PatchTone::Pitch_Envelope_Depth
+            || patchTone->function == PatchTone::Pitch_Envelope_Velocity_Sens
+            || patchTone->function == PatchTone::Pitch_Envelope_Velocity_Time1
+            || patchTone->function == PatchTone::Pitch_Envelope_Velocity_Time4
+            || patchTone->function == PatchTone::Pitch_Envelope_Time_Keyfollow
+            ){
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Depth, theTone+1),
+                        pitchEnvelopeDepthList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Velocity_Sens, theTone+1),
+                        pitchEnvelopeVelocitySensList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Velocity_Time1, theTone+1),
+                        pitchEnvelopeVelocityTime1List->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Velocity_Time4, theTone+1),
+                        pitchEnvelopeVelocityTime4List->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_Keyfollow, theTone+1),
+                        pitchEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
+    }
+
+    /*
+     * Pitch Envelope
+    */
+    if( patchTone->function == PatchTone::Pitch_Envelope_Time_1
+          || patchTone->function == PatchTone::Pitch_Envelope_Time_2
+            || patchTone->function == PatchTone::Pitch_Envelope_Time_3
+            || patchTone->function == PatchTone::Pitch_Envelope_Time_4
+            || patchTone->function == PatchTone::Pitch_Envelope_Level_1
+            || patchTone->function == PatchTone::Pitch_Envelope_Level_2
+            || patchTone->function == PatchTone::Pitch_Envelope_Level_3
+            || patchTone->function == PatchTone::Pitch_Envelope_Level_4
+            ){
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_1, theTone+1),
+                      pitchEnvelopeTime1List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_2, theTone+1),
+                      pitchEnvelopeTime2List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_3, theTone+1),
+                      pitchEnvelopeTime3List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_4, theTone+1),
+                      pitchEnvelopeTime4List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_1, theTone+1),
+                      pitchEnvelopeLevel1List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_2, theTone+1),
+                      pitchEnvelopeLevel2List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_3, theTone+1),
+                      pitchEnvelopeLevel3List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_4, theTone+1),
+                      pitchEnvelopeLevel4List->at(theTone)->value() );
+  }
 
 
     /*
-    if(patchTone->function == PatchTone::LFO1_Fade_Mode)
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, theTone+1), lfo1FadeTimeList->at(theTone)->value() );
-
-    if(patchTone->function == PatchTone::LFO2_Fade_Mode)
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Fade_Time, theTone+1), lfo2FadeTimeList->at(theTone)->value() );
-
-    if(patchTone->function == PatchTone::LFO1_Offset)
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
-
-    if(patchTone->function == PatchTone::LFO2_Offset)
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, theTone+1), lfo2DelayTimeList->at(theTone)->value() );
-
-    if(patchTone->function == PatchTone::LFO1_Waveform){
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Key_Sync, theTone+1), lfo1KeySyncSwitchList->at(theTone)->isChecked() ? 1 : 0 );
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, theTone+1), lfo1RateList->at(theTone)->value() );
+     * LFO Depth: Pitch, TVF, TVA e Pan
+     */
+    if( patchTone->function == PatchTone::Pitch_LFO1_Depth || patchTone->function == PatchTone::Pitch_LFO2_Depth){
+        enviarMensagem( new PatchTone(PatchTone::Pitch_LFO1_Depth, theTone+1),
+                        pitchLfo1DepthList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_LFO2_Depth, theTone+1),
+                        pitchLfo2DepthList->at(theTone)->value() );
+    }
+    if( patchTone->function == PatchTone::Filter_LFO1_Depth || patchTone->function == PatchTone::Filter_LFO2_Depth){
+        enviarMensagem( new PatchTone(PatchTone::Filter_LFO1_Depth, theTone+1),
+                        filterLfo1DepthList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_LFO2_Depth, theTone+1),
+                        filterLfo2DepthList->at(theTone)->value() );
+        //Roland filha da puta, mais um bug
+        enviarMensagem( new PatchTone(PatchTone::Tone_Level, theTone+1),
+                        toneLevelList->at(theTone)->value() );
+    }
+    if( patchTone->function == PatchTone::Level_LFO1_Depth || patchTone->function == PatchTone::Level_LFO2_Depth){
+        enviarMensagem( new PatchTone(PatchTone::Level_LFO1_Depth, theTone+1),
+                        levelLfo1DepthList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_LFO2_Depth, theTone+1),
+                        levelLfo2DepthList->at(theTone)->value() );
+    }
+    if( patchTone->function == PatchTone::Pan_LFO1_Depth || patchTone->function == PatchTone::Pan_LFO2_Depth){
+        enviarMensagem( new PatchTone(PatchTone::Level_LFO1_Depth, theTone+1),
+                        panLfo1DepthList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_LFO2_Depth, theTone+1),
+                        panLfo2DepthList->at(theTone)->value() );
     }
 
-    if(patchTone->function == PatchTone::LFO2_Waveform){
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Key_Sync, theTone+1), lfo2KeySyncSwitchList->at(theTone)->isChecked() ? 1 : 0 );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Rate, theTone+1), lfo2RateList->at(theTone)->value() );
+    /*
+     * TVF
+     * Sequência bugada. Enviar nessa ordem para preservar todos os valores.
+     * Filter Type => Cutoff Frequency => Keyfollow => Resonance => Resoance Vel Sens => Filter EnvDepth
+     *
+     * BUG CIRCULAR: Resoance => KeyFollow e vice-versa.
+     *
+     */
+    if( patchTone->function == PatchTone::Filter_Type
+            || patchTone->function == PatchTone::Cutoff_Frequency
+            || patchTone->function == PatchTone::Resonance
+            || patchTone->function == PatchTone::Filter_Envelope_Time_Keyfollow
+            || patchTone->function == PatchTone::Filter_Envelope_Depth
+            || patchTone->function == PatchTone::Resonance_Velocity_Sens
+            ){
+
+        enviarMensagem( new PatchTone(PatchTone::Filter_Type, theTone+1),
+                        filterTypeList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Cutoff_Frequency, theTone+1),
+                        CutoffFrequencyList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_Keyfollow, theTone+1),
+                        filterEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Resonance, theTone+1),
+                        resonanceList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Resonance_Velocity_Sens, theTone+1),
+                        resonanceVelocitySensList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Depth, theTone+1),
+                        filterEnvelopeDepthList->at(theTone)->value() );
     }
 
-    if(patchTone->function == PatchTone::LFO1_Rate){
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, theTone+1), lfo1OffSetList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
+    /*
+     * TVF Velocity
+     * V-Curve => V-Sens
+     */
+    if( patchTone->function == PatchTone::Filter_Envelope_Velocity_Curve
+            || patchTone->function == PatchTone::Filter_Envelope_Velocity_Sens
+            ){
+
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Curve, theTone+1),
+                        filterEnvelopeVelocityCurveList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Sens, theTone+1),
+                        filterEnvelopeVelocitySensList->at(theTone)->value() );
     }
 
-    if(patchTone->function == PatchTone::LFO2_Rate){
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Offset, theTone+1), lfo2OffSetList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, theTone+1), lfo2DelayTimeList->at(theTone)->value() );
+    if( patchTone->function == PatchTone::Filter_Envelope_Velocity_Time1
+            || patchTone->function == PatchTone::Filter_Envelope_Velocity_Time4
+            || patchTone->function == PatchTone::Filter_Envelope_Time_Keyfollow
+            ){
+
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Time1, theTone+1),
+                        filterEnvelopeVelocityTime1List->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Time4, theTone+1),
+                        filterEnvelopeVelocityTime4List->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_Keyfollow, theTone+1),
+                        filterEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
     }
 
-*/
+    /*
+     * TVF Envelope
+     */
+    if( patchTone->function == PatchTone::Filter_Envelope_Time_1
+          || patchTone->function == PatchTone::Filter_Envelope_Time_2
+            || patchTone->function == PatchTone::Filter_Envelope_Time_3
+            || patchTone->function == PatchTone::Filter_Envelope_Time_4
+            || patchTone->function == PatchTone::Filter_Envelope_Level_1
+            || patchTone->function == PatchTone::Filter_Envelope_Level_2
+            || patchTone->function == PatchTone::Filter_Envelope_Level_3
+            || patchTone->function == PatchTone::Filter_Envelope_Level_4
+            ){
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_1, theTone+1),
+                      filterEnvelopeTime1List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_2, theTone+1),
+                      filterEnvelopeTime2List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_3, theTone+1),
+                      filterEnvelopeTime3List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_4, theTone+1),
+                      filterEnvelopeTime4List->at(theTone)->value() );
+
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_1, theTone+1),
+                      filterEnvelopeLevel1List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_2, theTone+1),
+                      filterEnvelopeLevel2List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_3, theTone+1),
+                      filterEnvelopeLevel3List->at(theTone)->value() );
+      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_4, theTone+1),
+                      filterEnvelopeLevel4List->at(theTone)->value() );
+  }
+
+    /*
+     * TVA
+     */
+    if( patchTone->function == PatchTone::Bias_Direction
+            || patchTone->function == PatchTone::Bias_Position
+            || patchTone->function == PatchTone::Bias_Level
+            || patchTone->function == PatchTone::Level_Envelope_Velocity_Curve
+            || patchTone->function == PatchTone::Level_Envelope_Velocity_Sens
+            ){
+        enviarMensagem( new PatchTone(PatchTone::Bias_Direction, theTone+1),
+                        biasDirectionList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Bias_Position, theTone+1),
+                        biasPositionList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Bias_Level, theTone+1),
+                        biasLevelList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Curve, theTone+1),
+                        levelEnvelopeVelocityCurveList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Sens, theTone+1),
+                        levelEnvelopeVelocitySensList->at(theTone)->value() );
+    }
+
+    /*
+     * PAN Modulate
+     */
+    if( patchTone->function == PatchTone::Pan_Keyfollow
+            || patchTone->function == PatchTone::Random_Pan_Depth
+            ){
+        enviarMensagem( new PatchTone(PatchTone::Pan_Keyfollow, theTone+1),
+                        panKeyfollowList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Random_Pan_Depth, theTone+1),
+                        randomPanDepthList->at(theTone)->value());
+    }
+
+    /*
+     * TVA TIME ENVELOPE
+     */
+    if( patchTone->function == PatchTone::Level_Envelope_Velocity_Time1
+            || patchTone->function == PatchTone::Level_Envelope_Velocity_Time4
+            || patchTone->function == PatchTone::Level_Envelope_Time_Keyfollow
+            ){
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Time1, theTone+1),
+                        levelEnvelopeVelocityTime1List->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Time4, theTone+1),
+                        levelEnvelopeVelocityTime4List->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_Keyfollow, theTone+1),
+                        levelEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
+
+    }
+
+    /*
+     * TVA ENVELOPE
+     */
+    if(patchTone->function == PatchTone::Level_Envelope_Time_1
+            || patchTone->function == PatchTone::Level_Envelope_Time_2
+            || patchTone->function == PatchTone::Level_Envelope_Time_3
+            || patchTone->function == PatchTone::Level_Envelope_Time_4
+            || patchTone->function == PatchTone::Level_Envelope_Level_1
+            || patchTone->function == PatchTone::Level_Envelope_Level_2
+            || patchTone->function == PatchTone::Level_Envelope_Level_3
+            ){
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_1, theTone+1),
+                        levelEnvelopeTime1List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_2, theTone+1),
+                        levelEnvelopeTime2List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_3, theTone+1),
+                        levelEnvelopeTime3List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_4, theTone+1),
+                        levelEnvelopeTime4List->at(theTone)->value() );
+
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Level_1, theTone+1),
+                        levelEnvelopeLevel1List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Level_2, theTone+1),
+                        levelEnvelopeLevel2List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Level_3, theTone+1),
+                        levelEnvelopeLevel3List->at(theTone)->value() );
+    }
+
+    /*
+     * EFFECTS/OUTPUT
+     */
+    if( patchTone->function == PatchTone::Output_Assign
+            || patchTone->function == PatchTone::MixEFX_Send_Level
+            || patchTone->function == PatchTone::Chorus_Send_Level
+            || patchTone->function == PatchTone::Reverb_Send_Level
+            )    {
+        enviarMensagem( new PatchTone(PatchTone::Output_Assign, theTone+1),
+                        outputAssignList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::MixEFX_Send_Level, theTone+1),
+                        mixEfxSendLevelList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Chorus_Send_Level, theTone+1),
+                        ChorusSendLevelList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Reverb_Send_Level, theTone+1),
+                        ReverbSendLevelList->at(theTone)->value() );
+    }
 
 }
 
