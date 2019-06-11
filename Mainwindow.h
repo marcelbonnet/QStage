@@ -15,6 +15,7 @@
 #include <QAction>
 #include <QList>
 #include "SysExMessage.h"
+#include "FormSerialMidi.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +34,7 @@ public:
 
     static QString getQStageDir();
     static QString getQStageDatabase();
+
 
     QString getConfig(QString key);
 
@@ -107,6 +109,12 @@ private slots:
 
     void on_btnController_toggled(bool checked);
 
+    void on_perfOrigem_currentIndexChanged(int index);
+
+    void partUtilsCopiarPerformancePartParaPart(int parteOrigem, int parteDestino);
+
+    void on_actionUSB_Serial_MIDI_triggered();
+
 private:
     Ui::MainWindow *ui;
     dialog_playlist *dlgPlaylist;
@@ -116,6 +124,7 @@ private:
     QString qstageDir;
     QString configMusicasDir;
     QString configSysExDir;
+    FormSerialMidi *smidi;
 
     /**
      * @brief carregarHTML carrega o HTML no Widget
@@ -138,7 +147,7 @@ private:
     void editarHTML(QString binPath);
     void reordenar(int posicao);
     bool tentarAutoConectar(QString porta);
-
+    void setTema(QString css);
 
 
     PartTab *tabParts[16];    //Tab
@@ -152,6 +161,8 @@ private:
     QString path;
 
     QList<SysExMessage*> *mensagens = new QList<SysExMessage*>();
+
+
 };
 
 #endif // MAINWINDOW_H

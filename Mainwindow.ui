@@ -1232,6 +1232,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionConectar"/>
+   <addaction name="actionUSB_Serial_MIDI"/>
    <addaction name="separator"/>
    <addaction name="actionAbrir_SYSEX"/>
    <addaction name="actionSalvar_SYSEX"/>
@@ -1467,6 +1468,18 @@
    </property>
    <property name="toolTip">
     <string>Tag</string>
+   </property>
+  </action>
+  <action name="actionUSB_Serial_MIDI">
+   <property name="icon">
+    <iconset resource="recursos.qrc">
+     <normaloff>:/icones/mixer-midi.png</normaloff>:/icones/mixer-midi.png</iconset>
+   </property>
+   <property name="text">
+    <string>USB Serial MIDI</string>
+   </property>
+   <property name="toolTip">
+    <string>Abrir Arduino (USB Serial MIDI)</string>
    </property>
   </action>
  </widget>

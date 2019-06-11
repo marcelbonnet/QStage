@@ -70,6 +70,12 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     }
     this->carregarPatches();
 
+    //Utils: copiar esta part para outra, exceto part 10 (RHYTHM)
+    for(int i=1; i<=16; i++){
+        if(i == parte || i == 10) continue;
+        ui->partUtilDestino->addItem(QString::number(i), QVariant::fromValue(i));
+    }
+
 }
 void PartTab::carregarPatches(QString categoria){
     QComboBox *patch = ui->patch;
@@ -129,7 +135,7 @@ void PartTab::enviar(){
 
 
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value()));
+    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value() -1 ));
 
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
     if(ui->patch->currentIndex() > -1){
@@ -189,6 +195,10 @@ void PartTab::on_btnLocal_clicked()
 Patch *PartTab::getPatch(){
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
     return patch;
+}
+
+int PartTab::getPatchIndex(){
+    return ui->patch->currentIndex();
 }
 
 int PartTab::getRegiaoMin(){
@@ -300,57 +310,75 @@ void PartTab::setLocalOn(int i){
     ui->btnLocal->setChecked( i == 1 ? true : false);
 }
 
-void PartTab::on_level_valueChanged(int value)
+void PartTab::on_level_valueChanged()
 {
     enviarMensagem(PerformancePart::PartLevel, ui->level->value() );
+    //issue #18
+    on_pan_valueChanged();
 }
 
-void PartTab::on_sendLevel_valueChanged(int value)
+void PartTab::on_sendLevel_valueChanged()
 {
     enviarMensagem(PerformancePart::MixEFXSendLevel, ui->sendLevel->value() );
+    //issue #18
+    on_chorus_valueChanged();
 }
 
-void PartTab::on_reverb_valueChanged(int value)
+void PartTab::on_reverb_valueChanged()
 {
     enviarMensagem(PerformancePart::ReverbSendLevel, ui->reverb->value() );
 }
 
-void PartTab::on_chorus_valueChanged(int value)
+void PartTab::on_chorus_valueChanged()
 {
     enviarMensagem(PerformancePart::ChorusSendLevel, ui->chorus->value() );
+    //issue #18
+    on_reverb_valueChanged();
 }
 
-void PartTab::on_pan_valueChanged(int value)
+void PartTab::on_pan_valueChanged()
 {
     enviarMensagem(PerformancePart::PartPan, ui->pan->value() );
+    //issue #18
+    on_afinacaoBruta_valueChanged();
 }
 
 void PartTab::on_canal_valueChanged(int arg1)
 {
-    enviarMensagem(PerformancePart::MIDIChannel, ui->canal->value() );
+    enviarMensagem(PerformancePart::MIDIChannel, ui->canal->value()-1 );
 }
 
 void PartTab::on_minimo_currentIndexChanged(int index)
 {
     enviarMensagem(PerformancePart::KeyboardRangeLower, ui->minimo->currentIndex() );
+    //issue #18
+    on_maximo_currentIndexChanged(ui->maximo->currentIndex());
+
 }
 
 void PartTab::on_maximo_currentIndexChanged(int index)
 {
     enviarMensagem(PerformancePart::KeyboardRangeUpper, ui->maximo->currentIndex() );
+    //issue #18
+    on_oitava_valueChanged();
+
 }
 
-void PartTab::on_oitava_valueChanged(int arg1)
+void PartTab::on_oitava_valueChanged()
 {
     enviarMensagem(PerformancePart::OctaveShift, ui->oitava->value() + 3);
+    //issue #18
+    on_btnLocal_clicked();
 }
 
-void PartTab::on_afinacaoBruta_valueChanged(int arg1)
+void PartTab::on_afinacaoBruta_valueChanged()
 {
     enviarMensagem(PerformancePart::PartCoarseTune, ui->afinacaoBruta->value() +48 );
+    //issue #18
+    on_afinacaoFina_valueChanged();
 }
 
-void PartTab::on_afinacaoFina_valueChanged(int arg1)
+void PartTab::on_afinacaoFina_valueChanged()
 {
     enviarMensagem(PerformancePart::PartFineTune, ui->afinacaoFina->value() +50 );
 }
@@ -358,6 +386,8 @@ void PartTab::on_afinacaoFina_valueChanged(int arg1)
 void PartTab::on_saida_currentIndexChanged(int index)
 {
     enviarMensagem(PerformancePart::OutputAssign, ui->saida->currentIndex() );
+    //issue #18
+    on_sendLevel_valueChanged();
 }
 
 void PartTab::on_btn_clicked()
@@ -548,4 +578,14 @@ void PartTab::on_btn_37_clicked()
 void PartTab::on_btn_38_clicked()
 {
     carregarPatches("CMB");
+}
+
+void PartTab::on_partUtilDestinoBtn_clicked()
+{
+    emit partUtilsCopiarPerformancePart(
+                //origem
+                parte,
+                //destino
+                ui->partUtilDestino->currentData().toInt()
+                );
 }

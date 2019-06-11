@@ -27,8 +27,13 @@
 #include "Controller.h"
 #include <QAction>
 #include <QColorDialog>
+
 #include "PatchUI.h"
 #include "QHBoxLayout"
+
+#include "QStageException.h"
+#include "DialogTemaEditor.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -74,7 +79,13 @@ MainWindow::MainWindow(QWidget *parent) :
             act->setData(QVariant::fromValue(css));
 
         }
+        QAction *actDialogTemaEditor = menuVisual->addAction("Editor de Temas");
+        actDialogTemaEditor->setStatusTip("Editar temas");
+        actDialogTemaEditor->setData("editarTema");
+
         connect(menuVisual, SIGNAL(triggered(QAction*)), this, SLOT(setTema(QAction*)));
+
+
     } catch (std::exception &e) {
         QMessageBox::warning(this,"Erro ao Configurar Tema", e.what());
     }
@@ -127,8 +138,24 @@ MainWindow::MainWindow(QWidget *parent) :
         tabParts[i] = new PartTab(i+1, this->jack);
         QString name = QString::number(i+1) + "    ";
 
+        /*
+         *  RHYTHM Tab deve ser um outro Objeto
+         * então vou desabilitar essa Tab até
+         * que essa feature seja implementada
+         */
+        if(i==9){
+            tabParts[i]->setEnabled(false);
+            name = QString::number(i+1) + " DRM";
+        }
         tab->addTab(tabParts[i], name );
+        connect(tabParts[i], SIGNAL(partUtilsCopiarPerformancePart(int, int)), this, SLOT(partUtilsCopiarPerformancePartParaPart(int, int)));
     }
+
+    /*
+     * TAB SERIAL MIDI
+    */
+    smidi = new FormSerialMidi(this);
+    tab->addTab(smidi, "PEDAL");
 
     //carrega playlists e a primeira lista de músicas da playlist
     this->playlistRecarregar();
@@ -157,6 +184,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::setTema(QAction * action){
     QString css = action->data().toString();
+
+    if(css.compare("editarTema") == 0){
+        DialogTemaEditor *dlg = new DialogTemaEditor(this, this);
+        dlg->show();
+        return;
+    }
+
+
     setStyleSheet(css);
 
     try {
@@ -164,6 +199,10 @@ void MainWindow::setTema(QAction * action){
     } catch (std::exception &e) {
         QMessageBox::warning(this, "Erro ao Atualizar Último Tema Usado", e.what());
     }
+}
+
+void MainWindow::setTema(QString css){
+    setStyleSheet(css);
 }
 
 void MainWindow::carregarHTML()
@@ -399,6 +438,23 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
         conf->setValue("transposeVal", ui->sysTransposeVal->value());
         conf->endGroup();
 
+        /*
+         * PEDAL MIDI
+         */
+        conf->beginGroup("PedalMIDI");
+        conf->setValue("sustain", smidi->ignorarNoteOff()? 1 : 0);
+        for(int index=0; index<=11; index++){
+            conf->setValue(QString("programa%1").arg(index), smidi->getPrograma(index));
+            QStringList intervalos;
+            for(int indiceIntervalo : *smidi->getIntervalos(index))
+                intervalos << QString::number(indiceIntervalo);
+            conf->setValue(QString("intervalos%1").arg(index), intervalos );
+            conf->setValue(QString("oitava%1").arg(index), smidi->getOitava(index));
+            conf->setValue(QString("velocity%1").arg(index), smidi->getVelocitySemHumanizar(index));
+            conf->setValue(QString("humanize%1").arg(index), smidi->getVelocityHumanize(index));
+        }
+        conf->endGroup();
+
         conf->sync();
         arquivoTemporario.open(QFile::ReadOnly);//usar para QFile
         QTextStream entrada(&arquivoTemporario);  entrada.seek(0);
@@ -415,7 +471,7 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
     }
     catch (std::exception& e)
     {
-        QMessageBox::warning(this,"Erro ao Remover Música", e.what());
+        QMessageBox::warning(this,"Erro ao Salvar SYSEX", e.what());
         qDebug() << "exception: " << e.what();
     }
 
@@ -490,6 +546,27 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
     conf->beginGroup("System");
     ui->sysBtnTranspose->setChecked(conf->value("transpose").toInt() == 1 ? true : false );
     ui->sysTransposeVal->setValue(conf->value("transposeVal").toInt());
+    conf->endGroup();
+
+    /*
+     * PEDAL MIDI
+    */
+    conf->beginGroup("PedalMIDI");
+    if(conf->contains("sustain")){
+        smidi->reinicializarGUI();
+        smidi->setBtnIgnorarNoteOff(conf->value("sustain").toInt() == 1 ? true : false);
+        for(int index=0; index<=11; index++){
+            smidi->setPrograma(index, conf->value(QString("programa%1").arg(index)).toInt());
+            QList<int> *indicesSelecionados = new QList<int>();
+            for(QString sVal : conf->value(QString("intervalos%1").arg(index)).value<QStringList>() )
+                indicesSelecionados->append(sVal.toInt());
+            smidi->setIntervalos(index, indicesSelecionados);
+            smidi->setOitava(index, conf->value(QString("oitava%1").arg(index)).toInt());
+            smidi->setVelocity(index, conf->value(QString("velocity%1").arg(index)).toInt());
+            smidi->setVelocityHumanize(index, conf->value(QString("humanize%1").arg(index)).toInt());
+        }
+
+    }
     conf->endGroup();
 
     on_perfBtnEnviar_clicked();
@@ -1307,5 +1384,138 @@ void MainWindow::on_btnController_toggled(bool checked)
     if(checked){
         ui->btnFilterEnvelope->setChecked(false);
         ui->btnLevel->setChecked(false);
+    }
+}
+
+void MainWindow::on_perfOrigem_currentIndexChanged(int index)
+{
+
+    if(index>0){
+        /*
+         * selecionamos alguma origem diferente de "PERFORM"
+         * e agora o EFX em uso é aquele vinculado ao PATCH.
+         * Os parâmetros de EFX só podem ser alterados na
+         * edição do PATCH. Essa interface de COMMON se torna
+         * inútil.
+         * */
+
+        ui->perfEfeito->setEnabled(false);
+        ui->perfOA->setEnabled(false);
+        ui->perfCSL->setEnabled(false);
+        ui->perfMSL->setEnabled(false);
+        ui->perfperfRSL->setEnabled(false);
+        ui->label_5->setEnabled(false);
+        ui->label_6->setEnabled(false);
+        ui->label_7->setEnabled(false);
+        ui->label_8->setEnabled(false);
+        ui->label_9->setEnabled(false);
+        ui->perfParamLbl->setEnabled(false);
+        ui->perfParamLbl_2->setEnabled(false);
+        ui->perfParamLbl_3->setEnabled(false);
+        ui->perfParamLbl_4->setEnabled(false);
+        ui->perfParamLbl_5->setEnabled(false);
+        ui->perfParamLbl_6->setEnabled(false);
+        ui->perfParamLbl_7->setEnabled(false);
+        ui->perfParamLbl_8->setEnabled(false);
+        ui->perfParamLbl_9->setEnabled(false);
+        ui->perfParamLbl_10->setEnabled(false);
+        ui->perfParamLbl_11->setEnabled(false);
+        ui->perfParamLbl_12->setEnabled(false);
+        ui->perfParam->setEnabled(false);
+        ui->perfParam_2->setEnabled(false);
+        ui->perfParam_3->setEnabled(false);
+        ui->perfParam_4->setEnabled(false);
+        ui->perfParam_5->setEnabled(false);
+        ui->perfParam_6->setEnabled(false);
+        ui->perfParam_7->setEnabled(false);
+        ui->perfParam_8->setEnabled(false);
+        ui->perfParam_9->setEnabled(false);
+        ui->perfParam_10->setEnabled(false);
+        ui->perfParam_11->setEnabled(false);
+        ui->perfParam_12->setEnabled(false);
+
+
+    } else {
+        ui->perfEfeito->setEnabled(true);
+        ui->perfOA->setEnabled(true);
+        ui->perfCSL->setEnabled(true);
+        ui->perfMSL->setEnabled(true);
+        ui->perfperfRSL->setEnabled(true);
+        ui->label_5->setEnabled(true);
+        ui->label_6->setEnabled(true);
+        ui->label_7->setEnabled(true);
+        ui->label_8->setEnabled(true);
+        ui->label_9->setEnabled(true);
+        ui->perfParamLbl->setEnabled(true);
+        ui->perfParamLbl_2->setEnabled(true);
+        ui->perfParamLbl_3->setEnabled(true);
+        ui->perfParamLbl_4->setEnabled(true);
+        ui->perfParamLbl_5->setEnabled(true);
+        ui->perfParamLbl_6->setEnabled(true);
+        ui->perfParamLbl_7->setEnabled(true);
+        ui->perfParamLbl_8->setEnabled(true);
+        ui->perfParamLbl_9->setEnabled(true);
+        ui->perfParamLbl_10->setEnabled(true);
+        ui->perfParamLbl_11->setEnabled(true);
+        ui->perfParamLbl_12->setEnabled(true);
+        ui->perfParam->setEnabled(true);
+        ui->perfParam_2->setEnabled(true);
+        ui->perfParam_3->setEnabled(true);
+        ui->perfParam_4->setEnabled(true);
+        ui->perfParam_5->setEnabled(true);
+        ui->perfParam_6->setEnabled(true);
+        ui->perfParam_7->setEnabled(true);
+        ui->perfParam_8->setEnabled(true);
+        ui->perfParam_9->setEnabled(true);
+        ui->perfParam_10->setEnabled(true);
+        ui->perfParam_11->setEnabled(true);
+        ui->perfParam_12->setEnabled(true);
+    }
+
+}
+
+/**
+ * Copia as configurações de uma Parte para Outra
+ * É acionado por SIGNAL emitido de um dos objetos PartTab
+ *
+ * @brief MainWindow::partUtilsCopiarPerformancePartParaPart
+ * @param parteOrigem
+ * @param parteDestino
+ */
+void MainWindow::partUtilsCopiarPerformancePartParaPart(int parteOrigem, int parteDestino)
+{
+    PartTab *o = tabParts[parteOrigem - 1];
+    PartTab *d = tabParts[parteDestino - 1];
+
+    qDebug() << "Copiar performance part " << parteOrigem << " para " << parteDestino;
+
+    d->setPatch(o->getPatchIndex());
+    d->setRegiaoMin(o->getRegiaoMin());
+    d->setRegiaoMax(o->getRegiaoMax());
+    d->setOitava(o->getOitava());
+    d->setVolume(o->getVolume());
+    d->setCanalMidi(o->getCanalMidi());
+    d->setPan(o->getPan());
+    d->setSaida(o->getSaida());
+    d->setChorusLevel(o->getChorusLevel());
+    d->setMixEfxLevel(o->getMixEfxLevel());
+    d->setReverbLevel(o->getReverbLevel());
+    d->setAfinacaoFina(o->getAfinacaoFina());
+    d->setAfinacaoBruta(o->getAfinacaoBruta());
+
+    //d->setLocalOn(o->isLocalOn()); //não sei porque não está ativando. Estou com sono demais. Foda-se isso por enquanto.
+
+}
+
+void MainWindow::on_actionUSB_Serial_MIDI_triggered()
+{
+    try {
+        smidi->inicializarCliente();
+        smidi->conectar(getConfig("port")); //auto conexão na porta preferncial configurada
+        jack->startSerialMidi(smidi);
+    } catch (QStageException *e) {
+        QMessageBox msg;
+        msg.setText(e->getMessage());
+        msg.exec();
     }
 }

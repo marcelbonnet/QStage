@@ -62,6 +62,10 @@ SOURCES += main.cpp\
     MainWindow2.cpp \
     Waveform.cpp \
     PatchTone.cpp
+    WorkerSerialMidi.cpp \
+    FormSerialMidi.cpp \
+    QStageException.cpp \
+    DialogTemaEditor.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -89,6 +93,10 @@ HEADERS  += Mainwindow.h \
     MainWindow2.h \
     Waveform.h \
     PatchTone.h
+    WorkerSerialMidi.h \
+    FormSerialMidi.h \
+    QStageException.h \
+    DialogTemaEditor.h
 
 
 FORMS    += Mainwindow.ui \
@@ -100,6 +108,8 @@ FORMS    += Mainwindow.ui \
     dialogdocumenteditor.ui \
     PatchUI.ui \
     MainWindow2.ui
+    FormSerialMidi.ui \
+    DialogTemaEditor.ui
 
 
 DISTFILES += \

@@ -30,6 +30,8 @@ extern "C" {
 
 #include "SysExMessage.h"
 
+#include "FormSerialMidi.h"
+
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )			/*inotify event*/
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )		/*inotify events buffer size*/
 
@@ -118,6 +120,8 @@ public:
 
     QList<QString> *listarPortas();
 
+    void startSerialMidi(FormSerialMidi *smidi);
+
     enum Performance {
         //0x00 0x00
         Common,
@@ -144,6 +148,9 @@ protected:
     int ultimaMensagem[13] = { -1, -1, -1,-1, -1, -1,-1, -1, -1,-1, -1, -1, -1 };
     int ultimaMensagemIndex = 0;
     QList<QList<int>> *mensagensTransmitidas = new QList<QList<int>>();
+
+
+
 
 private:
 

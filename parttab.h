@@ -26,6 +26,7 @@ public:
 
     int getIndexFromPatches(QString nome);
     Patch *getPatch();
+    int getPatchIndex();
     int getRegiaoMin();
     int getRegiaoMax();
     int getOitava();
@@ -63,15 +64,15 @@ private slots:
 
     void on_btnLocal_clicked();
 
-    void on_level_valueChanged(int value);
+    void on_level_valueChanged();
 
-    void on_sendLevel_valueChanged(int value);
+    void on_sendLevel_valueChanged();
 
-    void on_reverb_valueChanged(int value);
+    void on_reverb_valueChanged();
 
-    void on_chorus_valueChanged(int value);
+    void on_chorus_valueChanged();
 
-    void on_pan_valueChanged(int value);
+    void on_pan_valueChanged();
 
     void on_canal_valueChanged(int arg1);
 
@@ -79,11 +80,11 @@ private slots:
 
     void on_maximo_currentIndexChanged(int index);
 
-    void on_oitava_valueChanged(int arg1);
+    void on_oitava_valueChanged();
 
-    void on_afinacaoBruta_valueChanged(int arg1);
+    void on_afinacaoBruta_valueChanged();
 
-    void on_afinacaoFina_valueChanged(int arg1);
+    void on_afinacaoFina_valueChanged();
 
     void on_saida_currentIndexChanged(int index);
 
@@ -164,6 +165,11 @@ private slots:
     void on_btn_37_clicked();
 
     void on_btn_38_clicked();
+
+    void on_partUtilDestinoBtn_clicked();
+
+signals:
+    void partUtilsCopiarPerformancePart(int, int);
 
 protected:
     MidiControl *jack;
