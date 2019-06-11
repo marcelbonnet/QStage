@@ -38,11 +38,40 @@ private:
     void conectarWidgets();
     void desconectarWidgets();
     void setupProperties();
+    void enviarGrupoDeMensagens(PatchTone::Function function, int tone);
 
 
     QGridLayout *grid;
     QScrollArea *scrollArea;
     QList<QWidget*> *lista = new QList<QWidget*>();
+
+    //array para facilitar a implementação e envio de mensagens dos controles de destination e depth de cada tone
+    PatchTone::Function controles[24] = {
+        PatchTone::Controller_1_Destination_1,
+        PatchTone::Controller_1_Depth_1,
+        PatchTone::Controller_1_Destination_2,
+        PatchTone::Controller_1_Depth_2,
+        PatchTone::Controller_1_Destination_3,
+        PatchTone::Controller_1_Depth_3,
+        PatchTone::Controller_1_Destination_4,
+        PatchTone::Controller_1_Depth_4,
+        PatchTone::Controller_2_Destination_1,
+        PatchTone::Controller_2_Depth_1,
+        PatchTone::Controller_2_Destination_2,
+        PatchTone::Controller_2_Depth_2,
+        PatchTone::Controller_2_Destination_3,
+        PatchTone::Controller_2_Depth_3,
+        PatchTone::Controller_2_Destination_4,
+        PatchTone::Controller_2_Depth_4,
+        PatchTone::Controller_3_Destination_1,
+        PatchTone::Controller_3_Depth_1,
+        PatchTone::Controller_3_Destination_2,
+        PatchTone::Controller_3_Depth_2,
+        PatchTone::Controller_3_Destination_3,
+        PatchTone::Controller_3_Depth_3,
+        PatchTone::Controller_3_Destination_4,
+        PatchTone::Controller_3_Depth_4
+    };
 
     /*
      * Patch Tone

@@ -94,7 +94,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1138</width>
+             <width>1126</width>
              <height>835</height>
             </rect>
            </property>
@@ -309,7 +309,7 @@
               </property>
               <layout class="QGridLayout" name="gridLayout_11">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_20">
+                <widget class="QLabel" name="label_5">
                  <property name="text">
                   <string>Parte Origem</string>
                  </property>
@@ -336,7 +336,7 @@
                 </widget>
                </item>
                <item row="1" column="0" rowspan="2">
-                <widget class="QLabel" name="label_21">
+                <widget class="QLabel" name="label_6">
                  <property name="text">
                   <string>Tipo</string>
                  </property>
@@ -380,7 +380,7 @@
                 </widget>
                </item>
                <item row="4" column="0" colspan="2">
-                <widget class="QLabel" name="label_22">
+                <widget class="QLabel" name="label_7">
                  <property name="text">
                   <string>Output Assign</string>
                  </property>
@@ -440,14 +440,14 @@
                 </widget>
                </item>
                <item row="6" column="0" colspan="2">
-                <widget class="QLabel" name="label_23">
+                <widget class="QLabel" name="label_8">
                  <property name="text">
                   <string>Mix Out Send Level</string>
                  </property>
                 </widget>
                </item>
                <item row="6" column="3" colspan="2">
-                <widget class="QLabel" name="label_24">
+                <widget class="QLabel" name="label_9">
                  <property name="text">
                   <string>Chorus Send Level</string>
                  </property>

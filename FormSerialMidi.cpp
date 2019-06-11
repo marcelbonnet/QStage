@@ -308,7 +308,8 @@ void FormSerialMidi::inicializarCliente() noexcept(false){
         throw new QStageException("jack client nulo");
     }
 
-    ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE*2);
+//    ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE*2);
+    ringbuffer = jack_ringbuffer_create(1024*sizeof(struct FormSerialMidi::MidiMessage) *2);
 
     if (ringbuffer == NULL) {
         throw new QStageException("ring buffer nulo");

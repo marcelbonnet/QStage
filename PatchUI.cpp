@@ -62,8 +62,8 @@ void PatchUI::conectarWidgets()
 {
     //deve ser foreach QWidget, lista
     //teste
-//    for(int i=0; i<toneSwitchList->count(); i++)
-//        connect(toneSwitchList->at(i),SIGNAL( clicked()), this, SLOT(onPatchToneChanged()));
+    //    for(int i=0; i<toneSwitchList->count(); i++)
+    //        connect(toneSwitchList->at(i),SIGNAL( clicked()), this, SLOT(onPatchToneChanged()));
 
 
     for(int i=0; i<CutoffKeyfollowList->count(); i++) connect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
@@ -288,16 +288,32 @@ void PatchUI::setupProperties(){
      * - waveId
      */
     for(int i=0; i<waveIdList->count(); i++) waveIdList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Number, i+1)));
-    /*
-     * Falta:
-     * - controles de destination e depth
-     */
+
+    //controllers: dest e depth
+
+
+    int indexDestination = 0;
+    for(int tone=1; tone<=4; tone++){
+        for(int i=1; i<=12; i++){
+            controlerDestinationList->at( (i + (tone-1)*12)-1 )
+                    ->setProperty("function", QVariant::fromValue(new PatchTone(controles[indexDestination], tone)));
+            controlerDepthList->at( (i + (tone-1)*12)-1 )
+                    ->setProperty("function", QVariant::fromValue(new PatchTone(controles[indexDestination+1], tone)));
+
+            indexDestination+=2;
+            if( indexDestination%24 == 0)
+                indexDestination=0;
+        }
+    }
+
+
+
 
 
     for(int i=0; i<toneSwitchList->count(); i++) toneSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, i+1)));
     for(int i=0; i<waveGainList->count(); i++) waveGainList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Gain, i+1)));
-    for(int i=0; i<fxmColorList->count(); i++) fxmColorList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Color, i+1)));
-    for(int i=0; i<fxmDepthList->count(); i++) fxmDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Depth, i+1)));
+    for(int i=0; i<fxmColorList->count(); i++) fxmColorList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Color, i-1)));
+    for(int i=0; i<fxmDepthList->count(); i++) fxmDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Depth, i-1)));
     for(int i=0; i<toneDelayModeList->count(); i++) toneDelayModeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Delay_Mode, i+1)));
     for(int i=0; i<toneDelayTimeList->count(); i++) toneDelayTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Delay_Time, i+1)));
     for(int i=0; i<veocityRangeCrossFadeList->count(); i++) veocityRangeCrossFadeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Velocity_Cross_Fade, i+1)));
@@ -407,11 +423,11 @@ void PatchUI::onPatchToneChanged(){
     //============================================
 */
 
-//    QWidget *w = qobject_cast<QWidget*>(sender());
+    //    QWidget *w = qobject_cast<QWidget*>(sender());
     QPushButton *w = qobject_cast<QPushButton*>(sender());
     QVariant v = w->property("function");
 
-//    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
+    //    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
     PatchTone *patchTone = w->property("function").value<PatchTone*>();
     enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
 
@@ -427,6 +443,21 @@ void PatchUI::onPatchToneChanged(){
         enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
         enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
         enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
+    }
+
+    if(patchTone->function == PatchTone::LFO1_Key_Sync){
+        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, patchTone->whichTone), lfo1RateList->at(patchTone->whichTone-1)->value() );
+        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, patchTone->whichTone), lfo1OffSetList->at(patchTone->whichTone-1)->currentIndex() );
+        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, patchTone->whichTone), lfo1DelayTimeList->at(patchTone->whichTone-1)->value() );
+        enviarGrupoDeMensagens(patchTone->function, patchTone->whichTone-1);
+
+    }
+
+    if(patchTone->function == PatchTone::LFO2_Key_Sync){
+        //        enviarMensagem( new PatchTone(PatchTone::LFO2_Rate, patchTone->whichTone), lfo2RateList->at(patchTone->whichTone-1)->value() );
+        //        enviarMensagem( new PatchTone(PatchTone::LFO2_Offset, patchTone->whichTone), lfo2OffSetList->at(patchTone->whichTone-1)->currentIndex() );
+        //        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, patchTone->whichTone), lfo2DelayTimeList->at(patchTone->whichTone-1)->value() );
+        enviarGrupoDeMensagens(patchTone->function, patchTone->whichTone-1);
     }
 
 }
@@ -448,7 +479,7 @@ void PatchUI::onPatchToneChanged(int i){
      * Validações
      * */
     if(patchTone->function == PatchTone::Velocity_Range_Upper
-        && veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() ){
+            && veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() ){
         veocityRangeUpperList->at(theTone)->setValue(veocityRangeLowerList->at(theTone)->value());
         return;
     }
@@ -500,11 +531,10 @@ void PatchUI::onPatchToneChanged(int i){
     if(patchTone->function == PatchTone::FXM_Color)
         enviarMensagem( new PatchTone(PatchTone::FXM_Depth, theTone+1), fxmDepthList->at(theTone)->value() );
 
-    //Delay Mode => Time. Vou seguir o Teclado até saber o que é melhor
+    //Delay Mode => Time.
     if(patchTone->function == PatchTone::Tone_Delay_Mode){
-        desconectarWidgets();
-        toneDelayTimeList->at(theTone)->setValue(0);
-        conectarWidgets();
+        enviarMensagem( new PatchTone(PatchTone::Tone_Delay_Time, theTone+1), toneDelayTimeList->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Velocity_Cross_Fade, theTone+1), veocityRangeCrossFadeList->at(theTone)->value() );
     }
 
     //Tone Delay Time zera o Velocity Cross Fade
@@ -512,15 +542,153 @@ void PatchUI::onPatchToneChanged(int i){
         enviarMensagem( new PatchTone(PatchTone::Velocity_Cross_Fade, theTone+1), veocityRangeCrossFadeList->at(theTone)->value() );
     }
 
-    //Velocity Hi zera Keyboard Range Lower
-    if(patchTone->function == PatchTone::Velocity_Range_Upper){
+
+    if(patchTone->function == PatchTone::Keyboard_Range_Lower){
         enviarMensagem( new PatchTone(PatchTone::Keyboard_Range_Lower, theTone+1), keyboardRangeLowerList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::Keyboard_Range_Upper, theTone+1), keyboardRangeUpperList->at(theTone)->currentIndex() );
     }
 
 
+    /*
+     * Controles de Destination e Depth
+     */
+    bool enviarControlesDestDepth = false;
+    for (int j=0;j<24;j++) {
+        if(patchTone->function == controles[j]){
+            enviarControlesDestDepth = true;
+            break;
+        }
+    }
+
+    if(enviarControlesDestDepth){
+        int icontrole =0;
+        for(int i=1; i<=12; i++){
+            enviarMensagem(
+                        new PatchTone(controles[icontrole], theTone+1),
+                        controlerDestinationList->at( (i + (theTone)*12)-1 )->currentIndex()
+                        );
+            enviarMensagem(
+                        new PatchTone(controles[icontrole+1], theTone+1),
+                    controlerDepthList->at( (i + (theTone)*12)-1 )->value()
+                    );
+
+            icontrole+=2;
+        }
+    }
+    // =========================================
+
+
+    enviarGrupoDeMensagens(patchTone->function, theTone);
+    //    if(patchTone->function == PatchTone::LFO1_Rate
+    //            || patchTone->function == PatchTone::LFO1_Offset
+    //            || patchTone->function == PatchTone::LFO1_Waveform
+    //            || patchTone->function == PatchTone::LFO1_Fade_Mode
+    //            || patchTone->function == PatchTone::LFO1_Fade_Time
+    //            || patchTone->function == PatchTone::LFO1_Delay_Time
+    //            || patchTone->function == PatchTone::LFO1_External_Sync
+    //            ){
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Waveform, theTone+1), lfo1WaveFormList->at(theTone)->currentIndex() );
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Key_Sync, theTone+1), lfo1KeySyncSwitchList->at(theTone)->isChecked() ? 1 : 0 );
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, theTone+1), lfo1RateList->at(theTone)->value() );
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_External_Sync, theTone+1), lfo1ExternalSyncList->at(theTone)->currentIndex() );
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Mode, theTone+1), lfo1FadeModeList->at(theTone)->currentIndex() );
+    ////        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, theTone+1), lfo1FadeTimeList->at(theTone)->value() );
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, theTone+1), lfo1OffSetList->at(theTone)->currentIndex() );
+
+    //        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
+    //    }
+
+
+    /*
+    if(patchTone->function == PatchTone::LFO1_Fade_Mode)
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, theTone+1), lfo1FadeTimeList->at(theTone)->value() );
+
+    if(patchTone->function == PatchTone::LFO2_Fade_Mode)
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Fade_Time, theTone+1), lfo2FadeTimeList->at(theTone)->value() );
+
+    if(patchTone->function == PatchTone::LFO1_Offset)
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
+
+    if(patchTone->function == PatchTone::LFO2_Offset)
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, theTone+1), lfo2DelayTimeList->at(theTone)->value() );
+
+    if(patchTone->function == PatchTone::LFO1_Waveform){
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Key_Sync, theTone+1), lfo1KeySyncSwitchList->at(theTone)->isChecked() ? 1 : 0 );
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, theTone+1), lfo1RateList->at(theTone)->value() );
+    }
+
+    if(patchTone->function == PatchTone::LFO2_Waveform){
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Key_Sync, theTone+1), lfo2KeySyncSwitchList->at(theTone)->isChecked() ? 1 : 0 );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Rate, theTone+1), lfo2RateList->at(theTone)->value() );
+    }
+
+    if(patchTone->function == PatchTone::LFO1_Rate){
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, theTone+1), lfo1OffSetList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, theTone+1), lfo1DelayTimeList->at(theTone)->value() );
+    }
+
+    if(patchTone->function == PatchTone::LFO2_Rate){
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Offset, theTone+1), lfo2OffSetList->at(theTone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, theTone+1), lfo2DelayTimeList->at(theTone)->value() );
+    }
+
+*/
 
 }
 
+void PatchUI::enviarGrupoDeMensagens(PatchTone::Function function, int tone){
+
+    if(function == PatchTone::LFO1_Rate
+            || function == PatchTone::LFO1_Key_Sync
+            || function == PatchTone::LFO1_Offset
+            || function == PatchTone::LFO1_Waveform
+            || function == PatchTone::LFO1_Fade_Mode
+            || function == PatchTone::LFO1_Fade_Time
+            || function == PatchTone::LFO1_Delay_Time
+            || function == PatchTone::LFO1_External_Sync
+            ){
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Waveform, tone+1), lfo1WaveFormList->at(tone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Key_Sync, tone+1), lfo1KeySyncSwitchList->at(tone)->isChecked() ? 1 : 0 );
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, tone+1), lfo1RateList->at(tone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, tone+1), lfo1OffSetList->at(tone)->currentIndex() );
+
+//desabilitar: algo sempre coloca essa opção em OFF
+//        enviarMensagem( new PatchTone(PatchTone::LFO1_External_Sync, tone+1), lfo1ExternalSyncList->at(tone)->currentIndex() );
+
+
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, tone+1), lfo1DelayTimeList->at(tone)->value() );
+        /*
+         * MERDA DE BUG CIRCULAR:
+         * o Fade Mode zera o Fade Time e vice-versa.
+        */
+        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, tone+1), lfo1FadeTimeList->at(tone)->value() );
+//        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Mode, tone+1), lfo1FadeModeList->at(tone)->currentIndex() );
+
+    }
+
+
+    if(function == PatchTone::LFO2_Rate
+            || function == PatchTone::LFO2_Key_Sync
+            || function == PatchTone::LFO2_Offset
+            || function == PatchTone::LFO2_Waveform
+            || function == PatchTone::LFO2_Fade_Mode
+            || function == PatchTone::LFO2_Fade_Time
+            || function == PatchTone::LFO2_Delay_Time
+            || function == PatchTone::LFO2_External_Sync
+            ){
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Waveform, tone+1), lfo2WaveFormList->at(tone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Key_Sync, tone+1), lfo2KeySyncSwitchList->at(tone)->isChecked() ? 1 : 0 );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Rate, tone+1), lfo2RateList->at(tone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Offset, tone+1), lfo2OffSetList->at(tone)->currentIndex() );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, tone+1), lfo2DelayTimeList->at(tone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::LFO2_Fade_Time, tone+1), lfo2FadeTimeList->at(tone)->value() );
+    }
+}
+
+/**
+ * @brief Adiciona widgets na tela e seta valores default
+ */
 void PatchUI::drawPatchTone(){
     /*
      * Aba de Wave de cada Tone
@@ -543,7 +711,7 @@ void PatchUI::drawPatchTone(){
     for(int toneid=1; toneid<5; toneid++){
         QPushButton *toneSwitch = new QPushButton(QString("%1").arg(toneid));
         toneSwitch->setCheckable(true);
-//        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, toneid)));
+        //        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, toneid)));
 
         QComboBox *waveId = new QComboBox();
 
@@ -556,10 +724,10 @@ void PatchUI::drawPatchTone(){
         fxmSwitch->setCheckable(true);
 
         QSpinBox *fxmColor = new QSpinBox();
-        setSpinRange(fxmColor, 0, 3);
+        setSpinRange(fxmColor, 1, 4);
 
         QSpinBox *fxmDepth = new QSpinBox();
-        setSpinRange(fxmDepth,0,15);
+        setSpinRange(fxmDepth,1,16);
 
         QComboBox *toneDelayMode = new QComboBox();
         toneDelayMode->addItem("NORMAL");        toneDelayMode->addItem("HOLD");
@@ -682,12 +850,14 @@ void PatchUI::drawPatchTone(){
         lfo1DelayTimeList->append(lfo1DelayTime );
         grid->addWidget(lfo1DelayTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo1FadeMode = new QComboBox();
+        lfo1FadeMode->setEnabled(false);//XP30 BUG
         lfo1FadeModeList->append(lfo1FadeMode );
         grid->addWidget(lfo1FadeMode , r++, toneid, 1, 1, Qt::AlignTop);
         QSlider *lfo1FadeTime = new QSlider(Qt::Horizontal);
         lfo1FadeTimeList->append(lfo1FadeTime );
         grid->addWidget(lfo1FadeTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo1ExternalSync = new QComboBox();
+        lfo1ExternalSync->setEnabled(false);//XP30 BUG
         lfo1ExternalSyncList->append(lfo1ExternalSync );
         grid->addWidget(lfo1ExternalSync , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo2WaveForm = new QComboBox();
@@ -706,6 +876,7 @@ void PatchUI::drawPatchTone(){
         lfo2DelayTimeList->append(lfo2DelayTime );
         grid->addWidget(lfo2DelayTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo2FadeMode = new QComboBox();
+        lfo2FadeMode->setEnabled(false);//XP30 BUG
         lfo2FadeModeList->append(lfo2FadeMode );
         grid->addWidget(lfo2FadeMode , r++, toneid, 1, 1, Qt::AlignTop);
         QSlider *lfo2FadeTime = new QSlider(Qt::Horizontal);
@@ -713,6 +884,7 @@ void PatchUI::drawPatchTone(){
         grid->addWidget(lfo2FadeTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo2ExternalSync = new QComboBox();
         lfo2ExternalSyncList->append(lfo2ExternalSync );
+        lfo2ExternalSync->setEnabled(false);//XP30 BUG
         grid->addWidget(lfo2ExternalSync , r++, toneid, 1, 1, Qt::AlignTop);
         QSpinBox *coarseTune = new QSpinBox();
         coarseTuneList->append(coarseTune );

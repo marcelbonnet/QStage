@@ -17,7 +17,7 @@ extern "C" {
 
 #include "QStageException.h"
 
-#define RINGBUFFER_SIZE		1024*sizeof(struct FormSerialMidi::MidiMessage)
+//#define RINGBUFFER_SIZE		1024*sizeof(struct FormSerialMidi::MidiMessage)
 
 namespace Ui {
 class FormSerialMidi;
