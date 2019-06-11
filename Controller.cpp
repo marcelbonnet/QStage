@@ -1,4 +1,5 @@
 #include "Controller.h"
+#include "QStageException.h"
 #include <QDebug>
 
 Controller::Controller()
@@ -23,6 +24,49 @@ QMap<QString, QString> Controller::queryTemasUI() throw (std::exception) {
         rs.insert(QString(key), QString(val));
     }
     return rs;
+}
+
+void Controller::persistTema(QString key, QString css) noexcept(false) {
+    SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE);
+    SQLite::Statement   query(db, "SELECT key FROM config WHERE key = ?");
+
+    if(!key.startsWith("tema-"))
+        throw QStageException("O tema deve ter um nome (key) com o prefixo \"tema-\" para ser encontrado na tabela de config quando faço a query de temas existentes.");
+
+    query.bind(1, key.toUtf8().data());
+
+    try {
+
+        bool b = query.executeStep();
+
+        if(b){
+
+            SQLite::Statement   q(db, "UPDATE config SET val = ? WHERE key = ?");
+            q.bind(1, css.toUtf8().data());
+            q.bind(2, key.toUtf8().data());
+            q.exec();
+
+        } else {
+            SQLite::Statement   q(db, "INSERT INTO config (key, val) VALUES(?, ?)");
+            q.bind(1, key.toUtf8().data());
+            q.bind(2, css.toUtf8().data());
+            q.exec();
+        }
+
+    } catch (SQLite::Exception &e) {
+        throw e;
+    }
+
+}
+void Controller::deleteTema(QString key) noexcept(false) {
+    SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE);
+    SQLite::Statement   query(db, "DELETE FROM config WHERE key = ?");
+
+    if(!key.startsWith("tema-"))
+        throw new QStageException("O tema deve ter um nome (key) com o prefixo \"tema-\" para ser encontrado na tabela de config quando faço a query de temas existentes.");
+
+    query.bind(1, key.toUtf8().data());
+    query.exec();
 }
 
 void Controller::setUltimoTemaUsado(QString nomeTema) throw (std::exception) {

@@ -22,9 +22,15 @@ private slots:
 
     void on_cmbTemas_currentIndexChanged(int index);
 
+    void on_pushButton_clicked();
+
+    void on_btnRemover_clicked();
+
 private:
     Ui::DialogTemaEditor *ui;
     MainWindow *w;
+
+    void carregarTemas();
 };
 
 #endif // DIALOGTEMAEDITOR_H
