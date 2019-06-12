@@ -637,6 +637,7 @@ void MainWindow::on_perfEfeito_currentIndexChanged(int index)
     ui->perfParam_9->setMaximum(max->at(8));
     ui->perfParam_10->setMaximum(max->at(9));
     ui->perfParam_11->setMaximum(max->at(10));
+    ui->perfParam_12->setMaximum(max->at(11));
 
 }
 

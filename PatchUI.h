@@ -16,7 +16,7 @@
 #include "PatchTone.h"
 #include "SysExMessage.h"
 #include "patch.h"
-
+#include "Efeito.h"
 
 namespace Ui {
 class PatchUI;
@@ -188,6 +188,7 @@ private:
 private slots:
     void onPatchToneChanged();
     void onPatchToneChanged(int i);
+    void onPatchCommonEfx(int i);
     /*
     void onChangeCutoffKeyfollowList(int data);
     void onChangebiasDirectionList(int data);
@@ -322,6 +323,7 @@ private slots:
     void on_booster12_currentIndexChanged(int index);
     void on_structure34_currentIndexChanged(int index);
     void on_booster34_currentIndexChanged(int index);
+    void on_perfEfeito_currentIndexChanged(int index);
 };
 
 #endif // PATCHUI_H

@@ -23,7 +23,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
@@ -752,7 +752,7 @@
                </widget>
               </item>
               <item row="0" column="1" colspan="3">
-               <widget class="QComboBox" name="perfEfeito_3"/>
+               <widget class="QComboBox" name="perfEfeito"/>
               </item>
               <item row="1" column="0" colspan="2">
                <widget class="QLabel" name="label_93">
@@ -762,7 +762,7 @@
                </widget>
               </item>
               <item row="1" column="2" colspan="2">
-               <widget class="QComboBox" name="perfOA_3">
+               <widget class="QComboBox" name="perfOA">
                 <item>
                  <property name="text">
                   <string>MIX</string>
@@ -788,7 +788,7 @@
                </widget>
               </item>
               <item row="2" column="3">
-               <widget class="QSlider" name="mixOutSendLevel_2">
+               <widget class="QSlider" name="mixOutSendLevel">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -808,7 +808,7 @@
                </widget>
               </item>
               <item row="3" column="3">
-               <widget class="QSlider" name="chorusSendLevel_2">
+               <widget class="QSlider" name="chorusSendLevel">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -825,7 +825,7 @@
                </widget>
               </item>
               <item row="4" column="3">
-               <widget class="QSlider" name="reverbSendLevel_2">
+               <widget class="QSlider" name="reverbSendLevel">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -842,7 +842,7 @@
                </widget>
               </item>
               <item row="5" column="2" colspan="2">
-               <widget class="QComboBox" name="perfCtrlSrc1_3">
+               <widget class="QComboBox" name="perfCtrlSrc1">
                 <item>
                  <property name="text">
                   <string>OFF</string>
@@ -908,7 +908,7 @@
                </widget>
               </item>
               <item row="6" column="3">
-               <widget class="QSpinBox" name="perfCtrlDepth1_3">
+               <widget class="QSpinBox" name="perfCtrlDepth1">
                 <property name="maximum">
                  <number>126</number>
                 </property>
@@ -925,7 +925,7 @@
                </widget>
               </item>
               <item row="7" column="2" colspan="2">
-               <widget class="QComboBox" name="perfCtrlSrc2_3">
+               <widget class="QComboBox" name="perfCtrlSrc2">
                 <item>
                  <property name="text">
                   <string>OFF</string>
@@ -991,7 +991,7 @@
                </widget>
               </item>
               <item row="8" column="3">
-               <widget class="QSpinBox" name="perfCtrlDepth2_3">
+               <widget class="QSpinBox" name="perfCtrlDepth2">
                 <property name="maximum">
                  <number>126</number>
                 </property>
@@ -1045,7 +1045,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QSpinBox" name="perfChorusRate_3">
+               <widget class="QSpinBox" name="perfChorusRate">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1059,7 +1059,7 @@
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QSpinBox" name="perfChorusFeedback_3">
+               <widget class="QSpinBox" name="perfChorusFeedback">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1073,7 +1073,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QSpinBox" name="perfChorusDepth_3">
+               <widget class="QSpinBox" name="perfChorusDepth">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1087,7 +1087,7 @@
                </widget>
               </item>
               <item row="2" column="3">
-               <widget class="QComboBox" name="perfChorusOut_3">
+               <widget class="QComboBox" name="perfChorusOut">
                 <item>
                  <property name="text">
                   <string>MIX</string>
@@ -1122,7 +1122,7 @@
                </widget>
               </item>
               <item row="0" column="1" colspan="3">
-               <widget class="QComboBox" name="perfReverbType_3">
+               <widget class="QComboBox" name="perfReverbType">
                 <item>
                  <property name="text">
                   <string>ROOM1</string>
@@ -1173,7 +1173,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QSpinBox" name="perfReverbLevel_3">
+               <widget class="QSpinBox" name="perfReverbLevel">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1187,7 +1187,7 @@
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QComboBox" name="perfReverbHFDamp_3">
+               <widget class="QComboBox" name="perfReverbHFDamp">
                 <item>
                  <property name="text">
                   <string>220</string>
@@ -1288,7 +1288,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QSpinBox" name="perfReverbTime_3">
+               <widget class="QSpinBox" name="perfReverbTime">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1302,7 +1302,7 @@
                </widget>
               </item>
               <item row="2" column="3">
-               <widget class="QSpinBox" name="perfReverbDelayFeedback_3">
+               <widget class="QSpinBox" name="perfReverbDelayFeedback">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1325,7 +1325,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="perfParam_25">
+               <widget class="QSpinBox" name="perfParam1">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1342,7 +1342,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QSpinBox" name="perfParam_26">
+               <widget class="QSpinBox" name="perfParam2">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1359,7 +1359,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QSpinBox" name="perfParam_27">
+               <widget class="QSpinBox" name="perfParam3">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1376,7 +1376,7 @@
                </widget>
               </item>
               <item row="3" column="1">
-               <widget class="QSpinBox" name="perfParam_28">
+               <widget class="QSpinBox" name="perfParam4">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1393,7 +1393,7 @@
                </widget>
               </item>
               <item row="4" column="1">
-               <widget class="QSpinBox" name="perfParam_29">
+               <widget class="QSpinBox" name="perfParam5">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1410,7 +1410,7 @@
                </widget>
               </item>
               <item row="5" column="1">
-               <widget class="QSpinBox" name="perfParam_30">
+               <widget class="QSpinBox" name="perfParam6">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1427,7 +1427,7 @@
                </widget>
               </item>
               <item row="6" column="1">
-               <widget class="QSpinBox" name="perfParam_31">
+               <widget class="QSpinBox" name="perfParam7">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1444,7 +1444,7 @@
                </widget>
               </item>
               <item row="7" column="1">
-               <widget class="QSpinBox" name="perfParam_32">
+               <widget class="QSpinBox" name="perfParam8">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1461,7 +1461,7 @@
                </widget>
               </item>
               <item row="8" column="1">
-               <widget class="QSpinBox" name="perfParam_33">
+               <widget class="QSpinBox" name="perfParam9">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1478,7 +1478,7 @@
                </widget>
               </item>
               <item row="9" column="1">
-               <widget class="QSpinBox" name="perfParam_34">
+               <widget class="QSpinBox" name="perfParam10">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1495,7 +1495,7 @@
                </widget>
               </item>
               <item row="10" column="1">
-               <widget class="QSpinBox" name="perfParam_35">
+               <widget class="QSpinBox" name="perfParam11">
                 <property name="maximum">
                  <number>127</number>
                 </property>
@@ -1512,7 +1512,7 @@
                </widget>
               </item>
               <item row="11" column="1">
-               <widget class="QSpinBox" name="perfParam_36">
+               <widget class="QSpinBox" name="perfParam12">
                 <property name="maximum">
                  <number>127</number>
                 </property>

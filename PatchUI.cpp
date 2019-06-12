@@ -36,6 +36,11 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     for(int i=0; i<=38; i++)
         ui->patchCategory->addItem(categorias[i]);
 
+    //combo de Efeitos
+    for(int efx=0; efx<40; efx++ ){
+        QString nome = QString("%1 " + Efeito::nomes[efx]).arg(efx+1);
+        ui->perfEfeito->addItem(nome, QVariant::fromValue(0));
+    }
 
     /*
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
@@ -187,6 +192,42 @@ void PatchUI::conectarWidgets()
     for(int i=0; i<veocityRangeLowerList->count(); i++) connect(veocityRangeLowerList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<veocityRangeUpperList->count(); i++) connect(veocityRangeUpperList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
 
+    /*
+     * PATCH COMMON: EFX
+     * */
+    connect(ui->perfEfeito, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfOA, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfCtrlSrc1, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfCtrlSrc2, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfChorusOut, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfReverbType, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfReverbHFDamp, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->mixOutSendLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->chorusSendLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->reverbSendLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfCtrlDepth1, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfCtrlDepth2, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam1, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam2, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam3, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam4, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam5, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam6, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam7, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam8, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam9, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam10, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam11, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfParam11, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfChorusRate, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfChorusDepth, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfChorusLevel_3, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfChorusFeedback, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfChorusPreDelay_3, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfReverbTime, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfReverbLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->perfReverbDelayFeedback, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+
 
 }
 
@@ -296,6 +337,42 @@ void PatchUI::desconectarWidgets(){
     for(int i=0; i<veocityRangeLowerList->count(); i++) disconnect(veocityRangeLowerList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<veocityRangeUpperList->count(); i++) disconnect(veocityRangeUpperList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
 
+
+    /*
+     * PATCH COMMON: EFX
+     * */
+    disconnect(ui->perfEfeito, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfOA, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfCtrlSrc1, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfCtrlSrc2, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfChorusOut, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfReverbType, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfReverbHFDamp, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->mixOutSendLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->chorusSendLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->reverbSendLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfCtrlDepth1, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfCtrlDepth2, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam1, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam2, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam3, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam4, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam5, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam6, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam7, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam8, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam9, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam10, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam11, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfParam11, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfChorusRate, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfChorusDepth, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfChorusLevel_3, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfChorusFeedback, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfChorusPreDelay_3, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfReverbTime, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfReverbLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->perfReverbDelayFeedback, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
 }
 
 void PatchUI::setupProperties(){
@@ -639,7 +716,7 @@ void PatchUI::onPatchToneChanged(int i){
      * Pitch Envelope
     */
     if( patchTone->function == PatchTone::Pitch_Envelope_Time_1
-          || patchTone->function == PatchTone::Pitch_Envelope_Time_2
+            || patchTone->function == PatchTone::Pitch_Envelope_Time_2
             || patchTone->function == PatchTone::Pitch_Envelope_Time_3
             || patchTone->function == PatchTone::Pitch_Envelope_Time_4
             || patchTone->function == PatchTone::Pitch_Envelope_Level_1
@@ -647,23 +724,23 @@ void PatchUI::onPatchToneChanged(int i){
             || patchTone->function == PatchTone::Pitch_Envelope_Level_3
             || patchTone->function == PatchTone::Pitch_Envelope_Level_4
             ){
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_1, theTone+1),
-                      pitchEnvelopeTime1List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_2, theTone+1),
-                      pitchEnvelopeTime2List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_3, theTone+1),
-                      pitchEnvelopeTime3List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_4, theTone+1),
-                      pitchEnvelopeTime4List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_1, theTone+1),
-                      pitchEnvelopeLevel1List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_2, theTone+1),
-                      pitchEnvelopeLevel2List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_3, theTone+1),
-                      pitchEnvelopeLevel3List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_4, theTone+1),
-                      pitchEnvelopeLevel4List->at(theTone)->value() );
-  }
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_1, theTone+1),
+                        pitchEnvelopeTime1List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_2, theTone+1),
+                        pitchEnvelopeTime2List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_3, theTone+1),
+                        pitchEnvelopeTime3List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_4, theTone+1),
+                        pitchEnvelopeTime4List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_1, theTone+1),
+                        pitchEnvelopeLevel1List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_2, theTone+1),
+                        pitchEnvelopeLevel2List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_3, theTone+1),
+                        pitchEnvelopeLevel3List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_4, theTone+1),
+                        pitchEnvelopeLevel4List->at(theTone)->value() );
+    }
 
 
     /*
@@ -758,7 +835,7 @@ void PatchUI::onPatchToneChanged(int i){
      * TVF Envelope
      */
     if( patchTone->function == PatchTone::Filter_Envelope_Time_1
-          || patchTone->function == PatchTone::Filter_Envelope_Time_2
+            || patchTone->function == PatchTone::Filter_Envelope_Time_2
             || patchTone->function == PatchTone::Filter_Envelope_Time_3
             || patchTone->function == PatchTone::Filter_Envelope_Time_4
             || patchTone->function == PatchTone::Filter_Envelope_Level_1
@@ -766,24 +843,24 @@ void PatchUI::onPatchToneChanged(int i){
             || patchTone->function == PatchTone::Filter_Envelope_Level_3
             || patchTone->function == PatchTone::Filter_Envelope_Level_4
             ){
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_1, theTone+1),
-                      filterEnvelopeTime1List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_2, theTone+1),
-                      filterEnvelopeTime2List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_3, theTone+1),
-                      filterEnvelopeTime3List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_4, theTone+1),
-                      filterEnvelopeTime4List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_1, theTone+1),
+                        filterEnvelopeTime1List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_2, theTone+1),
+                        filterEnvelopeTime2List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_3, theTone+1),
+                        filterEnvelopeTime3List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_4, theTone+1),
+                        filterEnvelopeTime4List->at(theTone)->value() );
 
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_1, theTone+1),
-                      filterEnvelopeLevel1List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_2, theTone+1),
-                      filterEnvelopeLevel2List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_3, theTone+1),
-                      filterEnvelopeLevel3List->at(theTone)->value() );
-      enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_4, theTone+1),
-                      filterEnvelopeLevel4List->at(theTone)->value() );
-  }
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_1, theTone+1),
+                        filterEnvelopeLevel1List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_2, theTone+1),
+                        filterEnvelopeLevel2List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_3, theTone+1),
+                        filterEnvelopeLevel3List->at(theTone)->value() );
+        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_4, theTone+1),
+                        filterEnvelopeLevel4List->at(theTone)->value() );
+    }
 
     /*
      * TVA
@@ -882,6 +959,49 @@ void PatchUI::onPatchToneChanged(int i){
 
 }
 
+void PatchUI::onPatchCommonEfx(int i){
+    //vou mandar a porra toda de uma vez por causa da merda dos bugs da Roland
+    enviarMensagem(new Patch(Patch::EFXOutputAssign),ui->perfOA->currentIndex() );
+    enviarMensagem(new Patch(Patch::EFXMixSendOutputLevel),ui->mixOutSendLevel->value() );
+    enviarMensagem(new Patch(Patch::EFXChorusSendLevel),ui->chorusSendLevel->value() );
+    enviarMensagem(new Patch(Patch::EFXReverbSendLevel),ui->reverbSendLevel->value() );
+
+    enviarMensagem(new Patch(Patch::EFXType),ui->perfEfeito->currentIndex() );
+    enviarMensagem(new Patch(Patch::EFXParam01),ui->perfParam1->value() );
+    enviarMensagem(new Patch(Patch::EFXParam02),ui->perfParam2->value() );
+    enviarMensagem(new Patch(Patch::EFXParam03),ui->perfParam3->value() );
+    enviarMensagem(new Patch(Patch::EFXParam04),ui->perfParam4->value() );
+    enviarMensagem(new Patch(Patch::EFXParam05),ui->perfParam5->value() );
+    enviarMensagem(new Patch(Patch::EFXParam06),ui->perfParam6->value() );
+    enviarMensagem(new Patch(Patch::EFXParam07),ui->perfParam7->value() );
+    enviarMensagem(new Patch(Patch::EFXParam08),ui->perfParam8->value() );
+    enviarMensagem(new Patch(Patch::EFXParam09),ui->perfParam9->value() );
+    enviarMensagem(new Patch(Patch::EFXParam10),ui->perfParam10->value() );
+    enviarMensagem(new Patch(Patch::EFXParam11),ui->perfParam11->value() );
+    enviarMensagem(new Patch(Patch::EFXParam12),ui->perfParam12->value() );
+
+    enviarMensagem(new Patch(Patch::EFXControlSource1),ui->perfCtrlSrc1->currentIndex() );
+    enviarMensagem(new Patch(Patch::EFXControlDepth1),ui->perfCtrlDepth1->value() );
+    enviarMensagem(new Patch(Patch::EFXControlSource2),ui->perfCtrlSrc2->currentIndex() );
+    enviarMensagem(new Patch(Patch::EFXControlDepth2),ui->perfCtrlDepth2->value() );
+
+    enviarMensagem(new Patch(Patch::ChorusLevel),ui->perfChorusLevel_3->value() );
+    enviarMensagem(new Patch(Patch::ChorusRate),ui->perfChorusRate->value() );
+    enviarMensagem(new Patch(Patch::ChorusDepth),ui->perfChorusDepth->value() );
+    enviarMensagem(new Patch(Patch::ChorusPreDelay),ui->perfChorusPreDelay_3->value() );
+    enviarMensagem(new Patch(Patch::ChorusFeedback),ui->perfChorusFeedback->value() );
+
+    enviarMensagem(new Patch(Patch::ChorusOutput),ui->perfChorusOut->currentIndex() );
+
+    enviarMensagem(new Patch(Patch::ReverbType),ui->perfReverbType->currentIndex() );
+    enviarMensagem(new Patch(Patch::ReverbLevel),ui->perfReverbLevel->value() );
+    enviarMensagem(new Patch(Patch::ReverbTime),ui->perfReverbTime->value() );
+    enviarMensagem(new Patch(Patch::ReverbHFDamp),ui->perfReverbHFDamp->currentIndex() );
+    enviarMensagem(new Patch(Patch::DelayFeedback),ui->perfReverbDelayFeedback->value() );
+
+
+}
+
 void PatchUI::enviarGrupoDeMensagens(PatchTone::Function function, int tone){
 
     if(function == PatchTone::LFO1_Rate
@@ -898,8 +1018,8 @@ void PatchUI::enviarGrupoDeMensagens(PatchTone::Function function, int tone){
         enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, tone+1), lfo1RateList->at(tone)->value() );
         enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, tone+1), lfo1OffSetList->at(tone)->currentIndex() );
 
-//desabilitar: algo sempre coloca essa opção em OFF
-//        enviarMensagem( new PatchTone(PatchTone::LFO1_External_Sync, tone+1), lfo1ExternalSyncList->at(tone)->currentIndex() );
+        //desabilitar: algo sempre coloca essa opção em OFF
+        //        enviarMensagem( new PatchTone(PatchTone::LFO1_External_Sync, tone+1), lfo1ExternalSyncList->at(tone)->currentIndex() );
 
 
         enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, tone+1), lfo1DelayTimeList->at(tone)->value() );
@@ -908,7 +1028,7 @@ void PatchUI::enviarGrupoDeMensagens(PatchTone::Function function, int tone){
          * o Fade Mode zera o Fade Time e vice-versa.
         */
         enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, tone+1), lfo1FadeTimeList->at(tone)->value() );
-//        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Mode, tone+1), lfo1FadeModeList->at(tone)->currentIndex() );
+        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Mode, tone+1), lfo1FadeModeList->at(tone)->currentIndex() );
 
     }
 
@@ -1568,13 +1688,13 @@ void PatchUI::on_portamentoTime_valueChanged(int value)
 
 void PatchUI::on_portamentoType_currentIndexChanged(int index)
 {
-     enviarMensagem(new Patch(Patch::PortamentoType), ui->portamentoType->currentIndex());
-     enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
+    enviarMensagem(new Patch(Patch::PortamentoType), ui->portamentoType->currentIndex());
+    enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
 }
 
 void PatchUI::on_portamentoStart_currentIndexChanged(int index)
 {
-     enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
+    enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
 }
 
 void PatchUI::on_efxControl_currentIndexChanged(int index)
@@ -1652,4 +1772,36 @@ void PatchUI::on_structure34_currentIndexChanged(int index)
 void PatchUI::on_booster34_currentIndexChanged(int index)
 {
     enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
+}
+
+void PatchUI::on_perfEfeito_currentIndexChanged(int index)
+{
+    QStringList *labels = Efeito::getLabels(index);
+    QList<int> *max = Efeito::getParametrosMaxVal(index);
+
+    ui->perfParamLbl_25->setText(labels->at(0));
+    ui->perfParamLbl_26->setText(labels->at(1));
+    ui->perfParamLbl_27->setText(labels->at(2));
+    ui->perfParamLbl_28->setText(labels->at(3));
+    ui->perfParamLbl_29->setText(labels->at(4));
+    ui->perfParamLbl_30->setText(labels->at(5));
+    ui->perfParamLbl_31->setText(labels->at(6));
+    ui->perfParamLbl_32->setText(labels->at(7));
+    ui->perfParamLbl_33->setText(labels->at(8));
+    ui->perfParamLbl_34->setText(labels->at(9));
+    ui->perfParamLbl_35->setText(labels->at(10));
+    ui->perfParamLbl_36->setText(labels->at(11));
+
+    ui->perfParam1->setMaximum(max->at(0));
+    ui->perfParam2->setMaximum(max->at(1));
+    ui->perfParam3->setMaximum(max->at(2));
+    ui->perfParam4->setMaximum(max->at(3));
+    ui->perfParam5->setMaximum(max->at(4));
+    ui->perfParam6->setMaximum(max->at(5));
+    ui->perfParam7->setMaximum(max->at(6));
+    ui->perfParam8->setMaximum(max->at(7));
+    ui->perfParam9->setMaximum(max->at(8));
+    ui->perfParam10->setMaximum(max->at(9));
+    ui->perfParam11->setMaximum(max->at(10));
+    ui->perfParam12->setMaximum(max->at(11));
 }
