@@ -32,6 +32,10 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
         ui->structure34->setIconSize(QSize(250,60));
     }
 
+    //Categorias
+    for(int i=0; i<=38; i++)
+        ui->patchCategory->addItem(categorias[i]);
+
 
     /*
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
@@ -53,6 +57,18 @@ void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
                 new SysExMessage(
                     BaseAddress(BaseAddress::PatchModeTempPatch),
                     patchTone,
+                    data));
+
+    jack->tx(dados);
+}
+
+void PatchUI::enviarMensagem(Patch *patch, int data){
+    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+
+    dados->append(
+                new SysExMessage(
+                    BaseAddress(BaseAddress::PatchModeTempPatch),
+                    patch,
                     data));
 
     jack->tx(dados);
@@ -1457,3 +1473,183 @@ void PatchUI::drawPatchTone(){
 }
 
 
+
+void PatchUI::on_name_editingFinished()
+{
+    QString name = ui->name->text();
+    for(int i=name.length() ; i<12; i++){
+        name.append(" ");
+    }
+    Patch::Function nomes[12] = {
+        Patch::Name01,
+        Patch::Name02,
+        Patch::Name03,
+        Patch::Name04,
+        Patch::Name05,
+        Patch::Name06,
+        Patch::Name07,
+        Patch::Name08,
+        Patch::Name09,
+        Patch::Name10,
+        Patch::Name11,
+        Patch::Name12
+    };
+
+    for(int i=0; i<12; i++)
+        enviarMensagem(new Patch(nomes[i]), name.toUtf8().data()[i]);
+}
+
+void PatchUI::on_tempo_editingFinished()
+{
+    enviarMensagem(new Patch(Patch::PatchTempo), ui->tempo->value());
+}
+
+void PatchUI::on_patchCategory_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::PatchCategory), ui->patchCategory->currentIndex());
+}
+
+void PatchUI::on_analogFeel_valueChanged(int value)
+{
+    enviarMensagem(new Patch(Patch::AnalogFeel), ui->analogFeel->value());
+}
+
+void PatchUI::on_patchPan_valueChanged(int value)
+{
+    enviarMensagem(new Patch(Patch::PatchPan), ui->patchPan->value());
+    enviarMensagem(new Patch(Patch::AnalogFeel), ui->analogFeel->value());
+}
+
+void PatchUI::on_patchLevel_valueChanged(int value)
+{
+    enviarMensagem(new Patch(Patch::PatchLevel), ui->patchLevel->value());
+    enviarMensagem(new Patch(Patch::PatchPan), ui->patchPan->value());
+    enviarMensagem(new Patch(Patch::AnalogFeel), ui->analogFeel->value());
+}
+
+void PatchUI::on_btnKeyAssignMode_clicked()
+{
+    enviarMensagem(new Patch(Patch::KeyAssignMode), ui->btnKeyAssignMode->isChecked()? 1 : 0);
+    enviarMensagem(new Patch(Patch::SoloLegato), ui->btnSoloLegato->isChecked()? 1 : 0);
+}
+
+void PatchUI::on_btnSoloLegato_clicked()
+{
+    enviarMensagem(new Patch(Patch::SoloLegato), ui->btnSoloLegato->isChecked()? 1 : 0);
+}
+
+void PatchUI::on_bendMin_valueChanged(int arg1)
+{
+    enviarMensagem(new Patch(Patch::BendRangeDown), ui->bendMin->value()*-1);
+}
+
+void PatchUI::on_bendMax_valueChanged(int arg1)
+{
+    enviarMensagem(new Patch(Patch::BendRangeUp), ui->bendMax->value());
+    enviarMensagem(new Patch(Patch::BendRangeDown), ui->bendMin->value()*-1);
+}
+
+void PatchUI::on_btnPortamentoSwitch_clicked()
+{
+    enviarMensagem(new Patch(Patch::PortamentoSwitch), ui->btnPortamentoSwitch->isChecked()? 1 : 0);
+}
+
+void PatchUI::on_btnPortamentoMode_clicked()
+{
+    enviarMensagem(new Patch(Patch::PortamentoMode), ui->btnPortamentoMode->isChecked()? 1 : 0);
+    enviarMensagem(new Patch(Patch::PortamentoType), ui->portamentoType->currentIndex());
+    enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
+}
+
+void PatchUI::on_portamentoTime_valueChanged(int value)
+{
+    enviarMensagem(new Patch(Patch::PortamentoTime), ui->portamentoTime->value());
+}
+
+void PatchUI::on_portamentoType_currentIndexChanged(int index)
+{
+     enviarMensagem(new Patch(Patch::PortamentoType), ui->portamentoType->currentIndex());
+     enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
+}
+
+void PatchUI::on_portamentoStart_currentIndexChanged(int index)
+{
+     enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
+}
+
+void PatchUI::on_efxControl_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::EFXControlHoldPeak), ui->efxControl->currentIndex());
+    enviarMensagem(new Patch(Patch::Control_1_HoldPeak), ui->control1->currentIndex());
+    enviarMensagem(new Patch(Patch::Control_2_HoldPeak), ui->control2->currentIndex());
+    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
+}
+
+void PatchUI::on_control1_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::Control_1_HoldPeak), ui->control1->currentIndex());
+    enviarMensagem(new Patch(Patch::Control_2_HoldPeak), ui->control2->currentIndex());
+    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
+}
+
+void PatchUI::on_control2_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::Control_2_HoldPeak), ui->control2->currentIndex());
+    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
+}
+
+void PatchUI::on_control3_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
+}
+
+void PatchUI::on_octave_valueChanged(int arg1)
+{
+    enviarMensagem(new Patch(Patch::OctaveShift), ui->octave->value()+3);
+    enviarMensagem(new Patch(Patch::StretchTuneDepth), ui->stretchTuneDepth->value());
+}
+
+void PatchUI::on_stretchTuneDepth_valueChanged(int arg1)
+{
+    enviarMensagem(new Patch(Patch::StretchTuneDepth), ui->stretchTuneDepth->value());
+    enviarMensagem(new Patch(Patch::VoicePriority), ui->voicePriority->currentIndex());
+}
+
+void PatchUI::on_voicePriority_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::VoicePriority), ui->voicePriority->currentIndex());
+}
+
+void PatchUI::on_btnVelocityRangeSwitch_clicked()
+{
+    enviarMensagem(new Patch(Patch::VelocityRangeSwitch), ui->btnVelocityRangeSwitch->isChecked()? 1 : 0);
+    enviarMensagem(new Patch(Patch::OctaveShift), ui->octave->value()+3);
+    enviarMensagem(new Patch(Patch::StretchTuneDepth), ui->stretchTuneDepth->value());
+    enviarMensagem(new Patch(Patch::VoicePriority), ui->voicePriority->currentIndex());
+}
+
+void PatchUI::on_structure12_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::StructyreType12), ui->structure12->currentIndex());
+    enviarMensagem(new Patch(Patch::Booster12), ui->booster12->currentIndex());
+    enviarMensagem(new Patch(Patch::StructyreType34), ui->structure34->currentIndex());
+    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
+}
+
+void PatchUI::on_booster12_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::Booster12), ui->booster12->currentIndex());
+    enviarMensagem(new Patch(Patch::StructyreType34), ui->structure34->currentIndex());
+    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
+}
+
+void PatchUI::on_structure34_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::StructyreType34), ui->structure34->currentIndex());
+    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
+}
+
+void PatchUI::on_booster34_currentIndexChanged(int index)
+{
+    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
+}

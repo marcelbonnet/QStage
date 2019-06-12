@@ -5814,6 +5814,11 @@ private:
         "FX",
         "FX",
     };
+
+    /**
+      São as categorias nos botões de 1 a 0 do XP-30 que dão acesso
+      aos sub menus de categorias e bancos de instrumentos
+      */
     QString categoriasPai[1406] = {
         "SYNTH",
         "PIANO",

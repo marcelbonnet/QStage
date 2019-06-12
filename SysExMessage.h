@@ -7,6 +7,7 @@
 #include "PatchTone.h"
 #include "PerformanceCommon.h"
 #include "PerformancePart.h"
+#include "patch.h"
 
 class SysExMessage
 {
@@ -16,6 +17,7 @@ public:
     SysExMessage(BaseAddress baseAddress, PerformanceCommon perf, int data = 0);
     SysExMessage(BaseAddress baseAddress, PerformancePart part, int data = 0);
     SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data = 0);
+    SysExMessage(BaseAddress baseAddress, Patch *patch, int data = 0);
 
     DataSet1 message = DataSet1();
 protected:
@@ -24,6 +26,7 @@ protected:
     PerformanceCommon perf;
     PerformancePart part;
     PatchTone *patchTone;
+    Patch *patch;
     int data;
 
 

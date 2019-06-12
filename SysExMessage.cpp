@@ -110,6 +110,36 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int da
                 .arg(patchTone->functionName);
 }
 
+SysExMessage::SysExMessage(BaseAddress baseAddress, Patch *patch, int data)
+{
+    this->base = baseAddress;
+    this->patch = patch;
+    this->data = data;
+
+    int addr = base.startAddress + patch->address;
+    message.b8 = addr & 0xFF;
+    message.b7 = addr >> 8 & 0xFF;
+    message.b6 = addr >> 16 & 0xFF;
+    message.b5 = addr >> 24 & 0xFF;
+
+    if(!patch->is2ByteData){
+        message.b9 = data;
+    } else {
+        int d1 = data & 0xF;
+        int d2 = (data >> 4) & 0xF;
+        message.b9 = d2;
+        message.b10 = d1;
+    }
+
+    message.b11 = calcularChecksum(addr, data);
+
+    qDebug() << QString("Patch Common %4 %1 = %2    DATA: %3")
+                .arg(QString::number(patch->address,16))
+                .arg(QString::number(data,16))
+                .arg(message.getDataRepresentation())
+                .arg(patch->functionName);
+}
+
 
 int SysExMessage::calcularChecksum(int endereco, int dado)
 {
