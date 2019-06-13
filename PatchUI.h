@@ -35,6 +35,7 @@ protected:
 private:
     Ui::PatchUI *ui;
 
+    void enviarPacotesDS1();
     void enviarMensagem(PatchTone *patchTone, int data);
     void enviarMensagem(Patch *patch, int data);
     void conectarWidgets();

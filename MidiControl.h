@@ -118,6 +118,9 @@ public:
     void transmitir();//envia as mensagens da QList para queue_new_message. Esvazia a QList no final
 
     void tx(QList<SysExMessage*> *sxs);
+    int calcularChecksum(int endereco, QList<int> *data);
+    void txPacoteDataSet(int addr, QList<int> *data);
+    //void txPacoteRequestData(int addr, int data);
 
     QList<QString> *listarPortas();
 

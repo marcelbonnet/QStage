@@ -89,7 +89,7 @@ void MidiControl::post_process_midi_input(struct MidiControl::MidiMessage *ev){
     if(ev->data[0] == 0xFE) //active sensing enviado pelo teclado = 254
         return;
 
-    qDebug() << "RECEBIDO\t\t" << ev->data[0] << ev->data[1] << ev->data[2];
+    qDebug() << QString::number(ev->data[0],16) << QString::number(ev->data[1],16) << QString::number(ev->data[2],16);
 
 }
 
@@ -292,6 +292,61 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
 
 }
 
+int MidiControl::calcularChecksum(int endereco, QList<int> *data)
+{
+    int a,b,c,d, e, f, soma = 0;
+    a = b = c = d = e = f = soma = 0; //faltava inicializar as variáveis corretamente para o checksum ser correto
+    //endereço
+    a = endereco & 0xFF;
+    b = (endereco >> 8) & 0xFF;
+    c = (endereco >> 16) & 0xFF;
+    d = (endereco >> 24) & 0xFF;
+    //dados do DS ou size do RQ
+    for (int dado :*data) {
+        if(dado <= 0xFF){
+            e+=dado;
+        } else {
+            e += dado & 0xFF;
+            f += (dado >> 8) & 0xFF;
+        }
+    }
+
+
+    soma = 128 - ( (a+b+c+d+e+f)%128 );
+
+    return soma;
+}
+
+void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
+    int a4 = addr & 0xFF;
+    int a3 = addr >> 8 & 0xFF;
+    int a2 = addr >> 16 & 0xFF;
+    int a1 = addr >> 24 & 0xFF;
+
+    //início da mensagem DS
+    queue_new_message(0xF0, 0x41, 0x10 );
+    queue_new_message(0x6A, 0x12,  a1);
+    queue_new_message(a2, a3, a4 );
+
+    //adciona final da mensagem:
+    data->append( calcularChecksum(addr, data) );
+    data->append(0xF7);
+
+    for (int i=0; i<data->length(); i+=3) {
+        if(i+2 < data->length()){
+            queue_new_message(data->at(i), data->at(i+1), data->at(i+2));
+        } else {
+            if(i+1 >= data->length()){
+                queue_new_message(data->at(i), -1, -1);
+            } else {
+                queue_new_message(data->at(i), data->at(i+1), -1);
+            }
+
+        }
+    }
+    data->clear();
+}
+
 void MidiControl::tx(QList<SysExMessage *> *sxs){
     bool segundoEnvio = false;
 
@@ -309,12 +364,11 @@ void MidiControl::tx(QList<SysExMessage *> *sxs){
         queue_new_message(msg->message.b6, msg->message.b7, msg->message.b8 );
         queue_new_message(msg->message.b9, msg->message.b10, msg->message.b11 );
 
-        if(msg->message.TYPE == DataSysExType::DATASET)
-            queue_new_message(msg->message.b12, -1, -1 );
-        else{
-//            qDebug() << "ENVIANDO DATA REQUEST";
-            queue_new_message(msg->message.b12, msg->message.b13, msg->message.b14 );
-        }
+
+        queue_new_message(msg->message.b12
+                          , msg->message.b13 > -1? msg->message.b13 : -1
+                          ,  msg->message.b14 > -1? msg->message.b14 : -1);
+
 
         contadorMensagensEnviadas++;
     }

@@ -56,6 +56,146 @@ PatchUI::~PatchUI()
     delete ui;
 }
 
+void PatchUI::enviarPacotesDS1(){
+    QList<int> *dados = new QList<int>();
+    int tone = 0; //de 0 a 3
+    int offset = 0x1000; //tone 0
+    if(tone == 1) offset = 0x1200;
+    if(tone == 2) offset = 0x1400;
+    if(tone == 3) offset = 0x1600;
+    int addr = 0x03000000 + offset; //patch temporary + patch common|tone
+
+    Waveform *w = waveIdList->at(tone)->currentData().value<Waveform*>();
+    int waveNumber2 = w->number & 0xF;
+    int waveNumber1 = (w->number >> 4) & 0xF;
+
+    dados->append(toneSwitchList->at(tone)->isChecked()? 1 : 0);
+    dados->append(w->groupType);
+    dados->append(w->groupId);
+    dados->append(waveNumber1);
+    dados->append(waveNumber2);
+    dados->append(waveGainList->at(tone)->currentIndex());
+    dados->append(fxmSwitchList->at(tone)->isChecked()? 1 : 0);
+    dados->append(fxmColorList->at(tone)->value());
+    dados->append(fxmDepthList->at(tone)->value());
+    dados->append(toneDelayModeList->at(tone)->currentIndex());
+    dados->append(toneDelayTimeList->at(tone)->value());
+    dados->append(veocityRangeCrossFadeList->at(tone)->value());
+    dados->append(veocityRangeLowerList ->at(tone)->value());
+    dados->append(veocityRangeUpperList ->at(tone)->value());
+    dados->append(keyboardRangeLowerList ->at(tone)->currentIndex());
+    dados->append(keyboardRangeUpperList ->at(tone)->currentIndex());
+    dados->append(redamperControlSwitchList ->at(tone)->isChecked()? 1 : 0);
+    dados->append(volumeControlSwitchList ->at(tone)->isChecked()? 1 : 0);
+    dados->append(hold1ControlSwitchList ->at(tone)->isChecked()? 1 : 0);
+    dados->append(pitchBendControlSwitchList ->at(tone)->isChecked()? 1 : 0);
+    dados->append(panControlSwitchList ->at(tone)->isChecked()? 1 : 0);
+
+
+    int icontrole =0;
+    for(int i=1; i<=12; i++){
+        int dest = controlerDestinationList->at( (i + (tone)*12)-1 )->currentIndex();
+        int depth = controlerDepthList->at( (i + (tone)*12)-1 )->value();
+        dados->append(dest);
+        dados->append(depth);
+        icontrole+=2;
+    }
+
+    dados->append(lfo1WaveFormList ->at(tone)->currentIndex());
+    dados->append(lfo1KeySyncSwitchList ->at(tone)->isChecked()? 1 : 0);
+    dados->append(lfo1RateList ->at(tone)->value());
+    dados->append(lfo1OffSetList ->at(tone)->currentIndex());
+    dados->append(lfo1DelayTimeList ->at(tone)->value());
+    dados->append(lfo1FadeModeList ->at(tone)->currentIndex());
+    dados->append(lfo1FadeTimeList ->at(tone)->value());
+    dados->append(lfo1ExternalSyncList ->at(tone)->currentIndex());
+
+    dados->append(lfo2WaveFormList ->at(tone)->currentIndex());
+    dados->append(lfo2KeySyncSwitchList ->at(tone)->isChecked()? 1 : 0);
+    dados->append(lfo2RateList ->at(tone)->value());
+    dados->append(lfo2OffSetList ->at(tone)->currentIndex());
+    dados->append(lfo2DelayTimeList ->at(tone)->value());
+    dados->append(lfo2FadeModeList ->at(tone)->currentIndex());
+    dados->append(lfo2FadeTimeList ->at(tone)->value());
+    dados->append(lfo2ExternalSyncList ->at(tone)->currentIndex());
+
+
+    dados->append(coarseTuneList ->at(tone)->value());
+    dados->append(fineTuneList ->at(tone)->value());
+    dados->append(randomPitchDepthList ->at(tone)->currentIndex());
+    dados->append(pitchKeyfollowList ->at(tone)->currentIndex());
+    dados->append(pitchEnvelopeDepthList ->at(tone)->value());
+    dados->append(pitchEnvelopeVelocitySensList ->at(tone)->value());
+    dados->append(pitchEnvelopeVelocityTime1List ->at(tone)->currentIndex());
+    dados->append(pitchEnvelopeVelocityTime4List ->at(tone)->currentIndex());
+    dados->append(pitchEnvelopeTimeKeyfollowList ->at(tone)->currentIndex());
+    dados->append(pitchEnvelopeTime1List ->at(tone)->value());
+    dados->append(pitchEnvelopeTime2List ->at(tone)->value());
+    dados->append(pitchEnvelopeTime3List ->at(tone)->value());
+    dados->append(pitchEnvelopeTime4List ->at(tone)->value());
+    dados->append(pitchEnvelopeLevel1List ->at(tone)->value());
+    dados->append(pitchEnvelopeLevel2List ->at(tone)->value());
+    dados->append(pitchEnvelopeLevel3List ->at(tone)->value());
+    dados->append(pitchEnvelopeLevel4List ->at(tone)->value());
+    dados->append(pitchLfo1DepthList ->at(tone)->value());
+    dados->append(pitchLfo2DepthList ->at(tone)->value());
+
+    dados->append(filterTypeList ->at(tone)->currentIndex());
+    dados->append(CutoffFrequencyList ->at(tone)->value());
+    dados->append(CutoffKeyfollowList ->at(tone)->currentIndex());
+    dados->append(resonanceList ->at(tone)->value());
+    dados->append(resonanceVelocitySensList ->at(tone)->value());
+    dados->append(filterEnvelopeDepthList ->at(tone)->value());
+    dados->append(filterEnvelopeVelocityCurveList ->at(tone)->currentIndex());
+    dados->append(filterEnvelopeVelocitySensList ->at(tone)->value());
+    dados->append(filterEnvelopeVelocityTime1List ->at(tone)->currentIndex());
+    dados->append(filterEnvelopeVelocityTime4List ->at(tone)->currentIndex());
+    dados->append(filterEnvelopeTimeKeyfollowList ->at(tone)->currentIndex());
+    dados->append(filterEnvelopeTime1List ->at(tone)->value());
+    dados->append(filterEnvelopeTime2List ->at(tone)->value());
+    dados->append(filterEnvelopeTime3List ->at(tone)->value());
+    dados->append(filterEnvelopeTime4List ->at(tone)->value());
+    dados->append(filterEnvelopeLevel1List ->at(tone)->value());
+    dados->append(filterEnvelopeLevel2List ->at(tone)->value());
+    dados->append(filterEnvelopeLevel3List ->at(tone)->value());
+    dados->append(filterEnvelopeLevel4List ->at(tone)->value());
+    dados->append(filterLfo1DepthList ->at(tone)->value());
+    dados->append(filterLfo2DepthList ->at(tone)->value());
+
+    dados->append(toneLevelList ->at(tone)->value());
+    dados->append(biasDirectionList ->at(tone)->currentIndex());
+    dados->append(biasPositionList ->at(tone)->currentIndex());
+    dados->append(biasLevelList ->at(tone)->currentIndex());
+    dados->append(levelEnvelopeVelocityCurveList  ->at(tone)->currentIndex());
+    dados->append(levelEnvelopeVelocitySensList ->at(tone)->value());
+    dados->append(levelEnvelopeVelocityTime1List ->at(tone)->currentIndex());
+    dados->append(levelEnvelopeVelocityTime4List ->at(tone)->currentIndex());
+    dados->append(levelEnvelopeTimeKeyfollowList ->at(tone)->currentIndex());
+    dados->append(levelEnvelopeTime1List ->at(tone)->value());
+    dados->append(levelEnvelopeTime2List ->at(tone)->value());
+    dados->append(levelEnvelopeTime3List ->at(tone)->value());
+    dados->append(levelEnvelopeTime4List ->at(tone)->value());
+    dados->append(levelEnvelopeLevel1List ->at(tone)->value());
+    dados->append(levelEnvelopeLevel2List ->at(tone)->value());
+    dados->append(levelEnvelopeLevel3List ->at(tone)->value());
+    dados->append(levelLfo1DepthList ->at(tone)->value());
+    dados->append(levelLfo2DepthList ->at(tone)->value());
+    dados->append(tonePanList ->at(tone)->value());
+    dados->append(panKeyfollowList ->at(tone)->currentIndex());
+    dados->append(randomPanDepthList ->at(tone)->value());
+    dados->append(alternatePanDepthList ->at(tone)->value());
+    dados->append(panLfo1DepthList ->at(tone)->value());
+    dados->append(panLfo2DepthList ->at(tone)->value());
+    dados->append(outputAssignList ->at(tone)->currentIndex());
+    dados->append(mixEfxSendLevelList ->at(tone)->value());
+    dados->append(ChorusSendLevelList ->at(tone)->value());
+
+    jack->txPacoteDataSet(addr, dados);
+    //próxima mensagem:
+//    dados->append(ReverbSendLevelList ->at(tone)->value());
+
+}
+
 void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
 
@@ -523,6 +663,11 @@ void PatchUI::onPatchToneChanged(){
 
     //    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
     PatchTone *patchTone = w->property("function").value<PatchTone*>();
+
+    enviarPacotesDS1();
+    return;
+
+
     enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
 
     /*
@@ -558,6 +703,11 @@ void PatchUI::onPatchToneChanged(){
 void PatchUI::onPatchToneChanged(int i){
     QObject* o = QObject::sender();
     PatchTone *patchTone = o->property("function").value<PatchTone*>();
+
+    enviarPacotesDS1();
+    return;
+
+
     int offset = 0;
     int theTone = patchTone->whichTone-1;
     bool isTxDiferenciada = false;
@@ -1216,14 +1366,14 @@ void PatchUI::drawPatchTone(){
         lfo1DelayTimeList->append(lfo1DelayTime );
         grid->addWidget(lfo1DelayTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo1FadeMode = new QComboBox();
-        lfo1FadeMode->setEnabled(false);//XP30 BUG
+//        lfo1FadeMode->setEnabled(false);//XP30 BUG
         lfo1FadeModeList->append(lfo1FadeMode );
         grid->addWidget(lfo1FadeMode , r++, toneid, 1, 1, Qt::AlignTop);
         QSlider *lfo1FadeTime = new QSlider(Qt::Horizontal);
         lfo1FadeTimeList->append(lfo1FadeTime );
         grid->addWidget(lfo1FadeTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo1ExternalSync = new QComboBox();
-        lfo1ExternalSync->setEnabled(false);//XP30 BUG
+//        lfo1ExternalSync->setEnabled(false);//XP30 BUG
         lfo1ExternalSyncList->append(lfo1ExternalSync );
         grid->addWidget(lfo1ExternalSync , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo2WaveForm = new QComboBox();
@@ -1242,7 +1392,7 @@ void PatchUI::drawPatchTone(){
         lfo2DelayTimeList->append(lfo2DelayTime );
         grid->addWidget(lfo2DelayTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo2FadeMode = new QComboBox();
-        lfo2FadeMode->setEnabled(false);//XP30 BUG
+//        lfo2FadeMode->setEnabled(false);//XP30 BUG
         lfo2FadeModeList->append(lfo2FadeMode );
         grid->addWidget(lfo2FadeMode , r++, toneid, 1, 1, Qt::AlignTop);
         QSlider *lfo2FadeTime = new QSlider(Qt::Horizontal);
@@ -1250,7 +1400,7 @@ void PatchUI::drawPatchTone(){
         grid->addWidget(lfo2FadeTime , r++, toneid, 1, 1, Qt::AlignTop);
         QComboBox *lfo2ExternalSync = new QComboBox();
         lfo2ExternalSyncList->append(lfo2ExternalSync );
-        lfo2ExternalSync->setEnabled(false);//XP30 BUG
+//        lfo2ExternalSync->setEnabled(false);//XP30 BUG
         grid->addWidget(lfo2ExternalSync , r++, toneid, 1, 1, Qt::AlignTop);
         QSpinBox *coarseTune = new QSpinBox();
         coarseTuneList->append(coarseTune );
@@ -1810,11 +1960,13 @@ void PatchUI::on_perfEfeito_currentIndexChanged(int index)
 void PatchUI::on_pushButton_clicked()
 {
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-    qDebug() << "====================================================";
-    dados->append(
-                new SysExMessage(
-                    BaseAddress(BaseAddress::PatchModeTempPatch),
-                    new PatchTone(PatchTone::Tone_Switch, 1),
-                    1, DataSysExType::DATAREQUEST ));
+    qDebug() << "=================== REQUEST =================================";
+//    dados->append( new SysExMessage( 0x00000000, 0x66) );
+    dados->append( new SysExMessage( ui->startAddr->value(), ui->dataSize->value()) );
+    /*
+     * Recuperando Patch Tone #1
+     * 3001000 7f   (um DS1 de 128 bytes)
+     * 3001100 1    (pega o reverb do tone que não coube no primeiro DS)
+     */
     jack->tx(dados);
 }

@@ -161,6 +161,40 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, Patch *patch, int data)
 //                .arg(patch->functionName);
 }
 
+SysExMessage::SysExMessage(int addr, int data)
+{
+
+    message.b8 = addr & 0xFF;
+    message.b7 = addr >> 8 & 0xFF;
+    message.b6 = addr >> 16 & 0xFF;
+    message.b5 = addr >> 24 & 0xFF;
+    // REQUEST
+    message.b4 = 0x11;
+//    message.b12 = 1;
+//    message.b11 = 0;
+//    message.b10 = 0;
+//    message.b9 = 0;
+        message.b12 = data & 0xFF;
+        message.b11 = data >> 8 & 0xFF;
+        message.b10 = data >> 16 & 0xFF;
+        message.b9 =  data >> 24 & 0xFF;
+
+    message.b13 = calcularChecksum(addr, data);
+
+
+//    if(!patch->is2ByteData){
+//        message.b9 = data;
+//    } else {
+//        int d1 = data & 0xF;
+//        int d2 = (data >> 4) & 0xF;
+//        message.b9 = d2;
+//        message.b10 = d1;
+//    }
+
+
+
+}
+
 
 int SysExMessage::calcularChecksum(int endereco, int dado)
 {

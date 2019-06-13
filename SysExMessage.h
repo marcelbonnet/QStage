@@ -20,6 +20,8 @@ public:
     SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data = 0, int type = DataSysExType::DATASET);
     SysExMessage(BaseAddress baseAddress, Patch *patch, int data = 0);
 
+    SysExMessage(int addr, int data = 0);
+
 
     DataSysExType message = DataSysExType();
 
