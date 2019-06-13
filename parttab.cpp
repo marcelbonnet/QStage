@@ -125,13 +125,13 @@ void PartTab::enviarMensagem(PerformancePart::Function function, int data){
                     BaseAddress(BaseAddress::TempPerformance),
                     pp,
                     data));
-    qDebug() << QString("Enviando Parte %1 -> %2 = %3").arg(parte).arg(pp.functionName).arg(QString::number(data,16));
+//    qDebug() << QString("Enviando Parte %1 -> %2 = %3").arg(parte).arg(pp.functionName).arg(QString::number(data,16));
     jack->tx(dados);
 }
 
 void PartTab::enviar(){
 
-    qDebug() << QString("====> Enviando todas as mensagens de Performance Part #%1").arg(parte);
+//    qDebug() << QString("====> Enviando todas as mensagens de Performance Part #%1").arg(parte);
 
 
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
@@ -139,7 +139,7 @@ void PartTab::enviar(){
 
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
     if(ui->patch->currentIndex() > -1){
-        qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
+//        qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
         dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchGroupType, parte),patch->groupType));
         dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchGroupID, parte),patch->groupId));
         dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchNumber, parte),patch->number));
@@ -173,7 +173,7 @@ void PartTab::on_patch_currentIndexChanged(int index)
 {
 	Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
     if(ui->patch->currentIndex() > -1){
-       qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
+//       qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
        enviarMensagem( PerformancePart::PatchGroupType, patch->groupType);
        enviarMensagem( PerformancePart::PatchGroupID, patch->groupId);
        enviarMensagem( PerformancePart::PatchNumber, patch->number);

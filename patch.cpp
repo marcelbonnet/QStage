@@ -312,7 +312,7 @@ Patch::Patch(Function func)
         break;
     }
 
-    qDebug() << QString("PATCH COMMON %1 -> %2").arg(functionName).arg(QString::number(address,16));
+//    qDebug() << QString("PATCH COMMON %1 -> %2").arg(functionName).arg(QString::number(address,16));
 }
 
 Patch::Patch(QString nome,QString categoria, QString categoriaPai, int groupType, int groupId, int number)

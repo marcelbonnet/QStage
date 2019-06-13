@@ -65,7 +65,9 @@ SOURCES += main.cpp\
     WorkerSerialMidi.cpp \
     FormSerialMidi.cpp \
     QStageException.cpp \
-    DialogTemaEditor.cpp
+    DialogTemaEditor.cpp \
+    DataRequest.cpp \
+    DataSysExType.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -96,7 +98,9 @@ HEADERS  += Mainwindow.h \
     WorkerSerialMidi.h \
     FormSerialMidi.h \
     QStageException.h \
-    DialogTemaEditor.h
+    DialogTemaEditor.h \
+    DataRequest.h \
+    DataSysExType.h
 
 
 FORMS    += Mainwindow.ui \

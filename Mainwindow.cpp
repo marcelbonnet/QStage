@@ -91,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     //caso contrário o programa quebra ao tentar transmitir sinais quando carregar configurações
-    if(!tentarAutoConectar(getConfig("port")))
+    if(!tentarAutoConectar(getConfig("default-midi-device-input"), getConfig("default-midi-device-output")))
         on_actionConectar_triggered();
 
     //    QDir *musicasDir = new QDir( configMusicasDir );
@@ -1322,22 +1322,27 @@ QString MainWindow::getConfig(QString key){
     }
 }
 
-bool MainWindow::tentarAutoConectar(QString porta){
+bool MainWindow::tentarAutoConectar(QString deviceIn, QString deviceOut){
     if(jack->connect() != 0)
         return false;
 
     QList<QString> *lista = jack->listarPortas();
-    qDebug() <<  "Tentando auto conexao na porta preferencial: " << porta ;
+    qDebug() <<  "Tentando auto conexão nas portas preferenciais: " << deviceIn << deviceOut ;
+
+    bool in = false;
+    bool out = false;
     for(int i=0; i< lista->length(); i++) {
-        if(lista->at(i).compare(porta) == 0){
-            if(jack->conectarNaPorta(porta))
-                return true;
-            else
-                return false;
+        if(lista->at(i).compare(deviceIn) == 0){
+            if(jack->conectarNaPorta(deviceIn))
+                in=true;
+        }
+        if(lista->at(i).compare(deviceOut) == 0){
+            if(jack->conectarQStageMidiInEm(deviceOut))
+                out = true;
         }
     }
 
-    return false;
+    return in && out;
 
 }
 

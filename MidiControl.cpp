@@ -33,7 +33,8 @@ struct MidiControl::MidiMessage * MidiControl::midi_message_from_midi_event(jack
         return (NULL);
     }
 
-    assert(event.size >= 1 && event.size <= 3);
+    if(event.size < 1 || event.size > 3)
+        return NULL;
 
     ev->len = event.size;
     ev->time = event.time;
@@ -76,12 +77,20 @@ void MidiControl::process_midi_input(jack_nframes_t nframes){
             continue;
         }
 
-        //post_process_midi_input(rev);
+        post_process_midi_input(rev);
     }
 }
 
-int MidiControl::post_process_midi_input(struct MidiControl::MidiMessage *ev){
-    //não usado
+void MidiControl::post_process_midi_input(struct MidiControl::MidiMessage *ev){
+
+    if(ev->len == 0)
+        return;
+
+    if(ev->data[0] == 0xFE) //active sensing enviado pelo teclado = 254
+        return;
+
+    qDebug() << "RECEBIDO\t\t" << ev->data[0] << ev->data[1] << ev->data[2];
+
 }
 
 void MidiControl::process_midi_output(jack_nframes_t nframes){
@@ -161,7 +170,7 @@ int MidiControl::processCallback(jack_nframes_t nframes, void *arg)
 
 
 
-    //process_midi_input(nframes);
+    mc->process_midi_input(nframes);
     mc->process_midi_output(nframes);
 
 
@@ -288,7 +297,7 @@ void MidiControl::tx(QList<SysExMessage *> *sxs){
 
     for(int i=0; i<sxs->length(); i++){
         if(contadorMensagensEnviadas%8 == 0) {
-            qDebug() << "===> INTERVALO ENTRE PACOTES " << QString::number(contadorMensagensEnviadas);
+//            qDebug() << "===> INTERVALO ENTRE PACOTES " << QString::number(contadorMensagensEnviadas);
             contadorMensagensEnviadas = 0;
             usleep(25000);
         }
@@ -299,7 +308,14 @@ void MidiControl::tx(QList<SysExMessage *> *sxs){
         queue_new_message(msg->message.b3, msg->message.b4, msg->message.b5 );
         queue_new_message(msg->message.b6, msg->message.b7, msg->message.b8 );
         queue_new_message(msg->message.b9, msg->message.b10, msg->message.b11 );
-        queue_new_message(msg->message.b12, -1, -1 );
+
+        if(msg->message.TYPE == DataSysExType::DATASET)
+            queue_new_message(msg->message.b12, -1, -1 );
+        else{
+//            qDebug() << "ENVIANDO DATA REQUEST";
+            queue_new_message(msg->message.b12, msg->message.b13, msg->message.b14 );
+        }
+
         contadorMensagensEnviadas++;
     }
     sxs->clear();
@@ -422,6 +438,12 @@ bool MidiControl::conectarNaPorta(QString nomePortaDestino){
         QString nomePortaOrigem =  QString("%1:%2").arg(PACKAGE_NAME).arg(OUTPUT_PORT_NAME);
         int ret = jack_connect(jack_client, nomePortaOrigem.toLatin1().data() , nomePortaDestino.toLatin1().data());
         return ret == 0 ? true : false;
+}
+
+bool MidiControl::conectarQStageMidiInEm(QString origem){
+    QString qstageMidiInput =  QString("%1:%2").arg(PACKAGE_NAME).arg(INPUT_PORT_NAME);
+    int ret = jack_connect(jack_client, origem.toLatin1().data(), qstageMidiInput.toLatin1().data() );
+    return ret == 0 ? true : false;
 }
 
 QList<QString> *MidiControl::listarPortas(){

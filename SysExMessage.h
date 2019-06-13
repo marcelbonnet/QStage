@@ -8,7 +8,8 @@
 #include "PerformanceCommon.h"
 #include "PerformancePart.h"
 #include "patch.h"
-
+#include "DataRequest.h"
+#include "DataSysExType.h"
 class SysExMessage
 {
 public:
@@ -16,10 +17,12 @@ public:
     SysExMessage(BaseAddress baseAddress, SystemCommon sys, int data = 0);
     SysExMessage(BaseAddress baseAddress, PerformanceCommon perf, int data = 0);
     SysExMessage(BaseAddress baseAddress, PerformancePart part, int data = 0);
-    SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data = 0);
+    SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data = 0, int type = DataSysExType::DATASET);
     SysExMessage(BaseAddress baseAddress, Patch *patch, int data = 0);
 
-    DataSet1 message = DataSet1();
+
+    DataSysExType message = DataSysExType();
+
 protected:
     BaseAddress base;
     SystemCommon sys;

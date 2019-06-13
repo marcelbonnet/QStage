@@ -324,6 +324,7 @@ private slots:
     void on_structure34_currentIndexChanged(int index);
     void on_booster34_currentIndexChanged(int index);
     void on_perfEfeito_currentIndexChanged(int index);
+    void on_pushButton_clicked();
 };
 
 #endif // PATCHUI_H

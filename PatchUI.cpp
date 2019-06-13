@@ -48,6 +48,7 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     drawPatchTone();
     setupProperties();
     conectarWidgets();
+
 }
 
 PatchUI::~PatchUI()
@@ -1804,4 +1805,16 @@ void PatchUI::on_perfEfeito_currentIndexChanged(int index)
     ui->perfParam10->setMaximum(max->at(9));
     ui->perfParam11->setMaximum(max->at(10));
     ui->perfParam12->setMaximum(max->at(11));
+}
+
+void PatchUI::on_pushButton_clicked()
+{
+    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+    qDebug() << "====================================================";
+    dados->append(
+                new SysExMessage(
+                    BaseAddress(BaseAddress::PatchModeTempPatch),
+                    new PatchTone(PatchTone::Tone_Switch, 1),
+                    1, DataSysExType::DATAREQUEST ));
+    jack->tx(dados);
 }

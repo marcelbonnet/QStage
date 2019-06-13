@@ -113,6 +113,6 @@ PerformancePart::PerformancePart(Function func, int part)
     }
 
     address = address + ((part-1 << 8) | 0x1000) ; //endereço temporary performance + endereço da parte
-    qDebug() << QString("Performance Part %1 -> %2 %3").arg(part).arg(functionName).arg(QString::number(address,16)) ;
+//    qDebug() << QString("Performance Part %1 -> %2 %3").arg(part).arg(functionName).arg(QString::number(address,16)) ;
 
 }

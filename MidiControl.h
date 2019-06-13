@@ -105,8 +105,9 @@ public:
     int connect();
     void desconectar(QString nomePortaDestino);
     bool conectarNaPorta(QString nomePortaDestino);
+    bool conectarQStageMidiInEm(QString origem);
     struct MidiControl::MidiMessage * midi_message_from_midi_event(jack_midi_event_t event);
-    int post_process_midi_input(struct MidiControl::MidiMessage *ev);
+    void post_process_midi_input(struct MidiControl::MidiMessage *ev);
     void process_midi_output(jack_nframes_t nframes);
     void process_midi_input(jack_nframes_t nframes);
     void queue_message(struct MidiControl::MidiMessage *ev);

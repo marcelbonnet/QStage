@@ -548,6 +548,6 @@ PatchTone::PatchTone(Function func, int whichTone)
         break;
     }
 
-    qDebug() << "ADDRESS: " << QString::number(address,16);
+//    qDebug() << "ADDRESS: " << QString::number(address,16);
 
 }

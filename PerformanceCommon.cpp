@@ -213,5 +213,5 @@ PerformanceCommon::PerformanceCommon(Function func)
         break;
     }
 
-    qDebug() << QString("Performance COMMON %1 -> %2").arg(functionName).arg(QString::number(address,16));
+//    qDebug() << QString("Performance COMMON %1 -> %2").arg(functionName).arg(QString::number(address,16));
 }

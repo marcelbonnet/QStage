@@ -146,7 +146,7 @@ private:
      */
     void editarHTML(QString binPath);
     void reordenar(int posicao);
-    bool tentarAutoConectar(QString porta);
+    bool tentarAutoConectar(QString deviceIn, QString deviceOut);
     void setTema(QString css);
 
 

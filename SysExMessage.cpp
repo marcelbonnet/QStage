@@ -24,7 +24,7 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, SystemCommon sys, int data)
 
     message.b11 = calcularChecksum(addr, data);
 
-    qDebug() << QString("SYSTEM COMMON %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
+//    qDebug() << QString("SYSTEM COMMON %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 
 }
 
@@ -51,7 +51,7 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PerformanceCommon perf, int 
 
     message.b11 = calcularChecksum(addr, data);
 
-    qDebug() << QString("Performance COMMON %1 -> %2 = %3    DATA: %4").arg(perf.functionName).arg(QString::number(perf.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
+//    qDebug() << QString("Performance COMMON %1 -> %2 = %3    DATA: %4").arg(perf.functionName).arg(QString::number(perf.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 }
 
 SysExMessage::SysExMessage(BaseAddress baseAddress, PerformancePart part, int data)
@@ -77,10 +77,10 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PerformancePart part, int da
 
     message.b11 = calcularChecksum(addr, data);
 
-    qDebug() << QString("Performance Part %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
+//    qDebug() << QString("Performance Part %1 -> %2 = %3    DATA: %4").arg(sys.functionName).arg(QString::number(sys.address,16)).arg(QString::number(data,16)).arg(message.getDataRepresentation());
 }
 
-SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data)
+SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int data, int type)
 {
     this->base = baseAddress;
     this->patchTone = patchTone;
@@ -92,22 +92,43 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, PatchTone *patchTone, int da
     message.b6 = addr >> 16 & 0xFF;
     message.b5 = addr >> 24 & 0xFF;
 
-    if(!patchTone->is2ByteData){
-        message.b9 = data;
-    } else {
-        int d1 = data & 0xF;
-        int d2 = (data >> 4) & 0xF;
-        message.b9 = d2;
-        message.b10 = d1;
+    if(type == DataSysExType::DATASET){
+
+        if(!patchTone->is2ByteData){
+            message.b9 = data;
+        } else {
+            int d1 = data & 0xF;
+            int d2 = (data >> 4) & 0xF;
+            message.b9 = d2;
+            message.b10 = d1;
+        }
+
+        message.b11 = calcularChecksum(addr, data);
+
+//        qDebug() << QString("Patch Tone %4 %1 = %2    DATA: %3")
+//                    .arg(QString::number(patchTone->address,16))
+//                    .arg(QString::number(data,16))
+//                    .arg(message.getDataRepresentation())
+//                    .arg(patchTone->functionName);
     }
 
-    message.b11 = calcularChecksum(addr, data);
+    if(type == DataSysExType::DATAREQUEST){
+        data = 1;
+        message.b4 = 0x11;
+        message.b12 = 1;
+        message.b11 = 0;
+        message.b10 = 0;
+        message.b9 = 0;
+//        message.b12 = data & 0x0a;
+//        message.b11 = data >> 8 & 0xaa;
+//        message.b10 = data >> 16 & 0xaa;
+//        message.b9 = data >> 24 & 0xaa;
 
-    qDebug() << QString("Patch Tone %4 %1 = %2    DATA: %3")
-                .arg(QString::number(patchTone->address,16))
-                .arg(QString::number(data,16))
-                .arg(message.getDataRepresentation())
-                .arg(patchTone->functionName);
+        qDebug() << "MSG: " << message.b9 << message.b10 << message.b11 << message.b12;
+
+        message.b13 = calcularChecksum(addr, data);
+        message.TYPE = type;
+    }
 }
 
 SysExMessage::SysExMessage(BaseAddress baseAddress, Patch *patch, int data)
@@ -133,11 +154,11 @@ SysExMessage::SysExMessage(BaseAddress baseAddress, Patch *patch, int data)
 
     message.b11 = calcularChecksum(addr, data);
 
-    qDebug() << QString("Patch Common %4 %1 = %2    DATA: %3")
-                .arg(QString::number(patch->address,16))
-                .arg(QString::number(data,16))
-                .arg(message.getDataRepresentation())
-                .arg(patch->functionName);
+//    qDebug() << QString("Patch Common %4 %1 = %2    DATA: %3")
+//                .arg(QString::number(patch->address,16))
+//                .arg(QString::number(data,16))
+//                .arg(message.getDataRepresentation())
+//                .arg(patch->functionName);
 }
 
 
