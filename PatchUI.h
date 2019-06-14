@@ -11,12 +11,16 @@
 #include <QTabWidget>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QThread>
 
 #include "MidiControl.h"
 #include "PatchTone.h"
 #include "SysExMessage.h"
 #include "patch.h"
 #include "Efeito.h"
+
+#include "WorkerSysExRequest.h"
+
 
 namespace Ui {
 class PatchUI;
@@ -35,7 +39,7 @@ protected:
 private:
     Ui::PatchUI *ui;
 
-    void enviarPacotesDS1();
+    void enviarPacotesDS1(int tone);
     void enviarMensagem(PatchTone *patchTone, int data);
     void enviarMensagem(Patch *patch, int data);
     void conectarWidgets();
@@ -326,6 +330,8 @@ private slots:
     void on_booster34_currentIndexChanged(int index);
     void on_perfEfeito_currentIndexChanged(int index);
     void on_pushButton_clicked();
+
+    void onSysExRequestFinished();
 };
 
 #endif // PATCHUI_H

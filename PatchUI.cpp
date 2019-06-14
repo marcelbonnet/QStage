@@ -11,6 +11,7 @@
 #include "Waveform.h"
 #include "Controller.h"
 
+
 PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PatchUI)
@@ -56,9 +57,9 @@ PatchUI::~PatchUI()
     delete ui;
 }
 
-void PatchUI::enviarPacotesDS1(){
+void PatchUI::enviarPacotesDS1(int tone){
     QList<int> *dados = new QList<int>();
-    int tone = 0; //de 0 a 3
+//    int tone = 0; //de 0 a 3
     int offset = 0x1000; //tone 0
     if(tone == 1) offset = 0x1200;
     if(tone == 2) offset = 0x1400;
@@ -120,11 +121,11 @@ void PatchUI::enviarPacotesDS1(){
     dados->append(lfo2ExternalSyncList ->at(tone)->currentIndex());
 
 
-    dados->append(coarseTuneList ->at(tone)->value());
-    dados->append(fineTuneList ->at(tone)->value());
+    dados->append(coarseTuneList ->at(tone)->value() +48);
+    dados->append(fineTuneList ->at(tone)->value() +50);
     dados->append(randomPitchDepthList ->at(tone)->currentIndex());
     dados->append(pitchKeyfollowList ->at(tone)->currentIndex());
-    dados->append(pitchEnvelopeDepthList ->at(tone)->value());
+    dados->append(pitchEnvelopeDepthList ->at(tone)->value()+12);
     dados->append(pitchEnvelopeVelocitySensList ->at(tone)->value());
     dados->append(pitchEnvelopeVelocityTime1List ->at(tone)->currentIndex());
     dados->append(pitchEnvelopeVelocityTime4List ->at(tone)->currentIndex());
@@ -192,7 +193,8 @@ void PatchUI::enviarPacotesDS1(){
 
     jack->txPacoteDataSet(addr, dados);
     //próxima mensagem:
-//    dados->append(ReverbSendLevelList ->at(tone)->value());
+    dados->append(ReverbSendLevelList ->at(tone)->value());
+    jack->txPacoteDataSet(addr, dados);
 
 }
 
@@ -664,7 +666,7 @@ void PatchUI::onPatchToneChanged(){
     //    PatchTone *patchTone = qobject_cast<PatchTone*>(w->property("function"));
     PatchTone *patchTone = w->property("function").value<PatchTone*>();
 
-    enviarPacotesDS1();
+    enviarPacotesDS1(patchTone->whichTone-1);
     return;
 
 
@@ -704,7 +706,7 @@ void PatchUI::onPatchToneChanged(int i){
     QObject* o = QObject::sender();
     PatchTone *patchTone = o->property("function").value<PatchTone*>();
 
-    enviarPacotesDS1();
+    enviarPacotesDS1(patchTone->whichTone-1);
     return;
 
 
@@ -1717,6 +1719,11 @@ void PatchUI::drawPatchTone(){
         setSliderRange(ChorusSendLevel,0,127);
         setSliderRange(ReverbSendLevel,0,127);
 
+        setSliderRange(panLfo1Depth,0,126);
+        panLfo1Depth->setValue(63);
+        setSliderRange(panLfo2Depth,0,126);
+        panLfo2Depth->setValue(63);
+
         try {
             foreach (Waveform *w, Controller::queryWaveforms()) {
                 QString nome = QString("%3 [%1 %2] %4")
@@ -1959,14 +1966,56 @@ void PatchUI::on_perfEfeito_currentIndexChanged(int index)
 
 void PatchUI::on_pushButton_clicked()
 {
-    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-    qDebug() << "=================== REQUEST =================================";
-//    dados->append( new SysExMessage( 0x00000000, 0x66) );
-    dados->append( new SysExMessage( ui->startAddr->value(), ui->dataSize->value()) );
-    /*
-     * Recuperando Patch Tone #1
-     * 3001000 7f   (um DS1 de 128 bytes)
-     * 3001100 1    (pega o reverb do tone que não coube no primeiro DS)
-     */
-    jack->tx(dados);
+//    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
+//    qDebug() << "=================== REQUEST =================================";
+////    dados->append( new SysExMessage( 0x00000000, 0x66) );
+////    jack->tx(dados);
+
+//    //dados->append( new SysExMessage( ui->startAddr->value(), ui->dataSize->value()) );
+//    /*
+//     * Recuperando Patch Tone #1
+//     * 3001000 7f   (um DS1 de 128 bytes)
+//     * 3001100 1    (pega o reverb do tone que não coube no primeiro DS)
+//     */
+
+    QList<int> *patch = new QList<int>();
+    //loop vai começar aqui
+    patch->append(1);
+    patch->append(0);
+    //o patch:
+    patch->append(2);
+    patch->append(11);
+    patch->append(0x5);
+    patch->append(0x7);
+    jack->txPacoteDataSet(0x00000000, patch);
+
+
+    QList<int[2]> *dados = new QList<int[2]>();
+    dados->append({0x03000000, 0x4a});
+    dados->append({0x03001000, 0x7f });
+    dados->append({0x03001000, 0x01 });
+    dados->append({0x03001200, 0x7f });
+    dados->append({0x03001200, 0x01 });
+    dados->append({ 0x03001400, 0x7f });
+    dados->append({ 0x03001400, 0x01 });
+    dados->append({ 0x03001600, 0x7f });
+    dados->append({ 0x03001600, 0x01 });
+
+    QThread* thread = new QThread;
+    WorkerSysExRequest* worker = new WorkerSysExRequest(jack);
+    worker->moveToThread(thread);
+//    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    connect(thread, SIGNAL(started()), worker, SLOT(process()));
+    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+//    connect(worker, SIGNAL(finished()), this, SLOT(onSysExRequestFinished()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), this, SLOT(onSysExRequestFinished()));
+    thread->start();
+}
+
+void PatchUI::onSysExRequestFinished(){
+
+    qDebug() << "FINALIZADO. CONTÉM: " << jack->sysxin->length();
+    jack->sysxin->clear();
 }

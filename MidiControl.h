@@ -96,7 +96,10 @@ public:
     jack_port_t	*input_port;
     jack_client_t	*jack_client = NULL;
     jack_ringbuffer_t *ringbuffer;
-
+    /**
+     * @brief mensagens exclusivas recebidas pelo QStage para serem lidas e apagadas quando necessário
+     */
+    QList<int> *sysxin;
 
     double nframes_to_ms(jack_nframes_t nframes);
 
@@ -119,8 +122,14 @@ public:
 
     void tx(QList<SysExMessage*> *sxs);
     int calcularChecksum(int endereco, QList<int> *data);
+    int calcularChecksum(int endereco, int dado);
+    /**
+     * @brief Faz o envio do pacote e clean do ponteiro que contém os dados
+     * @param addr endereço inicial da página de dados a ser modificada
+     * @param data lista de dados em sequência
+     */
     void txPacoteDataSet(int addr, QList<int> *data);
-    //void txPacoteRequestData(int addr, int data);
+    void txPacoteRequestData(int addr, int data);
 
     QList<QString> *listarPortas();
 
@@ -157,7 +166,8 @@ protected:
 
 
 private:
-
+    //usada pelo post_process_midi_input para saber quando guardar cópia das mensagens recebidas
+    bool midiInputDoTipoSysEx = false;
 
 
 };

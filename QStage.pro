@@ -67,7 +67,8 @@ SOURCES += main.cpp\
     QStageException.cpp \
     DialogTemaEditor.cpp \
     DataRequest.cpp \
-    DataSysExType.cpp
+    DataSysExType.cpp \
+    WorkerSysExRequest.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -100,7 +101,8 @@ HEADERS  += Mainwindow.h \
     QStageException.h \
     DialogTemaEditor.h \
     DataRequest.h \
-    DataSysExType.h
+    DataSysExType.h \
+    WorkerSysExRequest.h
 
 
 FORMS    += Mainwindow.ui \

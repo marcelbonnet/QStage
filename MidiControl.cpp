@@ -12,6 +12,7 @@
 MidiControl::MidiControl()
 {
 
+    sysxin = new QList<int>();
 
 }
 
@@ -86,10 +87,31 @@ void MidiControl::post_process_midi_input(struct MidiControl::MidiMessage *ev){
     if(ev->len == 0)
         return;
 
-    if(ev->data[0] == 0xFE) //active sensing enviado pelo teclado = 254
+    int a = ev->data[0];
+    int b = ev->data[1];
+    int c = ev->data[2];
+
+    if(a == 0xFE) //active sensing enviado pelo teclado = 254
         return;
 
-    qDebug() << QString::number(ev->data[0],16) << QString::number(ev->data[1],16) << QString::number(ev->data[2],16);
+    //salvando estado do tipo de mensagem que estamos recebendo
+    if(a == 0xF0)
+        midiInputDoTipoSysEx = true;
+
+    //se estamos recebendo uma SYSEX, guardar para leitura posterior
+    if(midiInputDoTipoSysEx){
+        sysxin->append(a);
+        sysxin->append(b);
+        sysxin->append(c);
+    }
+
+    qDebug() << (midiInputDoTipoSysEx? "SYSEX IN" : "IN") << QString::number(a,16) << QString::number(b,16) << QString::number(c,16);
+
+    //determinar se a sysex terminou
+    if(a == 0xF7 || b == 0xF7 || c == 0xF7)
+        midiInputDoTipoSysEx = false;
+
+
 
 }
 
@@ -317,6 +339,28 @@ int MidiControl::calcularChecksum(int endereco, QList<int> *data)
     return soma;
 }
 
+int MidiControl::calcularChecksum(int endereco, int dado)
+{
+    int a,b,c,d, e, f, soma = 0;
+    a = b = c = d = e = f = soma = 0; //faltava inicializar as variáveis corretamente para o checksum ser correto
+    //endereço
+    a = endereco & 0xFF;
+    b = (endereco >> 8) & 0xFF;
+    c = (endereco >> 16) & 0xFF;
+    d = (endereco >> 24) & 0xFF;
+    //dados
+    if(dado <= 0xFF){
+        e=dado;
+    } else {
+        e = dado & 0xFF;
+        f = (dado >> 8) & 0xFF;
+    }
+
+    soma = 128 - ( (a+b+c+d+e+f)%128 );
+
+    return soma;
+}
+
 void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
     int a4 = addr & 0xFF;
     int a3 = addr >> 8 & 0xFF;
@@ -345,6 +389,21 @@ void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
         }
     }
     data->clear();
+}
+
+void MidiControl::txPacoteRequestData(int addr, int data){
+    int a4 = addr & 0xFF;
+    int a3 = addr >> 8 & 0xFF;
+    int a2 = addr >> 16 & 0xFF;
+    int a1 = addr >> 24 & 0xFF;
+
+    //início da mensagem DS
+    queue_new_message(0xF0, 0x41, 0x10 );
+    queue_new_message(0x6A, 0x11,  a1);
+    queue_new_message(a2, a3, a4 );
+    queue_new_message(0, 0,0 ); //size
+    queue_new_message(data, calcularChecksum(addr, data), 0xf7 );
+
 }
 
 void MidiControl::tx(QList<SysExMessage *> *sxs){
