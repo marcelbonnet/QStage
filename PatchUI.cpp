@@ -2067,7 +2067,7 @@ void PatchUI::on_pushButton_clicked()
 
     }
 
-    //fazer o INSERT na tabela dos dados.
+    //separando os SYSEX recebidos em pacotes. Cada patch tem 5 pacotes: common e tones
     int bytesPorMensagem = 735;
     for (int i=0;i<jack->sysxin->length();i+=bytesPorMensagem) {
 //        dados->append({ 0x03000000, 0x4a});      //patch common #75
@@ -2211,12 +2211,44 @@ void PatchUI::on_pushButton_clicked()
         for(int k=tone3.length()-10; k<tone3.length();k++)
             t3 += QString("%1 ").arg(tone3.at(k));
 
-        qDebug() << "patch" << nome << "DADOS: " << dados << "#" << patch.length() << patch.at(0) << "/" << patch.at(patch.length()-1)
-                 << "tone0 #" << tone0.length() << tone0.at(0) << "/" << tone0.at(tone0.length()-1) << t0
-                 << "tone1 #" << tone1.length() << tone1.at(0) << "/" << tone0.at(tone1.length()-1) << t1
-                 << "tone2 #" << tone2.length() << tone2.at(0) << "/" << tone0.at(tone2.length()-1) << t2
-                 << "tone3 #" << tone3.length() << tone3.at(0) << "/" << tone0.at(tone3.length()-1) << t3
-                    ;
+//        qDebug() << "patch" << nome << "DADOS: " << dados << "#" << patch.length() << patch.at(0) << "/" << patch.at(patch.length()-1)
+//                 << "tone0 #" << tone0.length() << tone0.at(0) << "/" << tone0.at(tone0.length()-1) << t0
+//                 << "tone1 #" << tone1.length() << tone1.at(0) << "/" << tone0.at(tone1.length()-1) << t1
+//                 << "tone2 #" << tone2.length() << tone2.at(0) << "/" << tone0.at(tone2.length()-1) << t2
+//                 << "tone3 #" << tone3.length() << tone3.at(0) << "/" << tone0.at(tone3.length()-1) << t3
+//                    ;
+
+        qDebug() << "patch" << nome;
+
+        QString commonStr, t0Str, t1Str, t2Str, t3Str;
+        for(int h : patch)
+            commonStr+=QString("%1 ").arg(h);
+        commonStr = commonStr.trimmed();
+        for(int h : tone0)
+            t0Str+=QString("%1 ").arg(h);
+        t0Str = t0Str.trimmed();
+        for(int h : tone1)
+            t1Str+=QString("%1 ").arg(h);
+        t1Str = t1Str.trimmed();
+        for(int h : tone2)
+            t2Str+=QString("%1 ").arg(h);
+        t2Str = t2Str.trimmed();
+        for(int h : tone3)
+            t3Str+=QString("%1 ").arg(h);
+        t3Str = t3Str.trimmed();
+
+        try {
+            Controller::insertPatch(
+                        patches->at(i).at(0),
+                        patches->at(i).at(1),
+                        patches->at(i).at(2),
+                        nome,
+                        commonStr,
+                        t0Str, t1Str, t2Str, t3Str
+                        );
+        } catch (SQLite::Exception &e) {
+            qDebug() << e.what();
+        }
 
     };
 //    qDebug() << "ENCERROU (para 5 patches deve ter 2955 ou 3110 622/cada ) " << jack->sysxin->length();

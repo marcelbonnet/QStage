@@ -149,3 +149,26 @@ QList<QList<int>>* Controller::queryDefaultPatches() noexcept(false){
     }
     return rs;
 }
+
+void Controller::insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0, QString tone1, QString tone2, QString tone3) noexcept(false)  {
+    SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
+    SQLite::Statement   query(db, "INSERT INTO patches ( patchGroupType, patchGroupId, patchNumber,  name, common, tone0, tone1, tone2, tone3  ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )  ");
+
+    try {
+        query.bind(1, groupType );
+        query.bind(2, groupId);
+        query.bind(3, number);
+        query.bind(4, name.toUtf8().data());
+        query.bind(5, common.toUtf8().data());
+        query.bind(6, tone0.toUtf8().data());
+        query.bind(7, tone1.toUtf8().data());
+        query.bind(8, tone2.toUtf8().data());
+        query.bind(9, tone3.toUtf8().data());
+    } catch (SQLite::Exception &e) {
+        throw e;
+    }
+
+
+
+    query.exec();
+}

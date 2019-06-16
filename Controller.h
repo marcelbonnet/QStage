@@ -36,6 +36,9 @@ public:
      * @return
      */
     static QList<QList<int>>* queryDefaultPatches() noexcept(false);
+
+    static void insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0
+                           , QString tone1 , QString tone2, QString tone3) noexcept(false);
 };
 
 #endif // CONTROLLER_H
