@@ -168,6 +168,10 @@ protected:
 private:
     //usada pelo post_process_midi_input para saber quando guardar cópia das mensagens recebidas
     bool midiInputDoTipoSysEx = false;
+    //marcador para saber se estamos no primeiro trio de bytes de header
+    bool midiInputHeader1 = false;
+    //marcador para saber se ainda estamos recebendo o segundo trio de header de sysex (0x6a 0x12 [data])
+    bool midiInputHeader2 = false;
 
 
 };

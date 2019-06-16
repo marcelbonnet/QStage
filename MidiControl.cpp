@@ -94,24 +94,59 @@ void MidiControl::post_process_midi_input(struct MidiControl::MidiMessage *ev){
     if(a == 0xFE) //active sensing enviado pelo teclado = 254
         return;
 
-    //salvando estado do tipo de mensagem que estamos recebendo
-    if(a == 0xF0)
-        midiInputDoTipoSysEx = true;
+    //salvando tudo
+    sysxin->append(a);
+    sysxin->append(b);
+    sysxin->append(c);
+    return;
 
-    //se estamos recebendo uma SYSEX, guardar para leitura posterior
-    if(midiInputDoTipoSysEx){
-        sysxin->append(a);
-        sysxin->append(b);
-        sysxin->append(c);
-    }
+//    //salvando estado do tipo de mensagem que estamos recebendo
+//    if(a == 0xF0){
+//        midiInputDoTipoSysEx = true;//nesta iteração teremos: a=0xf0 b=0x41 c=0x10
+//        midiInputHeader1 = true;
+//        return;
+//    }
 
-    qDebug() << (midiInputDoTipoSysEx? "SYSEX IN" : "IN") << QString::number(a,16) << QString::number(b,16) << QString::number(c,16);
+//    //na segunda iteração, teremos a flag de header1 levantada e os seguintes bytes:
+//    if(midiInputHeader1 && a == 0x6a && b == 0x12){
+//        midiInputHeader1 = false;
+//        sysxin->append(c); // c=[data] nesta iteração
+//        return;
+//    }
+
+//    //se estamos recebendo uma SYSEX, guardar na lista:
+//    if(midiInputDoTipoSysEx && !midiInputHeader1 ){
+//        //determinar se a sysex terminou
+//        if(c == 0xF7){
+//            midiInputDoTipoSysEx = false;
+//            sysxin->append(a);
+//            //b =[checksum]
+//            return;
+//        }
+//        if(b == 0xF7){
+//            midiInputDoTipoSysEx = false;
+//            //a =[checksum]
+//            return;
+//        }
+//        if(a == 0xF7){
+//            midiInputDoTipoSysEx = false;
+//            sysxin->removeAt(sysxin->length()-1); //o último byte gravado era um checksum
+//            return;
+//        }
+
+//        //nesta iteração tudo é data:
+//        sysxin->append(a);
+//        sysxin->append(b);
+//        sysxin->append(c);
+
+//        return;
+//    }
+
+//    qDebug() << (midiInputDoTipoSysEx? "SYSEX IN" : "IN") << QString::number(a,16) << QString::number(b,16) << QString::number(c,16);
 
     //determinar se a sysex terminou
-    if(a == 0xF7 || b == 0xF7 || c == 0xF7)
-        midiInputDoTipoSysEx = false;
-
-
+//    if(a == 0xF7 || b == 0xF7 || c == 0xF7)
+//        midiInputDoTipoSysEx = false;
 
 }
 
@@ -309,7 +344,7 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
     }
 
     ev.time = jack_frame_time(jack_client);
-//    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
+    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
     queue_message(&ev);
 
 }
@@ -367,14 +402,12 @@ void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
     int a2 = addr >> 16 & 0xFF;
     int a1 = addr >> 24 & 0xFF;
 
+
+
     //início da mensagem DS
     queue_new_message(0xF0, 0x41, 0x10 );
     queue_new_message(0x6A, 0x12,  a1);
     queue_new_message(a2, a3, a4 );
-
-    //adciona final da mensagem:
-    data->append( calcularChecksum(addr, data) );
-    data->append(0xF7);
 
     for (int i=0; i<data->length(); i+=3) {
         if(i+2 < data->length()){
@@ -388,6 +421,8 @@ void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
 
         }
     }
+
+    queue_new_message(calcularChecksum(addr, data), 0xf7, -1);
     data->clear();
 }
 

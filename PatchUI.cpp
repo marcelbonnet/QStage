@@ -1966,11 +1966,6 @@ void PatchUI::on_perfEfeito_currentIndexChanged(int index)
 
 void PatchUI::on_pushButton_clicked()
 {
-//    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-//    qDebug() << "=================== REQUEST =================================";
-////    dados->append( new SysExMessage( 0x00000000, 0x66) );
-////    jack->tx(dados);
-
 //    //dados->append( new SysExMessage( ui->startAddr->value(), ui->dataSize->value()) );
 //    /*
 //     * Recuperando Patch Tone #1
@@ -1978,44 +1973,259 @@ void PatchUI::on_pushButton_clicked()
 //     * 3001100 1    (pega o reverb do tone que não coube no primeiro DS)
 //     */
 
-    QList<int> *patch = new QList<int>();
-    //loop vai começar aqui
-    patch->append(1);
-    patch->append(0);
-    //o patch:
-    patch->append(2);
-    patch->append(11);
-    patch->append(0x5);
-    patch->append(0x7);
-    jack->txPacoteDataSet(0x00000000, patch);
+    //dump de Patches do teclado. Provavelmente só usarei isso uma vez na vida para salvar no SQLite
+
+    QList<QList<int>>* patches = Controller::queryDefaultPatches();
+    //vou enviar uma mudança de patch em bulk, então tenho que enviar o data dos endereços anteriors ao Patch
+    QList<int> *patch;
+    for (int i=0; i<patches->length(); i++) {
+        patch = new QList<int>();
+            patch->append(1);//sound mode = patch
+            patch->append(0);//performance number, tanto faz
+        //o patch da vez
+        patch->append(patches->at(i).at(0)); //patch group type
+        patch->append(patches->at(i).at(1)); // patch group id
+        int number = patches->at(i).at(2);
+        int n2 = number & 0xF;
+        int n1 = (number >> 4) & 0xF;
+        patch->append(n1);
+        patch->append(n2);
+        //seleciona o patch da vez
+//        qDebug() << "PATCH len=" << patch->length()
+//                 << QString::number(patch->at(0),16)
+//                 << QString::number(patch->at(1),16)
+//                 << QString::number(patch->at(2),16)
+//                 << QString::number(patch->at(3),16)
+//                 << QString::number(patch->at(4),16)
+//                 << QString::number(patch->at(5),16)
+//                 ;
+        jack->txPacoteDataSet(0x00000000, patch);
+
+        usleep(100000);
+
+        //páginas de memória que serão requisitadas para dump:
+        QList<int> *dados = new QList<int>();
+        dados->append(0x03000000);      //patch common #75
+        dados->append(0x4a);      //patch common #75
+        dados->append(0x03001000);     //tone 1 #128
+        dados->append(0x7f);     //tone 1 #128
+        dados->append(0x0300107f);
+        dados->append(0x01);
+        dados->append(0x03001100);
+        dados->append(0x01);
+        dados->append(0x03001200);
+        dados->append(0x7f);
+        dados->append(0x0300127f);
+        dados->append(0x01);
+        dados->append(0x03001300);
+        dados->append(0x01);
+        dados->append(0x03001400);
+        dados->append(0x7f);
+        dados->append(0x0300147f);
+        dados->append(0x01);
+        dados->append(0x03001500);
+        dados->append(0x01);
+        dados->append(0x03001600);
+        dados->append(0x7f);
+        dados->append(0x0300167f);
+        dados->append(0x01);
+        dados->append(0x03001700);
+        dados->append(0x01);
 
 
-    QList<int[2]> *dados = new QList<int[2]>();
-    dados->append({0x03000000, 0x4a});
-    dados->append({0x03001000, 0x7f });
-    dados->append({0x03001000, 0x01 });
-    dados->append({0x03001200, 0x7f });
-    dados->append({0x03001200, 0x01 });
-    dados->append({ 0x03001400, 0x7f });
-    dados->append({ 0x03001400, 0x01 });
-    dados->append({ 0x03001600, 0x7f });
-    dados->append({ 0x03001600, 0x01 });
+        int oldlen = jack->sysxin->length();
+        //para cada página farei uma requisição e aguardarei um tempo para garantir o recebimento dos dados
+        for (int di=0;di<dados->length();di+=2) {
+//            qDebug() << "LANÇANDO THREAD";
 
-    QThread* thread = new QThread;
-    WorkerSysExRequest* worker = new WorkerSysExRequest(jack);
-    worker->moveToThread(thread);
-//    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
-    connect(thread, SIGNAL(started()), worker, SLOT(process()));
-    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
-//    connect(worker, SIGNAL(finished()), this, SLOT(onSysExRequestFinished()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    connect(thread, SIGNAL(finished()), this, SLOT(onSysExRequestFinished()));
-    thread->start();
+            QThread* thread = new QThread;
+            WorkerSysExRequest* worker = new WorkerSysExRequest(jack, dados->at(di), dados->at(di+1));
+            worker->moveToThread(thread);
+        //    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+            connect(thread, SIGNAL(started()), worker, SLOT(process()));
+            connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+            connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        //    connect(worker, SIGNAL(finished()), this, SLOT(onSysExRequestFinished()));
+            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            connect(thread, SIGNAL(finished()), this, SLOT(onSysExRequestFinished()));
+            thread->start();
+//            usleep(500000);//tem que esperar antes de lançar outra thread
+            int qtde = 0;
+            for (;;) {
+                if(oldlen == jack->sysxin->length()){
+                    usleep(100000);
+                    qtde++;
+//                    qDebug() << "Esperou " << qtde;
+                }
+                else {
+                    oldlen = jack->sysxin->length();
+                    break;
+                }
+            }
+
+        }
+
+    }
+
+    //fazer o INSERT na tabela dos dados.
+    int bytesPorMensagem = 735;
+    for (int i=0;i<jack->sysxin->length();i+=bytesPorMensagem) {
+//        dados->append({ 0x03000000, 0x4a});      //patch common #75
+//        dados->append({ 0x03001000, 0x7f });     //tone 1 #128
+//        dados->append({ 0x03001100, 0x01 });     //tone Reverb Send Level #1
+//        dados->append({ 0x03001200, 0x7f });     //tone 2 #128
+//        dados->append({ 0x03001300, 0x01 });     //tone Reverb Send Level #1
+//        dados->append({ 0x03001400, 0x7f });     //tone 3
+//        dados->append({ 0x03001500, 0x01 });     //tone Reverb Send Level
+//        dados->append({ 0x03001600, 0x7f });     //tone 4
+//        dados->append({ 0x03001700, 0x01 });     //tone Reverb Send Level
+//        qDebug() <<  QString::number(jack->sysxin->at(i),16) << QString::number(jack->sysxin->at(i+bytesPorMensagem-1),16) ;
+
+        //cada grupo de pacotes para compor o dump de um patch
+        QList<int> patch;
+        QList<int> tone0;
+        QList<int> tone1;
+        QList<int> tone2;
+        QList<int> tone3;
+        int pacote = 0;
+        for (int index=i;index<i+bytesPorMensagem;index++) {
+
+            if(jack->sysxin->at(index) == 0xf0){
+                index+=9;
+                //common: 11 + 74 => 29 trios de bytes = 87
+                if(pacote == 1){
+                    patch.removeAt(patch.length()-1);//byte 0
+                    patch.removeAt(patch.length()-1);//byte 0
+                    patch.removeAt(patch.length()-1);//0xf7
+                    patch.removeAt(patch.length()-1);//checksum
+                }
+//                //tone0
+//                if(pacote == 2 || pacote == 3){
+//                    tone0.removeAt(tone0.length()-1);
+//                    tone0.removeAt(tone0.length()-1);
+
+//                }
+//                if(pacote == 2 || pacote == 3){
+//                    tone0.removeAt(tone0.length()-1);
+//                    tone0.removeAt(tone0.length()-1);
+
+//                }
+//                //tone1
+//                if(pacote == 4 || pacote == 5){
+//                   tone1.removeAt(tone1.length()-1);
+//                    tone1.removeAt(tone1.length()-1);
+//                }
+//                //tone2
+//                if(pacote == 6 || pacote == 7){
+//                    tone2.removeAt(tone2.length()-1);
+//                    tone2.removeAt(tone2.length()-1);
+//                }
+//                //tone3
+//                if(pacote == 8 || pacote == 9){
+//                    tone3.removeAt(tone3.length()-1);
+//                    tone3.removeAt(tone3.length()-1);
+//                }
+
+                //tone0
+                if(pacote >=2 && pacote <=4 ){
+                    tone0.removeAt(tone0.length()-1);
+                    tone0.removeAt(tone0.length()-1);
+//                    tone0.removeAt(tone0.length()-1);
+//                    tone0.removeAt(tone0.length()-1);
+
+                }
+
+                //tone1
+                if(pacote >=5 && pacote <=7){
+                    tone1.removeAt(tone1.length()-1);
+                    tone1.removeAt(tone1.length()-1);
+//                    tone1.removeAt(tone1.length()-1);
+//                    tone1.removeAt(tone1.length()-1);
+                }
+
+                //tone2
+                if(pacote >=8 && pacote <=10){
+                    tone2.removeAt(tone2.length()-1);
+                    tone2.removeAt(tone2.length()-1);
+//                    tone2.removeAt(tone2.length()-1);
+//                    tone2.removeAt(tone2.length()-1);
+                }
+                //tone3
+                if(pacote >=11 && pacote <=13){
+//                    tone3.removeAt(tone3.length()-1);
+//                    tone3.removeAt(tone3.length()-1);
+//                    tone3.removeAt(tone3.length()-1);
+//                    tone3.removeAt(tone3.length()-1);
+                }
+
+                pacote++;
+            }
+            //patch common
+            if(pacote == 1)
+                patch.append(jack->sysxin->at(index));
+            //tone0
+            if(pacote >=2 && pacote <=4 )
+                tone0.append(jack->sysxin->at(index));
+
+            //tone1
+            if(pacote >=5 && pacote <=7)
+                tone1.append(jack->sysxin->at(index));
+
+            //tone2
+            if(pacote >=8 && pacote <=10)
+                tone2.append(jack->sysxin->at(index));
+
+            //tone3
+            if(pacote >=11 && pacote <=13){
+                tone3.append(jack->sysxin->at(index));
+            }
+
+        }
+
+        //agora remove os dois últimos da mensagem inteira do patch
+        tone3.removeAt(tone3.length()-1);
+        tone3.removeAt(tone3.length()-1);
+        tone3.removeAt(tone3.length()-2);
+        tone3.removeAt(tone3.length()-2);
+        tone3.removeAt(tone3.length()-3);
+        tone3.removeAt(tone3.length()-3);
+
+
+        QString nome;
+        for (int c=0; c<12; c++) {
+            nome += (char) patch.at(c);
+        }
+        QString dados;
+//        for(int i : patch)
+//            dados += QString("%1 ").arg(i);
+        QString t0;
+        for(int k=tone0.length()-10; k<tone0.length();k++)
+            t0 += QString("%1 ").arg(tone0.at(k));
+        QString t1;
+        for(int k=tone1.length()-10; k<tone1.length();k++)
+            t1 += QString("%1 ").arg(tone1.at(k));
+        QString t2;
+        for(int k=tone2.length()-10; k<tone2.length();k++)
+            t2 += QString("%1 ").arg(tone2.at(k));
+        QString t3;
+        for(int k=tone3.length()-10; k<tone3.length();k++)
+            t3 += QString("%1 ").arg(tone3.at(k));
+
+        qDebug() << "patch" << nome << "DADOS: " << dados << "#" << patch.length() << patch.at(0) << "/" << patch.at(patch.length()-1)
+                 << "tone0 #" << tone0.length() << tone0.at(0) << "/" << tone0.at(tone0.length()-1) << t0
+                 << "tone1 #" << tone1.length() << tone1.at(0) << "/" << tone0.at(tone1.length()-1) << t1
+                 << "tone2 #" << tone2.length() << tone2.at(0) << "/" << tone0.at(tone2.length()-1) << t2
+                 << "tone3 #" << tone3.length() << tone3.at(0) << "/" << tone0.at(tone3.length()-1) << t3
+                    ;
+
+    };
+//    qDebug() << "ENCERROU (para 5 patches deve ter 2955 ou 3110 622/cada ) " << jack->sysxin->length();
+    qDebug() << "ENCERROU #" << jack->sysxin->length();
+
 }
 
 void PatchUI::onSysExRequestFinished(){
-
-    qDebug() << "FINALIZADO. CONTÉM: " << jack->sysxin->length();
-    jack->sysxin->clear();
+//a cada loop recebo: common, depois tone 0, 1, 2 e 3
+//    qDebug() << "Fim da RQ. total# " << jack->sysxin->length();
+//    jack->sysxin->clear();
 }

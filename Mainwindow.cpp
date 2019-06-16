@@ -878,7 +878,7 @@ void MainWindow::editarHTML(QString binPath)
     QTextStream fluxo(&file);
     fluxo << musica->html << endl;
     fluxo.flush();
-    qDebug() << file.fileName();
+//    qDebug() << file.fileName();
     const char * tmp =  + file.fileName().toUtf8().data();
 
 
@@ -1309,7 +1309,7 @@ QString MainWindow::getConfig(QString key){
         query.bind(1, key.toUtf8().data());
         while(query.executeStep()){
         const char *val = query.getColumn(0);
-            qDebug() << val << QString(val);
+//            qDebug() << val << QString(val);
             return QString(val);
         }
 
@@ -1493,7 +1493,7 @@ void MainWindow::partUtilsCopiarPerformancePartParaPart(int parteOrigem, int par
     PartTab *o = tabParts[parteOrigem - 1];
     PartTab *d = tabParts[parteDestino - 1];
 
-    qDebug() << "Copiar performance part " << parteOrigem << " para " << parteDestino;
+//    qDebug() << "Copiar performance part " << parteOrigem << " para " << parteDestino;
 
     d->setPatch(o->getPatchIndex());
     d->setRegiaoMin(o->getRegiaoMin());

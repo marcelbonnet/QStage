@@ -95,7 +95,6 @@ QMap<int, QString> Controller::queryPlaylists() throw (std::exception){
     {
         int id            = query.getColumn(0);
         const char* titulo= query.getColumn(1);
-        qDebug() << id << QString(titulo);
         rs.insert(id, QString(titulo));
     }
     return rs;
@@ -128,6 +127,25 @@ QList<Waveform*> Controller::queryWaveforms() throw (std::exception){
 
         Waveform *w = new Waveform(id, QString(nome),groupType, groupId, QString(waveGroup), oneShot, number);
         rs.append(w);
+    }
+    return rs;
+}
+
+QList<QList<int>>* Controller::queryDefaultPatches() noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT a,b,c FROM temp LIMIT 5");
+
+    QList<QList<int>>* rs = new QList<QList<int>>();
+    while (query.executeStep())
+    {
+        int groupType = query.getColumn(0);
+        int groupId = query.getColumn(1);
+        int  number = query.getColumn(2);
+        QList<int> lista;
+        lista.append(groupType);
+        lista.append(groupId);
+        lista.append(number);
+        rs->append(lista);
     }
     return rs;
 }
