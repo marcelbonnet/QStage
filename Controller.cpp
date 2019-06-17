@@ -150,6 +150,35 @@ QList<QList<int>>* Controller::queryDefaultPatches() noexcept(false){
     return rs;
 }
 
+QList<QString>* Controller::getPatch(int id) noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT common, tone0, tone1, tone2, tone3, name FROM patches WHERE patch_id = ?");
+
+    query.bind(1, id);
+
+    QList<QString>* lista = new QList<QString>();
+    while (query.executeStep())
+    {
+        const char* common = query.getColumn(0);
+        const char* t0 = query.getColumn(1);
+        const char* t1 = query.getColumn(2);
+        const char* t2 = query.getColumn(3);
+        const char* t3 = query.getColumn(4);
+        const char* name = query.getColumn(5);
+
+
+        lista->append(common);//deve ser o primeiro no append
+        lista->append(t0); //a seguir append dos tones 0 a 3
+        lista->append(t1);
+        lista->append(t2);
+        lista->append(t3);
+        //dados adicionais, manter appendo no final
+        lista->append(name);
+
+    }
+    return lista;
+}
+
 void Controller::insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0, QString tone1, QString tone2, QString tone3) noexcept(false)  {
     SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
     SQLite::Statement   query(db, "INSERT INTO patches ( patchGroupType, patchGroupId, patchNumber,  name, common, tone0, tone1, tone2, tone3  ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )  ");

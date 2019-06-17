@@ -37,6 +37,8 @@ public:
      */
     static QList<QList<int>>* queryDefaultPatches() noexcept(false);
 
+    static QList<QString>* getPatch(int id) noexcept(false);
+
     static void insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0
                            , QString tone1 , QString tone2, QString tone3) noexcept(false);
 };

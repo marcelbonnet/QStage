@@ -1964,15 +1964,125 @@ void PatchUI::on_perfEfeito_currentIndexChanged(int index)
     ui->perfParam12->setMaximum(max->at(11));
 }
 
-void PatchUI::on_pushButton_clicked()
-{
-//    //dados->append( new SysExMessage( ui->startAddr->value(), ui->dataSize->value()) );
-//    /*
-//     * Recuperando Patch Tone #1
-//     * 3001000 7f   (um DS1 de 128 bytes)
-//     * 3001100 1    (pega o reverb do tone que não coube no primeiro DS)
-//     */
+void PatchUI::on_pushButton_clicked(){
 
+//FUNCIONA:
+
+    try {
+        QList<QString>* patch = Controller::getPatch(ui->spinBox->value());
+
+        jack->txPacoteDataSetString(0x03001000, patch->at(1));
+        jack->txPacoteDataSetString(0x03001200, patch->at(2));
+        jack->txPacoteDataSetString(0x03001400, patch->at(3));
+        jack->txPacoteDataSetString(0x03001600, patch->at(4));
+        jack->txPacoteDataSetString(0x03000000, patch->at(0));//common
+    } catch (SQLite::Exception &e) {
+        qDebug() << e.what();
+    }
+
+
+    qDebug() << "FIM TESTE";
+    return;
+
+    int msg = 0;
+    //cada grupo de pacotes para compor o dump de um patch
+    QList<int> patch;
+    QList<int> tone0;
+    QList<int> tone1;
+    QList<int> tone2;
+    QList<int> tone3;
+    for (int i=0;i<jack->sysxin->length();i++) {
+
+        if(jack->sysxin->at(i)==0xf0){
+            msg++;
+            i+=9;
+//            continue;
+        }
+
+        if(jack->sysxin->at(i)!=0xf0 && jack->sysxin->at(i)!=0xf7)
+            switch (msg) {
+            case 1:
+                patch.append(jack->sysxin->at(i));
+                break;
+            case 2:
+                tone0.append(jack->sysxin->at(i));
+                break;
+            case 3:
+                tone1.append(jack->sysxin->at(i));
+                break;
+            case 4:
+                tone2.append(jack->sysxin->at(i));
+                break;
+            case 5:
+                tone3.append(jack->sysxin->at(i));
+                break;
+            }
+
+        if(msg==5 && jack->sysxin->at(i)==0xf7){
+
+            patch.removeLast();
+            patch.removeLast();
+
+            tone0.removeLast();
+            tone1.removeLast();
+            tone2.removeLast();
+            patch.removeLast();
+            tone0.removeLast();
+            tone1.removeLast();
+            tone2.removeLast();
+
+            tone3.removeLast(); //só uma vez
+
+            QString nome;
+            for (int c=0; c<12; c++) {
+                nome += (char) patch.at(c);
+            }
+            qDebug() << "patch" << nome;
+
+            QString commonStr, t0Str, t1Str, t2Str, t3Str;
+            for(int h : patch)
+                commonStr+=QString("%1 ").arg(h);
+            commonStr = commonStr.trimmed();
+            for(int h : tone0)
+                t0Str+=QString("%1 ").arg(h);
+            t0Str = t0Str.trimmed();
+            for(int h : tone1)
+                t1Str+=QString("%1 ").arg(h);
+            t1Str = t1Str.trimmed();
+            for(int h : tone2)
+                t2Str+=QString("%1 ").arg(h);
+            t2Str = t2Str.trimmed();
+            for(int h : tone3)
+                t3Str+=QString("%1 ").arg(h);
+            t3Str = t3Str.trimmed();
+
+
+            try {
+                Controller::insertPatch(
+                            0,
+                            0,
+                            0,
+                            nome,
+                            commonStr,
+                            t0Str, t1Str, t2Str, t3Str
+                            );
+                patch.clear();
+                tone0.clear();
+                tone1.clear();
+                tone2.clear();
+                tone3.clear();
+            } catch (SQLite::Exception &e) {
+                qDebug() << e.what();
+            }
+            msg=0;
+        }
+    }//fim for
+    qDebug() << "Apagando cache de SYSEX";
+    jack->sysxin->clear();
+
+}
+/*void PatchUI::on_pushButton_clicked()
+{
     //dump de Patches do teclado. Provavelmente só usarei isso uma vez na vida para salvar no SQLite
 
     QList<QList<int>>* patches = Controller::queryDefaultPatches();
@@ -2255,6 +2365,7 @@ void PatchUI::on_pushButton_clicked()
     qDebug() << "ENCERROU #" << jack->sysxin->length();
 
 }
+*/
 
 void PatchUI::onSysExRequestFinished(){
 //a cada loop recebo: common, depois tone 0, 1, 2 e 3

@@ -129,6 +129,12 @@ public:
      * @param data lista de dados em sequência
      */
     void txPacoteDataSet(int addr, QList<int> *data);
+    /**
+     * @brief converte os dados para uma lista de int e envia
+     * @param addr
+     * @param data
+     */
+    void txPacoteDataSetString(int addr, QString data);
     void txPacoteRequestData(int addr, int data);
 
     QList<QString> *listarPortas();

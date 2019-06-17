@@ -95,9 +95,9 @@ void MidiControl::post_process_midi_input(struct MidiControl::MidiMessage *ev){
         return;
 
     //salvando tudo
-    sysxin->append(a);
-    sysxin->append(b);
-    sysxin->append(c);
+//    sysxin->append(a);
+//    sysxin->append(b);
+//    sysxin->append(c);
     return;
 
 //    //salvando estado do tipo de mensagem que estamos recebendo
@@ -396,6 +396,22 @@ int MidiControl::calcularChecksum(int endereco, int dado)
     return soma;
 }
 
+void MidiControl::txPacoteDataSetString(int addr, QString lista){
+    QList<int> *data = new QList<int>();
+
+    for(QString c : lista.split(" ") )
+        data->append( c.toInt() );
+
+    if(addr >= 0x03001000 && addr <= 0x03001600){
+        QList<int> *data2 = new QList<int>();
+        data2->append(data->last());
+        txPacoteDataSet(addr + 0x00000100, data2);
+        data->removeLast();
+    }
+
+    txPacoteDataSet(addr, data);
+}
+
 void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
     int a4 = addr & 0xFF;
     int a3 = addr >> 8 & 0xFF;
@@ -408,6 +424,7 @@ void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
     queue_new_message(0xF0, 0x41, 0x10 );
     queue_new_message(0x6A, 0x12,  a1);
     queue_new_message(a2, a3, a4 );
+
 
     for (int i=0; i<data->length(); i+=3) {
         if(i+2 < data->length()){
