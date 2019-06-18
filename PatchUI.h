@@ -196,112 +196,7 @@ private slots:
     void onPatchToneChanged();
     void onPatchToneChanged(int i);
     void onPatchCommonEfx(int i);
-    /*
-    void onChangeCutoffKeyfollowList(int data);
-    void onChangebiasDirectionList(int data);
-    void onChangebiasLevelList(int data);
-    void onChangebiasPositionList(int data);
-    void onChangecontrolerDestinationList(int data);
-    void onChangefilterEnvelopeTimeKeyfollowList(int data);
-    void onChangefilterEnvelopeVelocityCurveList(int data);
-    void onChangefilterEnvelopeVelocityTime1List(int data);
-    void onChangefilterEnvelopeVelocityTime4List(int data);
-    void onChangefilterTypeList(int data);
-    void onChangekeyboardRangeLowerList(int data);
-    void onChangekeyboardRangeUpperList(int data);
-    void onChangelevelEnvelopeTimeKeyfollowList(int data);
-    void onChangelevelEnvelopeVelocityCurveList(int data);
-    void onChangelevelEnvelopeVelocityTime1List(int data);
-    void onChangelevelEnvelopeVelocityTime4List(int data);
-    void onChangelfo1ExternalSyncList(int data);
-    void onChangelfo1FadeModeList(int data);
-    void onChangelfo1OffSetList(int data);
-    void onChangelfo1WaveFormList(int data);
-    void onChangelfo2ExternalSyncList(int data);
-    void onChangelfo2FadeModeList(int data);
-    void onChangelfo2OffSetList(int data);
-    void onChangelfo2WaveFormList(int data);
-    void onChangeoutputAssignList(int data);
-    void onChangepanKeyfollowList(int data);
-    void onChangepitchEnvelopeTimeKeyfollowList(int data);
-    void onChangepitchEnvelopeVelocityTime1List(int data);
-    void onChangepitchEnvelopeVelocityTime4List(int data);
-    void onChangepitchKeyfollowList(int data);
-    void onChangerandomPitchDepthList(int data);
-    void onChangetoneDelayModeList(int data);
-    void onChangewaveGainList(int data);
-    void onChangewaveIdList(int data);
-    void onChangefxmSwitchList(int data);
-    void onChangehold1ControlSwitchList(int data);
-    void onChangelfo1KeySyncSwitchList(int data);
-    void onChangelfo2KeySyncSwitchList(int data);
-    void onChangepanControlSwitchList(int data);
-    void onChangepitchBendControlSwitchList(int data);
-    void onChangeredamperControlSwitchList(int data);
-    void onChangetoneSwitchList(int data);
-    void onChangevolumeControlSwitchList(int data);
-    void onChangeChorusSendLevelList(int data);
-    void onChangeCutoffFrequencyList(int data);
-    void onChangeReverbSendLevelList(int data);
-    void onChangealternatePanDepthList(int data);
-    void onChangefilterEnvelopeDepthList(int data);
-    void onChangefilterEnvelopeLevel1List(int data);
-    void onChangefilterEnvelopeLevel2List(int data);
-    void onChangefilterEnvelopeLevel3List(int data);
-    void onChangefilterEnvelopeLevel4List(int data);
-    void onChangefilterEnvelopeTime1List(int data);
-    void onChangefilterEnvelopeTime2List(int data);
-    void onChangefilterEnvelopeTime3List(int data);
-    void onChangefilterEnvelopeTime4List(int data);
-    void onChangefilterEnvelopeVelocitySensList(int data);
-    void onChangefilterLfo1DepthList(int data);
-    void onChangefilterLfo2DepthList(int data);
-    void onChangelevelEnvelopeLevel1List(int data);
-    void onChangelevelEnvelopeLevel2List(int data);
-    void onChangelevelEnvelopeLevel3List(int data);
-    void onChangelevelEnvelopeTime1List(int data);
-    void onChangelevelEnvelopeTime2List(int data);
-    void onChangelevelEnvelopeTime3List(int data);
-    void onChangelevelEnvelopeTime4List(int data);
-    void onChangelevelEnvelopeVelocitySensList(int data);
-    void onChangelevelLfo1DepthList(int data);
-    void onChangelevelLfo2DepthList(int data);
-    void onChangelfo1DelayTimeList(int data);
-    void onChangelfo1FadeTimeList(int data);
-    void onChangelfo1RateList(int data);
-    void onChangelfo2DelayTimeList(int data);
-    void onChangelfo2FadeTimeList(int data);
-    void onChangelfo2RateList(int data);
-    void onChangemixEfxSendLevelList(int data);
-    void onChangepanLfo1DepthList(int data);
-    void onChangepanLfo2DepthList(int data);
-    void onChangepitchEnvelopeLevel1List(int data);
-    void onChangepitchEnvelopeLevel2List(int data);
-    void onChangepitchEnvelopeLevel3List(int data);
-    void onChangepitchEnvelopeLevel4List(int data);
-    void onChangepitchEnvelopeTime1List(int data);
-    void onChangepitchEnvelopeTime2List(int data);
-    void onChangepitchEnvelopeTime3List(int data);
-    void onChangepitchEnvelopeTime4List(int data);
-    void onChangepitchEnvelopeVelocitySensList(int data);
-    void onChangepitchLfo1DepthList(int data);
-    void onChangepitchLfo2DepthList(int data);
-    void onChangerandomPanDepthList(int data);
-    void onChangeresonanceList(int data);
-    void onChangeresonanceVelocitySensList(int data);
-    void onChangetoneLevelList(int data);
-    void onChangetonePanList(int data);
-    void onChangecoarseTuneList(int data);
-    void onChangecontrolerDepthList(int data);
-    void onChangefineTuneList(int data);
-    void onChangefxmColorList(int data);
-    void onChangefxmDepthList(int data);
-    void onChangepitchEnvelopeDepthList(int data);
-    void onChangetoneDelayTimeList(int data);
-    void onChangeveocityRangeCrossFadeList(int data);
-    void onChangeveocityRangeLowerList(int data);
-    void onChangeveocityRangeUpperList(int data);
-*/
+
 
     void on_name_editingFinished();
     void on_tempo_editingFinished();
@@ -335,7 +230,16 @@ private slots:
 
     void onSysExRequestFinished();
 
+    /**
+     * @brief slot chamado quando o combo de categorias é acionado para filtrar os patches por categoria
+     * @param i
+     */
     void onFiltrarCategoria(int i);
+    /**
+     * @brief quando um Patch é selecionado esse slot carrega os widgets com os dados de Patch
+     * Common e Tones de 0 a 3 obtidos do banco de dados
+     */
+    void onPatchSelected(int);
 };
 
 #endif // PATCHUI_H

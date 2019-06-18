@@ -39,6 +39,11 @@ public:
      */
     static QList<QList<int>>* queryDefaultPatches() noexcept(false);
 
+    /**
+     * @brief retorna Lista de String, cada item contendo: patch common, tone0, tone1, tone2, tone3
+     * @param id
+     * @return
+     */
     static QList<QString>* getPatch(int id) noexcept(false);
     /**
      * @brief retorna todos os patches (da Roland e os criados no QStage)

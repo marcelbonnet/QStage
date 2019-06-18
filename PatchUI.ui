@@ -39,9 +39,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-29</y>
             <width>1284</width>
-            <height>1086</height>
+            <height>1208</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -73,6 +73,26 @@
                   <enum>QFrame::Raised</enum>
                  </property>
                  <layout class="QFormLayout" name="formLayout">
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>Categoria</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="filtroCategoria"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_3">
+                    <property name="text">
+                     <string>Patch</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="patch"/>
+                  </item>
                   <item row="3" column="0">
                    <widget class="QLabel" name="label_61">
                     <property name="text">
@@ -90,14 +110,14 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="0">
+                  <item row="7" column="0">
                    <widget class="QLabel" name="label_68">
                     <property name="text">
                      <string>Tempo</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="1">
+                  <item row="7" column="1">
                    <widget class="QSpinBox" name="tempo">
                     <property name="minimum">
                      <number>20</number>
@@ -113,35 +133,29 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="8" column="0">
+                  <item row="9" column="0">
                    <widget class="QLabel" name="label_62">
                     <property name="text">
                      <string>Categoria</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="8" column="1">
+                  <item row="9" column="1">
                    <widget class="QComboBox" name="patchCategory"/>
                   </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_3">
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="label_7">
                     <property name="text">
-                     <string>Patch</string>
+                     <string>Clock Source</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="1">
-                   <widget class="QComboBox" name="patch"/>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_4">
+                  <item row="6" column="1">
+                   <widget class="QCheckBox" name="clockSource">
                     <property name="text">
-                     <string>Categoria</string>
+                     <string>Patch (desmarcado o relógio fica com o System)</string>
                     </property>
                    </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QComboBox" name="filtroCategoria"/>
                   </item>
                  </layout>
                 </widget>
@@ -415,6 +429,35 @@
                      <bool>true</bool>
                     </property>
                    </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_6">
+                 <property name="title">
+                  <string>Patch Control Source</string>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_2">
+                  <item>
+                   <widget class="QLabel" name="label_5">
+                    <property name="text">
+                     <string>Source 2</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="patchControlSource2"/>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>Source 3</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="patchControlSource3"/>
                   </item>
                  </layout>
                 </widget>
@@ -752,7 +795,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-183</y>
             <width>1284</width>
             <height>667</height>
            </rect>

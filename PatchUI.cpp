@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QFrame>
 #include <QDebug>
+#include <QMessageBox>
 
 #include "defaults.h"
 #include "PatchUI.h"
@@ -46,8 +47,12 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
         ui->perfEfeito->addItem(nome, QVariant::fromValue(0));
     }
 
-
-
+    //combos de patch common control source 2 e 3
+    QString origens[16] = {"OFF","SYS-CTRL1","SYS-CTRL2","MODULATION","BREATH","FOOT","VOLUME","PAN","EXPRESSION","PITCH BEND","AFTERTOUCH","LFO1","LFO2","VELOCITY","KEYFOLLOW","PLAYMATE"};
+    for(int i=0; i<16; i++){
+        ui->patchControlSource2->addItem(origens[i]);
+        ui->patchControlSource3->addItem(origens[i]);
+    }
     /*
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
      */
@@ -62,6 +67,100 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
 PatchUI::~PatchUI()
 {
     delete ui;
+}
+
+void PatchUI::onPatchSelected(int i){
+    QList<QString>* patch;
+    try {
+        Patch* patchSelecionado = ui->patch->currentData().value<Patch*>();
+        patch = Controller::getPatch( patchSelecionado->id );
+    } catch (SQLite::Exception &e) {
+        QMessageBox::critical(this,"Erro ao obter o patch do banco de dados", e.what());
+    }
+
+    if(patch == nullptr) {
+        QMessageBox::critical(this,"Erro ao obter o patch do banco de dados", "Deu um pau loko. Parei tudo.");
+        return;
+    }
+
+    //tem que enviar tudo numa porrada só
+//    desconectarWidgets();
+//    conectarWidgets();
+
+    ui->name->setText(patch->at(5));
+    //Patch Common
+    QStringList common = patch->at(0).split(" ");
+    ui->perfEfeito->setCurrentIndex(common.at(12).toInt());
+    ui->perfParam1->setValue(common.at(13).toInt());
+    ui->perfParam2->setValue(common.at(14).toInt());
+    ui->perfParam3->setValue(common.at(15).toInt());
+    ui->perfParam4->setValue(common.at(16).toInt());
+    ui->perfParam5->setValue(common.at(17).toInt());
+    ui->perfParam6->setValue(common.at(18).toInt());
+    ui->perfParam7->setValue(common.at(19).toInt());
+    ui->perfParam8->setValue(common.at(20).toInt());
+    ui->perfParam9->setValue(common.at(21).toInt());
+    ui->perfParam10->setValue(common.at(22).toInt());
+    ui->perfParam11->setValue(common.at(23).toInt());
+    ui->perfParam12->setValue(common.at(24).toInt());
+    ui->perfOA->setCurrentIndex(common.at(25).toInt());
+    ui->mixOutSendLevel->setValue(common.at(26).toInt());
+    ui->chorusSendLevel->setValue(common.at(27).toInt());
+    ui->reverbSendLevel->setValue(common.at(28).toInt());
+    ui->perfCtrlSrc1->setCurrentIndex(common.at(29).toInt());
+    ui->perfCtrlDepth1->setValue(common.at(30).toInt());
+    ui->perfCtrlSrc2->setCurrentIndex(common.at(31).toInt());
+    ui->perfCtrlDepth2->setValue(common.at(32).toInt());
+
+    ui->perfChorusLevel_3->setValue(common.at(33).toInt());
+    ui->perfChorusRate->setValue(common.at(34).toInt());
+    ui->perfChorusDepth->setValue(common.at(35).toInt());
+    ui->perfChorusPreDelay_3->setValue(common.at(36).toInt());
+    ui->perfChorusFeedback->setValue(common.at(37).toInt());
+    ui->perfChorusOut->setCurrentIndex(common.at(38).toInt());
+
+    ui->perfReverbType->setCurrentIndex(common.at(39).toInt());
+    ui->perfReverbLevel->setValue(common.at(40).toInt());
+    ui->perfReverbTime->setValue(common.at(41).toInt());
+    ui->perfReverbHFDamp->setCurrentIndex(common.at(42).toInt());
+    ui->perfReverbDelayFeedback->setValue(common.at(43).toInt());
+
+    QString tempoString = QString("%1%2").arg(common.at(44)).arg(common.at(45));
+    //tempoString = QString::number(tempoString,16);
+    bool intStatus;
+    int tempo = tempoString.toInt(&intStatus, 16);
+    if(!intStatus) QMessageBox::critical(this, "Conversão de QString para int", "Deu pau na conversão");
+    ui->tempo->setValue(tempo);
+    ui->patchLevel  ->setValue(common.at(46).toInt());
+    ui->patchPan    ->setValue(common.at(47).toInt());
+    ui->analogFeel  ->setValue(common.at(48).toInt());
+    ui->bendMin     ->setValue(common.at(49).toInt());
+    ui->bendMax     ->setValue(common.at(50).toInt());
+    ui->btnKeyAssignMode    ->setChecked(common.at(51).toInt() == 1);
+    ui->btnSoloLegato       ->setChecked(common.at(52).toInt() == 1);
+    ui->btnPortamentoSwitch ->setChecked(common.at(53).toInt() == 1);
+    ui->btnPortamentoMode   ->setChecked(common.at(54).toInt() == 1);
+    ui->portamentoType      ->setCurrentIndex(common.at(55).toInt());
+    ui->portamentoStart     ->setCurrentIndex(common.at(56).toInt());
+    ui->portamentoTime              ->setValue(common.at(57).toInt());
+
+    ui->patchControlSource2     ->setCurrentIndex(common.at(58).toInt());
+    ui->patchControlSource3     ->setCurrentIndex(common.at(59).toInt());
+
+    ui->efxControl    ->setCurrentIndex(common.at(60).toInt());
+    ui->control1    ->setCurrentIndex(common.at(61).toInt());
+    ui->control2    ->setCurrentIndex(common.at(62).toInt());
+    ui->control3    ->setCurrentIndex(common.at(63).toInt());
+    ui->btnVelocityRangeSwitch   ->setChecked(common.at(64).toInt() == 1);
+    ui->octave->setValue(common.at(65).toInt());
+    ui->stretchTuneDepth->setValue(common.at(66).toInt());
+    ui->voicePriority->setCurrentIndex(common.at(67).toInt());
+    ui->structure12->setCurrentIndex(common.at(68).toInt());
+    ui->booster12->setCurrentIndex(common.at(69).toInt());
+    ui->structure34->setCurrentIndex(common.at(70).toInt());
+    ui->booster34->setCurrentIndex(common.at(71).toInt());
+    ui->clockSource   ->setChecked(common.at(72).toInt() == 1);
+    ui->patchCategory->setCurrentIndex(common.at(73).toInt());
 }
 
 void PatchUI::carregarFiltroCategorias(QString categ){
@@ -254,6 +353,7 @@ void PatchUI::conectarWidgets()
     //        connect(toneSwitchList->at(i),SIGNAL( clicked()), this, SLOT(onPatchToneChanged()));
 
     connect(ui->filtroCategoria, SIGNAL(currentIndexChanged(int)), this, SLOT(onFiltrarCategoria(int)));
+    connect(ui->patch, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchSelected(int)));
 
     for(int i=0; i<CutoffKeyfollowList->count(); i++) connect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasDirectionList->count(); i++) connect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
@@ -401,6 +501,7 @@ void PatchUI::conectarWidgets()
 
 void PatchUI::desconectarWidgets(){
     disconnect(ui->filtroCategoria, SIGNAL(currentIndexChanged(int)), this, SLOT(onFiltrarCategoria(int)));
+    disconnect(ui->patch, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchSelected(int)));
 
     for(int i=0; i<CutoffKeyfollowList->count(); i++) disconnect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasDirectionList->count(); i++) disconnect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
