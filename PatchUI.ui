@@ -41,7 +41,7 @@
             <x>0</x>
             <y>0</y>
             <width>1284</width>
-            <height>1055</height>
+            <height>1086</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -132,6 +132,16 @@
                   </item>
                   <item row="2" column="1">
                    <widget class="QComboBox" name="patch"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>Categoria</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="filtroCategoria"/>
                   </item>
                  </layout>
                 </widget>

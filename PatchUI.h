@@ -36,6 +36,7 @@ public:
 
 protected:
     MidiControl *jack;
+
 private:
     Ui::PatchUI *ui;
 
@@ -46,6 +47,7 @@ private:
     void desconectarWidgets();
     void setupProperties();
     void enviarGrupoDeMensagens(PatchTone::Function function, int tone);
+    void carregarFiltroCategorias(QString categ);
 
 
     QGridLayout *grid;
@@ -332,6 +334,8 @@ private slots:
     void on_pushButton_clicked();
 
     void onSysExRequestFinished();
+
+    void onFiltrarCategoria(int i);
 };
 
 #endif // PATCHUI_H

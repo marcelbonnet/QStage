@@ -34,8 +34,11 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     }
 
     //Categorias
-    for(int i=0; i<=38; i++)
+    ui->filtroCategoria->addItem("Todos os patches");//exibirá todos os patches se selecionado
+    for(int i=0; i<=38; i++){
         ui->patchCategory->addItem(categorias[i]);
+        ui->filtroCategoria->addItem(categorias[i]);
+    }
 
     //combo de Efeitos
     for(int efx=0; efx<40; efx++ ){
@@ -43,25 +46,39 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
         ui->perfEfeito->addItem(nome, QVariant::fromValue(0));
     }
 
-    /*
-     * CARREGA LISTA DE PATCHES DA ROLAND E PATCHES FEITOS NO QSTAGE
-     */
-    for(Patch* p : *Controller::queryPatches() ){
-        ui->patch->addItem(p->getFullName(), QVariant::fromValue(p));
-    }
+
 
     /*
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
      */
+    carregarFiltroCategorias(NULL);
     drawPatchTone();
     setupProperties();
     conectarWidgets();
+
 
 }
 
 PatchUI::~PatchUI()
 {
     delete ui;
+}
+
+void PatchUI::carregarFiltroCategorias(QString categ){
+    desconectarWidgets();
+    ui->patch->clear();
+    for(Patch* p : *Controller::queryPatches() ){
+        if(categ == NULL || categorias[p->categId].compare(categ) == 0)
+            ui->patch->addItem(p->getFullName(), QVariant::fromValue(p));
+    }
+    conectarWidgets();
+}
+
+void PatchUI::onFiltrarCategoria(int i){
+    if(ui->filtroCategoria->currentIndex() == 0)
+        carregarFiltroCategorias(NULL);
+    else
+        carregarFiltroCategorias(ui->filtroCategoria->currentText());
 }
 
 void PatchUI::enviarPacotesDS1(int tone){
@@ -236,6 +253,7 @@ void PatchUI::conectarWidgets()
     //    for(int i=0; i<toneSwitchList->count(); i++)
     //        connect(toneSwitchList->at(i),SIGNAL( clicked()), this, SLOT(onPatchToneChanged()));
 
+    connect(ui->filtroCategoria, SIGNAL(currentIndexChanged(int)), this, SLOT(onFiltrarCategoria(int)));
 
     for(int i=0; i<CutoffKeyfollowList->count(); i++) connect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasDirectionList->count(); i++) connect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
@@ -382,6 +400,8 @@ void PatchUI::conectarWidgets()
 }
 
 void PatchUI::desconectarWidgets(){
+    disconnect(ui->filtroCategoria, SIGNAL(currentIndexChanged(int)), this, SLOT(onFiltrarCategoria(int)));
+
     for(int i=0; i<CutoffKeyfollowList->count(); i++) disconnect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasDirectionList->count(); i++) disconnect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasLevelList->count(); i++) disconnect(biasLevelList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
