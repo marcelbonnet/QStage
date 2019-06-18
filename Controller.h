@@ -7,6 +7,7 @@
 #include <QList>
 
 #include "Waveform.h"
+#include "patch.h"
 
 class Controller
 {
@@ -31,6 +32,7 @@ public:
     static QList<Waveform*> queryWaveforms() throw (std::exception);
 
     /**
+      @deprecated
      * @brief query tabela temporária em que salvei os Patches Group type, id e patch number
      * para usar em SYSEX de RequestData para fazer DUMP do Teclado
      * @return
@@ -38,9 +40,22 @@ public:
     static QList<QList<int>>* queryDefaultPatches() noexcept(false);
 
     static QList<QString>* getPatch(int id) noexcept(false);
+    /**
+     * @brief retorna todos os patches (da Roland e os criados no QStage)
+     * @return
+     */
+    static QList<Patch*>* queryPatches() noexcept(false);
+    /**
+     * @brief retorna os patches da roland (roland=true) ou somente os feitos no QStage (roland=false)
+     * @param roland true|false
+     * @return
+     */
+    static QList<Patch*>* queryPatches(bool roland) noexcept(false);
 
     static void insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0
                            , QString tone1 , QString tone2, QString tone3) noexcept(false);
+
+
 };
 
 #endif // CONTROLLER_H

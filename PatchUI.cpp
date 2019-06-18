@@ -44,6 +44,13 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     }
 
     /*
+     * CARREGA LISTA DE PATCHES DA ROLAND E PATCHES FEITOS NO QSTAGE
+     */
+    for(Patch* p : *Controller::queryPatches() ){
+        ui->patch->addItem(p->getFullName(), QVariant::fromValue(p));
+    }
+
+    /*
      * Adiciona Aba de Patch Tone e instancia inúmeros controles
      */
     drawPatchTone();

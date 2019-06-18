@@ -179,6 +179,55 @@ QList<QString>* Controller::getPatch(int id) noexcept(false){
     return lista;
 }
 
+QList<Patch*>* Controller::queryPatches() noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT patch_id, patchGroupType, patchGroupId, patchNumber, name, roland, categoria FROM patches ");
+
+
+
+    QList<Patch*>* lista = new QList<Patch*>();
+    while (query.executeStep())
+    {
+        int id = query.getColumn(0);
+        int gt = query.getColumn(1);
+        int gid = query.getColumn(2);
+        int number = query.getColumn(3);
+        const char* nome = query.getColumn(4);
+        int roland = query.getColumn(5);
+        int categid = query.getColumn(6);
+
+        Patch* p = new Patch(id, nome, gt, gid, number, (roland == 1), categid );
+
+        lista->append(p);
+
+    }
+    return lista;
+}
+
+QList<Patch*>* Controller::queryPatches(bool r) noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT patch_id, patchGroupType, patchGroupId, patchNumber, name, roland, categoria FROM patches WHERE roland = ? ");
+
+    query.bind(1, r? 1 : 0 );
+
+    QList<Patch*>* lista = new QList<Patch*>();
+    while (query.executeStep())
+    {
+        int id = query.getColumn(0);
+        int gt = query.getColumn(1);
+        int gid = query.getColumn(2);
+        int number = query.getColumn(3);
+        const char* nome = query.getColumn(4);
+        int roland = query.getColumn(5);
+        int categid = query.getColumn(6);
+
+        Patch* p = new Patch(id, nome, gt, gid, number, (roland == 1), categid );
+        lista->append(p);
+
+    }
+    return lista;
+}
+
 void Controller::insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0, QString tone1, QString tone2, QString tone3) noexcept(false)  {
     SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
     SQLite::Statement   query(db, "INSERT INTO patches ( patchGroupType, patchGroupId, patchNumber,  name, common, tone0, tone1, tone2, tone3  ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )  ");

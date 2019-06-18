@@ -8,15 +8,7 @@
 class Patch : public QVariant
 {
 public:
-    //a implementação usa a categorias de defaults.h
-//    const QString categorias[39] = {
-//        "---",
-//        "PNO","EP","KEY","BELL","MLT","ORG","ACD","HRM",
-//        "AGT","EGT","DGT","BS","SBS","STR",
-//        "ORC", "HIT", "WND","FLT","BRS","SBR","SAX","HLD","SLD",
-//        "TEK","PLS","SFX","SYN","BPD","SPD","VOX", "PLK",
-//        "ETH","FRT","PRC","FX","BTS","DRM","CMB"
-//    };
+
 
     enum Function {
         Name01,
@@ -97,6 +89,7 @@ public:
 
     Patch(); //default
     Patch(QString nome, QString categoria, QString categoriaPai, int groupType, int groupId, int number);
+    Patch(int id, QString nome, int groupType, int groupId, int number, bool roland, int categId);
     Patch(Function func);
 
     int address = 0x0000;
@@ -133,8 +126,44 @@ public:
         return number;
     }
 
+    QString getPresetGroup(){
+        if(groupType == 0 && groupId == 1)
+            return "USER";
+        if(groupType == 0 && groupId == 3)
+            return "PR-A";
+        if(groupType == 0 && groupId == 4)
+            return "PR-B";
+        if(groupType == 0 && groupId == 5)
+            return "PR-C";
+        if(groupType == 0 && groupId == 6)
+            return "GM";
+        if(groupType == 0 && groupId == 7)
+            return "PR-E";
+        if(groupType == 2 && groupId == 9)
+            return "XP-A";
+        if(groupType == 2 && groupId == 2)
+            return "XP-B";
+        if(groupType == 2 && groupId == 11)
+            return "XP-C";
+
+        return NULL;
+    }
+
+    QString getFullName(){
+        QString nome;
+        if(getPresetGroup() != NULL){
+            nome+=getPresetGroup()+":";
+            nome+=QString("%1 %2 ").arg(getNumber()+1, 3, 10, QChar('0')).arg(_categ[categId]);
+
+        } else {
+            nome+=QString("%1 %2 ").arg(getNumber(), 4, 10, QChar('0')).arg(_categ[categId]);
+        }
+        nome+=getNome();
+        return nome;
+    }
 
 
+    bool isRoland(){ return roland; }
 
 
     //private:
@@ -144,9 +173,22 @@ public:
     int groupType;
     int groupId;
     int number;
+    bool roland;
+    int categId;//0 - 38
+    int id;
 
 private:
     QMap<Function,QString> functionMap;
+
+    //a implementação usa a categorias de defaults.h
+    const QString _categ[39] = {
+        "---",
+        "PNO","EP","KEY","BELL","MLT","ORG","ACD","HRM",
+        "AGT","EGT","DGT","BS","SBS","STR",
+        "ORC", "HIT", "WND","FLT","BRS","SBR","SAX","HLD","SLD",
+        "TEK","PLS","SFX","SYN","BPD","SPD","VOX", "PLK",
+        "ETH","FRT","PRC","FX","BTS","DRM","CMB"
+    };
 
 };
 

@@ -324,3 +324,14 @@ Patch::Patch(QString nome,QString categoria, QString categoriaPai, int groupType
     this->groupId = groupId;
     this->number = number;
 }
+
+Patch::Patch(int id, QString nome, int groupType, int groupId, int number, bool roland, int categId)
+{
+    this->id = id;
+    this->nome = nome;
+    this->groupType = groupType;
+    this->groupId = groupId;
+    this->number = number;
+    this->roland = roland;
+    this->categId = categId;
+}
