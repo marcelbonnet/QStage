@@ -84,8 +84,8 @@ void PatchUI::onPatchSelected(int i){
     }
 
     //tem que enviar tudo numa porrada só
-//    desconectarWidgets();
-//    conectarWidgets();
+    desconectarWidgets();
+
 
     ui->name->setText(patch->at(5));
     //Patch Common
@@ -161,6 +161,158 @@ void PatchUI::onPatchSelected(int i){
     ui->booster34->setCurrentIndex(common.at(71).toInt());
     ui->clockSource   ->setChecked(common.at(72).toInt() == 1);
     ui->patchCategory->setCurrentIndex(common.at(73).toInt());
+
+    /*
+     * ***********************************************************
+    *       loop para setValue dos tones de 0 a 3:
+    *  ***********************************************************
+    */
+    int toneLoop = 0;
+    setToneWidget:
+    //========= GOTO LOOP:
+    QStringList t = patch->at(toneLoop+1).split(" ");
+    toneSwitchList->at(toneLoop)->setChecked(t.at(0).toInt() == 1);
+
+    //seleção da Waveform da combo
+    int wgt = t.at(1).toInt();
+    int wgid = t.at(2).toInt();
+
+    QString wnum1 = QString::number(t.at(3).toInt(),16);
+    QString wnum2 = QString::number(t.at(4).toInt(),16);
+    QString waveNumber = QString("%1%2").arg(wnum1).arg(wnum2);
+    int wnum = waveNumber.toInt(nullptr, 16);
+    for(int k=0; k<waveIdList->at(toneLoop)->count(); k++){
+        Waveform *w = waveIdList->at(toneLoop)->itemData(k).value<Waveform*>();
+        if(w->groupType == wgt && w->groupId == wgid && w->number == wnum){
+            waveIdList->at(toneLoop)->setCurrentIndex(k);
+            break;
+        }
+    }
+
+    waveGainList->at(toneLoop)->setCurrentIndex(t.at(5).toInt());
+    fxmSwitchList->at(toneLoop)->setChecked(t.at(6).toInt() == 1);
+    fxmColorList->at(toneLoop)->setValue(t.at(7).toInt());
+    fxmDepthList->at(toneLoop)->setValue(t.at(8).toInt());
+    toneDelayModeList->at(toneLoop)->setCurrentIndex(t.at(9).toInt());
+    toneDelayTimeList->at(toneLoop)->setValue(t.at(10).toInt());
+
+    veocityRangeCrossFadeList->at(toneLoop)->setValue(t.at(11).toInt());
+    veocityRangeLowerList->at(toneLoop)->setValue(t.at(12).toInt());
+    veocityRangeUpperList->at(toneLoop)->setValue(t.at(13).toInt());
+    keyboardRangeLowerList->at(toneLoop)->setCurrentIndex(t.at(14).toInt());
+    keyboardRangeUpperList->at(toneLoop)->setCurrentIndex(t.at(15).toInt());
+    redamperControlSwitchList->at(toneLoop)->setChecked(t.at(16).toInt() == 1);
+    volumeControlSwitchList->at(toneLoop)->setChecked(t.at(17).toInt() == 1);
+    hold1ControlSwitchList->at(toneLoop)->setChecked(t.at(18).toInt() == 1);
+    pitchBendControlSwitchList->at(toneLoop)->setChecked(t.at(19).toInt() == 1);
+    panControlSwitchList->at(toneLoop)->setChecked(t.at(20).toInt() == 1);
+
+    int icontrole =0;
+    int lastIndex = 21;
+    for(int i=1; i<=12; i++){
+        controlerDestinationList->at( (i + (toneLoop)*12)-1 )->setCurrentIndex(t.at(lastIndex).toInt());
+        controlerDepthList->at( (i + (toneLoop)*12)-1 )->setValue(t.at(lastIndex+1).toInt());
+        icontrole+=2;
+        lastIndex+=2;
+    }
+
+    lfo1WaveFormList->at(toneLoop)->setCurrentIndex(t.at(45).toInt());
+    lfo1KeySyncSwitchList->at(toneLoop)->setChecked(t.at(46).toInt() == 1);
+    lfo1RateList->at(toneLoop)->setValue(t.at(47).toInt());
+    lfo1OffSetList->at(toneLoop)->setCurrentIndex(t.at(48).toInt());
+    lfo1DelayTimeList->at(toneLoop)->setValue(t.at(49).toInt());
+    lfo1FadeModeList->at(toneLoop)->setCurrentIndex(t.at(50).toInt());
+    lfo1FadeTimeList->at(toneLoop)->setValue(t.at(51).toInt());
+    lfo1ExternalSyncList->at(toneLoop)->setCurrentIndex(t.at(52).toInt());
+    lfo2WaveFormList->at(toneLoop)->setCurrentIndex(t.at(53).toInt());
+    lfo2KeySyncSwitchList->at(toneLoop)->setChecked(t.at(54).toInt() == 1);
+    lfo2RateList->at(toneLoop)->setValue(t.at(55).toInt());
+    lfo2OffSetList->at(toneLoop)->setCurrentIndex(t.at(56).toInt());
+    lfo2DelayTimeList->at(toneLoop)->setValue(t.at(57).toInt());
+    lfo2FadeModeList->at(toneLoop)->setCurrentIndex(t.at(58).toInt());
+    lfo2FadeTimeList->at(toneLoop)->setValue(t.at(59).toInt());
+    lfo2ExternalSyncList->at(toneLoop)->setCurrentIndex(t.at(60).toInt());
+
+    coarseTuneList->at(toneLoop)->setValue(t.at(61).toInt());
+    fineTuneList->at(toneLoop)->setValue(t.at(62).toInt());
+    randomPitchDepthList->at(toneLoop)->setCurrentIndex(t.at(63).toInt());
+    pitchKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(64).toInt());
+    pitchEnvelopeDepthList->at(toneLoop)->setValue(t.at(65).toInt());
+    pitchEnvelopeVelocitySensList->at(toneLoop)->setValue(t.at(66).toInt());
+    pitchEnvelopeVelocityTime1List->at(toneLoop)->setCurrentIndex(t.at(67).toInt());
+    pitchEnvelopeVelocityTime4List->at(toneLoop)->setCurrentIndex(t.at(68).toInt());
+    pitchEnvelopeTimeKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(69).toInt());
+    pitchEnvelopeTime1List->at(toneLoop)->setValue(t.at(70).toInt());
+    pitchEnvelopeTime2List->at(toneLoop)->setValue(t.at(71).toInt());
+    pitchEnvelopeTime3List->at(toneLoop)->setValue(t.at(72).toInt());
+    pitchEnvelopeTime4List->at(toneLoop)->setValue(t.at(73).toInt());
+    pitchEnvelopeLevel1List->at(toneLoop)->setValue(t.at(74).toInt());
+    pitchEnvelopeLevel2List->at(toneLoop)->setValue(t.at(75).toInt());
+    pitchEnvelopeLevel3List->at(toneLoop)->setValue(t.at(76).toInt());
+    pitchEnvelopeLevel4List->at(toneLoop)->setValue(t.at(77).toInt());
+    pitchLfo1DepthList->at(toneLoop)->setValue(t.at(78).toInt());
+    pitchLfo2DepthList->at(toneLoop)->setValue(t.at(79).toInt());
+
+    filterTypeList->at(toneLoop)->setCurrentIndex(t.at(80).toInt());
+    CutoffFrequencyList->at(toneLoop)->setValue(t.at(81).toInt());
+    CutoffKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(82).toInt());
+    resonanceList->at(toneLoop)->setValue(t.at(83).toInt());
+    resonanceVelocitySensList->at(toneLoop)->setValue(t.at(84).toInt());
+    filterEnvelopeDepthList->at(toneLoop)->setValue(t.at(85).toInt());
+    filterEnvelopeVelocityCurveList->at(toneLoop)->setCurrentIndex(t.at(86).toInt());
+    filterEnvelopeVelocitySensList->at(toneLoop)->setValue(t.at(87).toInt());
+    filterEnvelopeVelocityTime1List->at(toneLoop)->setCurrentIndex(t.at(88).toInt());
+    filterEnvelopeVelocityTime4List->at(toneLoop)->setCurrentIndex(t.at(89).toInt());
+    filterEnvelopeTimeKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(90).toInt());
+    filterEnvelopeTime1List->at(toneLoop)->setValue(t.at(91).toInt());
+    filterEnvelopeTime2List->at(toneLoop)->setValue(t.at(92).toInt());
+    filterEnvelopeTime3List->at(toneLoop)->setValue(t.at(93).toInt());
+    filterEnvelopeTime4List->at(toneLoop)->setValue(t.at(94).toInt());
+    filterEnvelopeLevel1List->at(toneLoop)->setValue(t.at(95).toInt());
+    filterEnvelopeLevel2List->at(toneLoop)->setValue(t.at(96).toInt());
+    filterEnvelopeLevel3List->at(toneLoop)->setValue(t.at(97).toInt());
+    filterEnvelopeLevel4List->at(toneLoop)->setValue(t.at(98).toInt());
+    filterLfo1DepthList->at(toneLoop)->setValue(t.at(99).toInt());
+    filterLfo2DepthList->at(toneLoop)->setValue(t.at(100).toInt());
+
+    toneLevelList->at(toneLoop)->setValue(t.at(101).toInt());
+    biasDirectionList->at(toneLoop)->setCurrentIndex(t.at(102).toInt());
+    biasPositionList->at(toneLoop)->setCurrentIndex(t.at(103).toInt());
+    biasLevelList->at(toneLoop)->setCurrentIndex(t.at(104).toInt());
+    levelEnvelopeVelocityCurveList->at(toneLoop)->setCurrentIndex(t.at(105).toInt());
+    levelEnvelopeVelocitySensList->at(toneLoop)->setValue(t.at(106).toInt());
+    levelEnvelopeVelocityTime1List->at(toneLoop)->setCurrentIndex(t.at(107).toInt());
+    levelEnvelopeVelocityTime4List->at(toneLoop)->setCurrentIndex(t.at(108).toInt());
+    levelEnvelopeTimeKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(109).toInt());
+    levelEnvelopeTime1List->at(toneLoop)->setValue(t.at(110).toInt());
+    levelEnvelopeTime2List->at(toneLoop)->setValue(t.at(111).toInt());
+    levelEnvelopeTime3List->at(toneLoop)->setValue(t.at(112).toInt());
+    levelEnvelopeTime4List->at(toneLoop)->setValue(t.at(113).toInt());
+    levelEnvelopeLevel1List->at(toneLoop)->setValue(t.at(114).toInt());
+    levelEnvelopeLevel2List->at(toneLoop)->setValue(t.at(115).toInt());
+    levelEnvelopeLevel3List->at(toneLoop)->setValue(t.at(116).toInt());
+    levelLfo1DepthList->at(toneLoop)->setValue(t.at(117).toInt());
+    levelLfo2DepthList->at(toneLoop)->setValue(t.at(118).toInt());
+    tonePanList->at(toneLoop)->setValue(t.at(119).toInt());
+    panKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(120).toInt());
+    randomPanDepthList->at(toneLoop)->setValue(t.at(121).toInt());
+    alternatePanDepthList->at(toneLoop)->setValue(t.at(122).toInt());
+    panLfo1DepthList->at(toneLoop)->setValue(t.at(123).toInt());
+    panLfo2DepthList->at(toneLoop)->setValue(t.at(124).toInt());
+    outputAssignList->at(toneLoop)->setCurrentIndex(t.at(125).toInt());
+    mixEfxSendLevelList->at(toneLoop)->setValue(t.at(126).toInt());
+    ChorusSendLevelList->at(toneLoop)->setValue(t.at(127).toInt());
+    ReverbSendLevelList->at(toneLoop)->setValue(t.at(128).toInt());
+
+    /*
+     * UMA ITERAÇÃO ENCERRADA
+     */
+    toneLoop++;
+    if(toneLoop<=3)
+        goto setToneWidget;
+    //======================== LOOP ENCERRADO ===========================
+
+    conectarWidgets();
 }
 
 void PatchUI::carregarFiltroCategorias(QString categ){
