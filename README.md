@@ -1,6 +1,6 @@
 # QStage
 
-It is a program to send SYSEX MIDI Messages to my Roland Keyboard. Since it is the first program I wrote in C++, it was basically focused on my needs and as an opportunity to educate myself on C++. I chose to use Qt Framework, and almost nothing from stdlib.
+It is a program to send SYSEX MIDI Messages to my Roland Keyboard. Since it is the first program I wrote in C++, it was basically focused on my needs and as an opportunity to educate myself on C++. I chose to use Qt Framework. 
 
 ## QStage Features
 
