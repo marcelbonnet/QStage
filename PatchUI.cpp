@@ -5,6 +5,7 @@
 #include <QFrame>
 #include <QDebug>
 #include <QMessageBox>
+#include <QChar>
 
 #include "defaults.h"
 #include "PatchUI.h"
@@ -68,6 +69,7 @@ PatchUI::~PatchUI()
 {
     delete ui;
 }
+
 
 void PatchUI::onPatchSelected(int i){
     QList<QString>* patch;
@@ -134,8 +136,8 @@ void PatchUI::onPatchSelected(int i){
     ui->patchLevel  ->setValue(common.at(46).toInt());
     ui->patchPan    ->setValue(common.at(47).toInt());
     ui->analogFeel  ->setValue(common.at(48).toInt());
-    ui->bendMin     ->setValue(common.at(49).toInt());
-    ui->bendMax     ->setValue(common.at(50).toInt());
+    ui->bendMax     ->setValue(common.at(49).toInt());
+    ui->bendMin     ->setValue(common.at(50).toInt()*-1);
     ui->btnKeyAssignMode    ->setChecked(common.at(51).toInt() == 1);
     ui->btnSoloLegato       ->setChecked(common.at(52).toInt() == 1);
     ui->btnPortamentoSwitch ->setChecked(common.at(53).toInt() == 1);
@@ -152,7 +154,7 @@ void PatchUI::onPatchSelected(int i){
     ui->control2    ->setCurrentIndex(common.at(62).toInt());
     ui->control3    ->setCurrentIndex(common.at(63).toInt());
     ui->btnVelocityRangeSwitch   ->setChecked(common.at(64).toInt() == 1);
-    ui->octave->setValue(common.at(65).toInt());
+    ui->octave->setValue(common.at(65).toInt() -3);
     ui->stretchTuneDepth->setValue(common.at(66).toInt());
     ui->voicePriority->setCurrentIndex(common.at(67).toInt());
     ui->structure12->setCurrentIndex(common.at(68).toInt());
@@ -191,8 +193,8 @@ void PatchUI::onPatchSelected(int i){
 
     waveGainList->at(toneLoop)->setCurrentIndex(t.at(5).toInt());
     fxmSwitchList->at(toneLoop)->setChecked(t.at(6).toInt() == 1);
-    fxmColorList->at(toneLoop)->setValue(t.at(7).toInt());
-    fxmDepthList->at(toneLoop)->setValue(t.at(8).toInt());
+    fxmColorList->at(toneLoop)->setValue(t.at(7).toInt()-1);
+    fxmDepthList->at(toneLoop)->setValue(t.at(8).toInt()-1);
     toneDelayModeList->at(toneLoop)->setCurrentIndex(t.at(9).toInt());
     toneDelayTimeList->at(toneLoop)->setValue(t.at(10).toInt());
 
@@ -233,8 +235,8 @@ void PatchUI::onPatchSelected(int i){
     lfo2FadeTimeList->at(toneLoop)->setValue(t.at(59).toInt());
     lfo2ExternalSyncList->at(toneLoop)->setCurrentIndex(t.at(60).toInt());
 
-    coarseTuneList->at(toneLoop)->setValue(t.at(61).toInt());
-    fineTuneList->at(toneLoop)->setValue(t.at(62).toInt());
+    coarseTuneList->at(toneLoop)->setValue(t.at(61).toInt()-48);
+    fineTuneList->at(toneLoop)->setValue(t.at(62).toInt()-50);
     randomPitchDepthList->at(toneLoop)->setCurrentIndex(t.at(63).toInt());
     pitchKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(64).toInt());
     pitchEnvelopeDepthList->at(toneLoop)->setValue(t.at(65).toInt());
@@ -313,6 +315,12 @@ void PatchUI::onPatchSelected(int i){
     //======================== LOOP ENCERRADO ===========================
 
     conectarWidgets();
+
+    for(int i=0; i<4; i++){
+        enviarPacotesDS1(i);
+        usleep(100000);
+    }
+    enviarPacotesDS1PatchCommon();
 }
 
 void PatchUI::carregarFiltroCategorias(QString categ){
@@ -471,8 +479,98 @@ void PatchUI::enviarPacotesDS1(int tone){
     dados->append(ReverbSendLevelList ->at(tone)->value());
     jack->txPacoteDataSet(addr, dados);
 
+
 }
 
+void PatchUI::enviarPacotesDS1PatchCommon(){
+    QList<int> *dados = new QList<int>();
+    int addr = 0x03000000;
+
+    QString nome = ui->name->text();
+    for(int i=nome.length(); i<12; i++)
+        nome.append(" ");
+    for(QChar c : nome)
+        dados->append(c.unicode());
+
+    dados->append(ui->perfEfeito->currentIndex());
+    dados->append(ui->perfParam1->value());
+    dados->append(ui->perfParam2->value());
+    dados->append(ui->perfParam3->value());
+    dados->append(ui->perfParam4->value());
+    dados->append(ui->perfParam5->value());
+    dados->append(ui->perfParam6->value());
+    dados->append(ui->perfParam7->value());
+    dados->append(ui->perfParam8->value());
+    dados->append(ui->perfParam9->value());
+    dados->append(ui->perfParam10->value());
+    dados->append(ui->perfParam11->value());
+    dados->append(ui->perfParam12->value());
+
+    dados->append(ui->perfOA->currentIndex());
+    dados->append(ui->mixOutSendLevel->value());
+    dados->append(ui->chorusSendLevel->value());
+    dados->append(ui->reverbSendLevel->value());
+
+    dados->append(ui->perfCtrlSrc1->currentIndex());
+    dados->append(ui->perfCtrlDepth1->value());
+    dados->append(ui->perfCtrlSrc2->currentIndex());
+    dados->append(ui->perfCtrlDepth2->value());
+
+    dados->append(ui->perfChorusLevel_3->value());
+    dados->append(ui->perfChorusRate->value());
+    dados->append(ui->perfChorusDepth->value());
+    dados->append(ui->perfChorusPreDelay_3->value());
+    dados->append(ui->perfChorusFeedback->value());
+    dados->append(ui->perfChorusOut->currentIndex());
+
+    dados->append(ui->perfReverbType->currentIndex());
+    dados->append(ui->perfReverbLevel->value());
+    dados->append(ui->perfReverbTime->value());
+    dados->append(ui->perfReverbHFDamp->currentIndex());
+    dados->append(ui->perfReverbDelayFeedback->value());
+
+    int tempo = ui->tempo->value();
+    int tempo2 = tempo & 0xF;
+    int tempo1 = (tempo >> 4) & 0xF;
+
+    dados->append(tempo1);
+    dados->append(tempo2);
+qDebug() << "TEMPO" << tempo << tempo1 << tempo2;
+
+    dados->append(ui->patchLevel  ->value());
+    dados->append(ui->patchPan    ->value());
+    dados->append(ui->analogFeel  ->value());
+    dados->append(ui->bendMax     ->value());
+    dados->append(ui->bendMin     ->value()*-1);
+    dados->append(ui->btnKeyAssignMode    ->isChecked() ? 1 : 0);
+    dados->append(ui->btnSoloLegato       ->isChecked() ? 1 : 0);
+    dados->append(ui->btnPortamentoSwitch ->isChecked() ? 1 : 0);
+    dados->append(ui->btnPortamentoMode   ->isChecked() ? 1 : 0);
+    dados->append(ui->portamentoType      ->currentIndex());
+    dados->append(ui->portamentoStart     ->currentIndex());
+    dados->append(ui->portamentoTime              ->value());
+    dados->append(ui->patchControlSource2     ->currentIndex());
+    dados->append(ui->patchControlSource3     ->currentIndex());
+    dados->append(ui->efxControl    ->currentIndex());
+    dados->append(ui->control1    ->currentIndex());
+    dados->append(ui->control2    ->currentIndex());
+    dados->append(ui->control3    ->currentIndex());
+    dados->append(ui->btnVelocityRangeSwitch   ->isChecked() ? 1 : 0);
+    dados->append(ui->octave->value() +3);
+    dados->append(ui->stretchTuneDepth->value());
+    dados->append(ui->voicePriority->currentIndex());
+    dados->append(ui->structure12->currentIndex());
+    dados->append(ui->booster12->currentIndex());
+    dados->append(ui->structure34->currentIndex());
+    dados->append(ui->booster34->currentIndex());
+    dados->append(ui->clockSource   ->isChecked() ? 1 : 0);
+    dados->append(ui->patchCategory->currentIndex());
+
+    jack->txPacoteDataSet(addr, dados);
+
+}
+
+/*
 void PatchUI::enviarMensagem(PatchTone *patchTone, int data){
     QList<SysExMessage*> *dados = new QList<SysExMessage*>();
 
@@ -496,7 +594,7 @@ void PatchUI::enviarMensagem(Patch *patch, int data){
 
     jack->tx(dados);
 }
-
+*/
 void PatchUI::conectarWidgets()
 {
     //deve ser foreach QWidget, lista
@@ -612,6 +710,8 @@ void PatchUI::conectarWidgets()
     for(int i=0; i<veocityRangeLowerList->count(); i++) connect(veocityRangeLowerList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<veocityRangeUpperList->count(); i++) connect(veocityRangeUpperList->at(i),SIGNAL( valueChanged(int) ), this, SLOT(onPatchToneChanged(int)));
 
+
+
     /*
      * PATCH COMMON: EFX
      * */
@@ -649,6 +749,35 @@ void PatchUI::conectarWidgets()
     connect(ui->perfReverbDelayFeedback, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
 
 
+    //PATCH COMMON
+    connect(ui->patchLevel  , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->patchPan    , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->analogFeel  , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->bendMax     , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->bendMin     , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->btnKeyAssignMode    , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    connect(ui->btnSoloLegato       , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    connect(ui->btnPortamentoSwitch , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    connect(ui->btnPortamentoMode   , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    connect(ui->portamentoType      , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->portamentoStart     , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->portamentoTime              , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->patchControlSource2     , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->patchControlSource3     , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->efxControl    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->control1    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->control2    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->control3    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->btnVelocityRangeSwitch   , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    connect(ui->octave, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->stretchTuneDepth, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->voicePriority, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->structure12, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->booster12, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->structure34, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->booster34, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    connect(ui->clockSource   , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    connect(ui->patchCategory, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
 }
 
 void PatchUI::desconectarWidgets(){
@@ -796,6 +925,37 @@ void PatchUI::desconectarWidgets(){
     disconnect(ui->perfReverbTime, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
     disconnect(ui->perfReverbLevel, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
     disconnect(ui->perfReverbDelayFeedback, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+
+    //PATCH COMMON
+    disconnect(ui->patchLevel  , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->patchPan    , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->analogFeel  , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->bendMax     , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->bendMin     , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->btnKeyAssignMode    , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    disconnect(ui->btnSoloLegato       , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    disconnect(ui->btnPortamentoSwitch , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    disconnect(ui->btnPortamentoMode   , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    disconnect(ui->portamentoType      , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->portamentoStart     , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->portamentoTime              , SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->patchControlSource2     , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->patchControlSource3     , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->efxControl    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->control1    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->control2    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->control3    , SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->btnVelocityRangeSwitch   , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    disconnect(ui->octave, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->stretchTuneDepth, SIGNAL(valueChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->voicePriority, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->structure12, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->booster12, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->structure34, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->booster34, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+    disconnect(ui->clockSource   , SIGNAL(clicked()), this, SLOT(onPatchCommonEfx()) );
+    disconnect(ui->patchCategory, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchCommonEfx(int)) );
+
 }
 
 void PatchUI::setupProperties(){
@@ -826,7 +986,10 @@ void PatchUI::setupProperties(){
 
 
 
-    for(int i=0; i<toneSwitchList->count(); i++) toneSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, i+1)));
+    for(int i=0; i<toneSwitchList->count(); i++){
+        toneSwitchList->at(i)->setAccessibleName("toggle-btn");
+        toneSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, i+1)));
+    }
     for(int i=0; i<waveGainList->count(); i++) waveGainList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Gain, i+1)));
     for(int i=0; i<fxmColorList->count(); i++) fxmColorList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Color, i-1)));
     for(int i=0; i<fxmDepthList->count(); i++) fxmDepthList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Depth, i-1)));
@@ -837,14 +1000,35 @@ void PatchUI::setupProperties(){
     for(int i=0; i<veocityRangeUpperList->count(); i++) veocityRangeUpperList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Velocity_Range_Upper, i+1)));
     for(int i=0; i<keyboardRangeLowerList->count(); i++) keyboardRangeLowerList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Keyboard_Range_Lower, i+1)));
     for(int i=0; i<keyboardRangeUpperList->count(); i++) keyboardRangeUpperList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Keyboard_Range_Upper, i+1)));
-    for(int i=0; i<fxmSwitchList->count(); i++) fxmSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Switch, i+1)));
-    for(int i=0; i<redamperControlSwitchList->count(); i++) redamperControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Redamper_Control_Switch, i+1)));
-    for(int i=0; i<volumeControlSwitchList->count(); i++) volumeControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Volume_Control_Switch, i+1)));
-    for(int i=0; i<hold1ControlSwitchList->count(); i++) hold1ControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Hold1_Control_Switch, i+1)));
-    for(int i=0; i<pitchBendControlSwitchList->count(); i++) pitchBendControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Bend_Control_Switch, i+1)));
-    for(int i=0; i<panControlSwitchList->count(); i++) panControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pan_Control_Switch, i+1)));
+    for(int i=0; i<fxmSwitchList->count(); i++) {
+        fxmSwitchList->at(i)->setAccessibleName("toggle-btn");
+        fxmSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::FXM_Switch, i+1)));
+    }
+    for(int i=0; i<redamperControlSwitchList->count(); i++){
+        redamperControlSwitchList->at(i)->setAccessibleName("toggle-btn");
+        redamperControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Redamper_Control_Switch, i+1)));
+    }
+    for(int i=0; i<volumeControlSwitchList->count(); i++) {
+        volumeControlSwitchList->at(i)->setAccessibleName("toggle-btn");
+        volumeControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Volume_Control_Switch, i+1)));
+    }
+    for(int i=0; i<hold1ControlSwitchList->count(); i++){
+        hold1ControlSwitchList->at(i)->setAccessibleName("toggle-btn");
+        hold1ControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Hold1_Control_Switch, i+1)));
+    }
+    for(int i=0; i<pitchBendControlSwitchList->count(); i++){
+        pitchBendControlSwitchList->at(i)->setAccessibleName("toggle-btn");
+        pitchBendControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pitch_Bend_Control_Switch, i+1)));
+    }
+    for(int i=0; i<panControlSwitchList->count(); i++) {
+        panControlSwitchList->at(i)->setAccessibleName("toggle-btn");
+        panControlSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Pan_Control_Switch, i+1)));
+    }
     for(int i=0; i<lfo1WaveFormList->count(); i++) lfo1WaveFormList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Waveform, i+1)));
-    for(int i=0; i<lfo1KeySyncSwitchList->count(); i++) lfo1KeySyncSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Key_Sync, i+1)));
+    for(int i=0; i<lfo1KeySyncSwitchList->count(); i++) {
+        lfo1KeySyncSwitchList->at(i)->setAccessibleName("toggle-btn");
+        lfo1KeySyncSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Key_Sync, i+1)));
+    }
     for(int i=0; i<lfo1RateList->count(); i++) lfo1RateList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Rate, i+1)));
     for(int i=0; i<lfo1OffSetList->count(); i++) lfo1OffSetList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Offset, i+1)));
     for(int i=0; i<lfo1DelayTimeList->count(); i++) lfo1DelayTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Delay_Time, i+1)));
@@ -852,7 +1036,10 @@ void PatchUI::setupProperties(){
     for(int i=0; i<lfo1FadeTimeList->count(); i++) lfo1FadeTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_Fade_Time, i+1)));
     for(int i=0; i<lfo1ExternalSyncList->count(); i++) lfo1ExternalSyncList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO1_External_Sync, i+1)));
     for(int i=0; i<lfo2WaveFormList->count(); i++) lfo2WaveFormList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Waveform, i+1)));
-    for(int i=0; i<lfo2KeySyncSwitchList->count(); i++) lfo2KeySyncSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Key_Sync, i+1)));
+    for(int i=0; i<lfo2KeySyncSwitchList->count(); i++) {
+        lfo2KeySyncSwitchList->at(i)->setAccessibleName("toggle-btn");
+        lfo2KeySyncSwitchList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Key_Sync, i+1)));
+    }
     for(int i=0; i<lfo2RateList->count(); i++) lfo2RateList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Rate, i+1)));
     for(int i=0; i<lfo2OffSetList->count(); i++) lfo2OffSetList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Offset, i+1)));
     for(int i=0; i<lfo2DelayTimeList->count(); i++) lfo2DelayTimeList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::LFO2_Delay_Time, i+1)));
@@ -950,539 +1137,99 @@ void PatchUI::onPatchToneChanged(){
     return;
 
 
-    enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
+//    enviarMensagem( patchTone, w->isChecked()? 1 : 0 );
 
-    /*
-     * WORKAROUNDS
-    */
-    //Tone Switch 1 e 2: quando mudam de estado desconfiguram o respectivo Wave
-    if(patchTone->function == PatchTone::Tone_Switch && (patchTone->whichTone == 1 || patchTone->whichTone == 2) ){
-        qDebug() << "****************************";
-        qDebug() << "       BUG do patch tone #" << patchTone->whichTone-1;
-        qDebug() << "****************************";
-        Waveform *w = waveIdList->at(patchTone->whichTone-1)->currentData().value<Waveform*>();
-        enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
-        enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
-        enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
-    }
 
-    if(patchTone->function == PatchTone::LFO1_Key_Sync){
-        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, patchTone->whichTone), lfo1RateList->at(patchTone->whichTone-1)->value() );
-        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, patchTone->whichTone), lfo1OffSetList->at(patchTone->whichTone-1)->currentIndex() );
-        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, patchTone->whichTone), lfo1DelayTimeList->at(patchTone->whichTone-1)->value() );
-        enviarGrupoDeMensagens(patchTone->function, patchTone->whichTone-1);
 
-    }
 
-    if(patchTone->function == PatchTone::LFO2_Key_Sync){
-        //        enviarMensagem( new PatchTone(PatchTone::LFO2_Rate, patchTone->whichTone), lfo2RateList->at(patchTone->whichTone-1)->value() );
-        //        enviarMensagem( new PatchTone(PatchTone::LFO2_Offset, patchTone->whichTone), lfo2OffSetList->at(patchTone->whichTone-1)->currentIndex() );
-        //        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, patchTone->whichTone), lfo2DelayTimeList->at(patchTone->whichTone-1)->value() );
-        enviarGrupoDeMensagens(patchTone->function, patchTone->whichTone-1);
-    }
 
 }
 void PatchUI::onPatchToneChanged(int i){
     QObject* o = QObject::sender();
     PatchTone *patchTone = o->property("function").value<PatchTone*>();
 
-    enviarPacotesDS1(patchTone->whichTone-1);
-    return;
 
 
-    int offset = 0;
+
+//    int offset = 0;
     int theTone = patchTone->whichTone-1;
-    bool isTxDiferenciada = false;
-
-    if(patchTone->function == PatchTone::Coarse_Tune)
-        offset = 48;
-    if(patchTone->function == PatchTone::Fine_Tune)
-        offset = 50;
-    if(patchTone->function == PatchTone::Filter_Envelope_Depth)
-        offset = 24;
 
     /*
      * Validações
      * */
-    if(patchTone->function == PatchTone::Velocity_Range_Upper
-            && veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() ){
+    if(veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() )
         veocityRangeUpperList->at(theTone)->setValue(veocityRangeLowerList->at(theTone)->value());
-        return;
-    }
-    if(patchTone->function == PatchTone::Velocity_Range_Lower
-            && veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() ){
+
+    if(veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() )
         veocityRangeLowerList->at(theTone)->setValue(veocityRangeUpperList->at(theTone)->value());
-        return;
-    }
+
 
     /*
      * Três envios quando selecionada a forma de onda:
      */
-    if(patchTone->function == PatchTone::Wave_Number){
-        isTxDiferenciada = true;
-        QComboBox *c = qobject_cast<QComboBox*>(o);
-        Waveform *w =  c->currentData().value<Waveform*>();
-        enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
-        enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
-        enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
+//    if(patchTone->function == PatchTone::Wave_Number){
+//        isTxDiferenciada = true;
+//        QComboBox *c = qobject_cast<QComboBox*>(o);
+//        Waveform *w =  c->currentData().value<Waveform*>();
+//        enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
+//        enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
+//        enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
 
-        qDebug() <<"======================================";
-        qDebug() << "WAVE GROUP TYPE: " << w->groupType ;
-        qDebug() << "WAVE GROUP ID  : " << w->groupId;
-        qDebug() << "WAVE NUMBER    # " << w->number ;
-        qDebug() << "WAVE NOME      : " << w->nome ;
-        qDebug() <<"======================================";
-    }
-
-
-    if(!isTxDiferenciada){
-        if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
-            QComboBox *c = qobject_cast<QComboBox*>(o);
-            enviarMensagem( patchTone, c->currentIndex() );
-        }
-        if(QString::compare(o->metaObject()->className(), "QSpinBox") == 0){
-            QSpinBox *s = qobject_cast<QSpinBox*>(o);
-            enviarMensagem( patchTone, s->value() + offset );
-        }
-        if(QString::compare(o->metaObject()->className(), "QSlider") == 0){
-            QSlider *s = qobject_cast<QSlider*>(o);
-            enviarMensagem( patchTone, s->value() + offset );
-        }
-    }
-    /*
-     * Workarounds para comportamentos inesperados do
-     * Teclado depois de receber certas mensagens
-     * */
-    //FXM Color => Depth
-    if(patchTone->function == PatchTone::FXM_Color)
-        enviarMensagem( new PatchTone(PatchTone::FXM_Depth, theTone+1), fxmDepthList->at(theTone)->value() );
-
-    //Delay Mode => Time.
-    if(patchTone->function == PatchTone::Tone_Delay_Mode){
-        enviarMensagem( new PatchTone(PatchTone::Tone_Delay_Time, theTone+1), toneDelayTimeList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Velocity_Cross_Fade, theTone+1), veocityRangeCrossFadeList->at(theTone)->value() );
-    }
-
-    //Tone Delay Time zera o Velocity Cross Fade
-    if(patchTone->function == PatchTone::Tone_Delay_Time){
-        enviarMensagem( new PatchTone(PatchTone::Velocity_Cross_Fade, theTone+1), veocityRangeCrossFadeList->at(theTone)->value() );
-    }
+//        qDebug() <<"======================================";
+//        qDebug() << "WAVE GROUP TYPE: " << w->groupType ;
+//        qDebug() << "WAVE GROUP ID  : " << w->groupId;
+//        qDebug() << "WAVE NUMBER    # " << w->number ;
+//        qDebug() << "WAVE NOME      : " << w->nome ;
+//        qDebug() <<"======================================";
+//    }
 
 
-    if(patchTone->function == PatchTone::Keyboard_Range_Lower){
-        enviarMensagem( new PatchTone(PatchTone::Keyboard_Range_Lower, theTone+1), keyboardRangeLowerList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Keyboard_Range_Upper, theTone+1), keyboardRangeUpperList->at(theTone)->currentIndex() );
-    }
+
+//        if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
+//            QComboBox *c = qobject_cast<QComboBox*>(o);
+//            enviarMensagem( patchTone, c->currentIndex() );
+//        }
+//        if(QString::compare(o->metaObject()->className(), "QSpinBox") == 0){
+//            QSpinBox *s = qobject_cast<QSpinBox*>(o);
+//            enviarMensagem( patchTone, s->value() + offset );
+//        }
+//        if(QString::compare(o->metaObject()->className(), "QSlider") == 0){
+//            QSlider *s = qobject_cast<QSlider*>(o);
+//            enviarMensagem( patchTone, s->value() + offset );
+//        }
 
 
-    /*
-     * Controles de Destination e Depth
-     */
-    bool enviarControlesDestDepth = false;
-    for (int j=0;j<24;j++) {
-        if(patchTone->function == controles[j]){
-            enviarControlesDestDepth = true;
-            break;
-        }
-    }
 
-    if(enviarControlesDestDepth){
-        int icontrole =0;
-        for(int i=1; i<=12; i++){
-            enviarMensagem(
-                        new PatchTone(controles[icontrole], theTone+1),
-                        controlerDestinationList->at( (i + (theTone)*12)-1 )->currentIndex()
-                        );
-            enviarMensagem(
-                        new PatchTone(controles[icontrole+1], theTone+1),
-                    controlerDepthList->at( (i + (theTone)*12)-1 )->value()
-                    );
+//    if(enviarControlesDestDepth){
+//        int icontrole =0;
+//        for(int i=1; i<=12; i++){
+//            enviarMensagem(
+//                        new PatchTone(controles[icontrole], theTone+1),
+//                        controlerDestinationList->at( (i + (theTone)*12)-1 )->currentIndex()
+//                        );
+//            enviarMensagem(
+//                        new PatchTone(controles[icontrole+1], theTone+1),
+//                    controlerDepthList->at( (i + (theTone)*12)-1 )->value()
+//                    );
 
-            icontrole+=2;
-        }
-    }
+//            icontrole+=2;
+//        }
+//    }
     // =========================================
 
 
-    enviarGrupoDeMensagens(patchTone->function, theTone);
-
-    /*
-     * PITCH
-     */
-    if( patchTone->function == PatchTone::Coarse_Tune
-            || patchTone->function == PatchTone::Fine_Tune
-            || patchTone->function == PatchTone::Random_Pitch_Depth
-            || patchTone->function == PatchTone::Pitch_Keyfollow
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Coarse_Tune, theTone+1),
-                        coarseTuneList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Fine_Tune, theTone+1),
-                        fineTuneList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Random_Pitch_Depth, theTone+1),
-                        randomPitchDepthList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Keyfollow, theTone+1),
-                        pitchKeyfollowList->at(theTone)->currentIndex() );
-    }
-
-    /*
-     * PITCH ENVELOPE
-     */
-    if( patchTone->function == PatchTone::Pitch_Envelope_Depth
-            || patchTone->function == PatchTone::Pitch_Envelope_Velocity_Sens
-            || patchTone->function == PatchTone::Pitch_Envelope_Velocity_Time1
-            || patchTone->function == PatchTone::Pitch_Envelope_Velocity_Time4
-            || patchTone->function == PatchTone::Pitch_Envelope_Time_Keyfollow
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Depth, theTone+1),
-                        pitchEnvelopeDepthList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Velocity_Sens, theTone+1),
-                        pitchEnvelopeVelocitySensList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Velocity_Time1, theTone+1),
-                        pitchEnvelopeVelocityTime1List->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Velocity_Time4, theTone+1),
-                        pitchEnvelopeVelocityTime4List->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_Keyfollow, theTone+1),
-                        pitchEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
-    }
-
-    /*
-     * Pitch Envelope
-    */
-    if( patchTone->function == PatchTone::Pitch_Envelope_Time_1
-            || patchTone->function == PatchTone::Pitch_Envelope_Time_2
-            || patchTone->function == PatchTone::Pitch_Envelope_Time_3
-            || patchTone->function == PatchTone::Pitch_Envelope_Time_4
-            || patchTone->function == PatchTone::Pitch_Envelope_Level_1
-            || patchTone->function == PatchTone::Pitch_Envelope_Level_2
-            || patchTone->function == PatchTone::Pitch_Envelope_Level_3
-            || patchTone->function == PatchTone::Pitch_Envelope_Level_4
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_1, theTone+1),
-                        pitchEnvelopeTime1List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_2, theTone+1),
-                        pitchEnvelopeTime2List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_3, theTone+1),
-                        pitchEnvelopeTime3List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Time_4, theTone+1),
-                        pitchEnvelopeTime4List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_1, theTone+1),
-                        pitchEnvelopeLevel1List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_2, theTone+1),
-                        pitchEnvelopeLevel2List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_3, theTone+1),
-                        pitchEnvelopeLevel3List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_Envelope_Level_4, theTone+1),
-                        pitchEnvelopeLevel4List->at(theTone)->value() );
-    }
-
-
-    /*
-     * LFO Depth: Pitch, TVF, TVA e Pan
-     */
-    if( patchTone->function == PatchTone::Pitch_LFO1_Depth || patchTone->function == PatchTone::Pitch_LFO2_Depth){
-        enviarMensagem( new PatchTone(PatchTone::Pitch_LFO1_Depth, theTone+1),
-                        pitchLfo1DepthList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Pitch_LFO2_Depth, theTone+1),
-                        pitchLfo2DepthList->at(theTone)->value() );
-    }
-    if( patchTone->function == PatchTone::Filter_LFO1_Depth || patchTone->function == PatchTone::Filter_LFO2_Depth){
-        enviarMensagem( new PatchTone(PatchTone::Filter_LFO1_Depth, theTone+1),
-                        filterLfo1DepthList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_LFO2_Depth, theTone+1),
-                        filterLfo2DepthList->at(theTone)->value() );
-        //Roland filha da puta, mais um bug
-        enviarMensagem( new PatchTone(PatchTone::Tone_Level, theTone+1),
-                        toneLevelList->at(theTone)->value() );
-    }
-    if( patchTone->function == PatchTone::Level_LFO1_Depth || patchTone->function == PatchTone::Level_LFO2_Depth){
-        enviarMensagem( new PatchTone(PatchTone::Level_LFO1_Depth, theTone+1),
-                        levelLfo1DepthList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_LFO2_Depth, theTone+1),
-                        levelLfo2DepthList->at(theTone)->value() );
-    }
-    if( patchTone->function == PatchTone::Pan_LFO1_Depth || patchTone->function == PatchTone::Pan_LFO2_Depth){
-        enviarMensagem( new PatchTone(PatchTone::Level_LFO1_Depth, theTone+1),
-                        panLfo1DepthList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_LFO2_Depth, theTone+1),
-                        panLfo2DepthList->at(theTone)->value() );
-    }
-
-    /*
-     * TVF
-     * Sequência bugada. Enviar nessa ordem para preservar todos os valores.
-     * Filter Type => Cutoff Frequency => Keyfollow => Resonance => Resoance Vel Sens => Filter EnvDepth
-     *
-     * BUG CIRCULAR: Resoance => KeyFollow e vice-versa.
-     *
-     */
-    if( patchTone->function == PatchTone::Filter_Type
-            || patchTone->function == PatchTone::Cutoff_Frequency
-            || patchTone->function == PatchTone::Resonance
-            || patchTone->function == PatchTone::Filter_Envelope_Time_Keyfollow
-            || patchTone->function == PatchTone::Filter_Envelope_Depth
-            || patchTone->function == PatchTone::Resonance_Velocity_Sens
-            ){
-
-        enviarMensagem( new PatchTone(PatchTone::Filter_Type, theTone+1),
-                        filterTypeList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Cutoff_Frequency, theTone+1),
-                        CutoffFrequencyList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_Keyfollow, theTone+1),
-                        filterEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Resonance, theTone+1),
-                        resonanceList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Resonance_Velocity_Sens, theTone+1),
-                        resonanceVelocitySensList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Depth, theTone+1),
-                        filterEnvelopeDepthList->at(theTone)->value() );
-    }
-
-    /*
-     * TVF Velocity
-     * V-Curve => V-Sens
-     */
-    if( patchTone->function == PatchTone::Filter_Envelope_Velocity_Curve
-            || patchTone->function == PatchTone::Filter_Envelope_Velocity_Sens
-            ){
-
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Curve, theTone+1),
-                        filterEnvelopeVelocityCurveList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Sens, theTone+1),
-                        filterEnvelopeVelocitySensList->at(theTone)->value() );
-    }
-
-    if( patchTone->function == PatchTone::Filter_Envelope_Velocity_Time1
-            || patchTone->function == PatchTone::Filter_Envelope_Velocity_Time4
-            || patchTone->function == PatchTone::Filter_Envelope_Time_Keyfollow
-            ){
-
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Time1, theTone+1),
-                        filterEnvelopeVelocityTime1List->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Velocity_Time4, theTone+1),
-                        filterEnvelopeVelocityTime4List->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_Keyfollow, theTone+1),
-                        filterEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
-    }
-
-    /*
-     * TVF Envelope
-     */
-    if( patchTone->function == PatchTone::Filter_Envelope_Time_1
-            || patchTone->function == PatchTone::Filter_Envelope_Time_2
-            || patchTone->function == PatchTone::Filter_Envelope_Time_3
-            || patchTone->function == PatchTone::Filter_Envelope_Time_4
-            || patchTone->function == PatchTone::Filter_Envelope_Level_1
-            || patchTone->function == PatchTone::Filter_Envelope_Level_2
-            || patchTone->function == PatchTone::Filter_Envelope_Level_3
-            || patchTone->function == PatchTone::Filter_Envelope_Level_4
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_1, theTone+1),
-                        filterEnvelopeTime1List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_2, theTone+1),
-                        filterEnvelopeTime2List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_3, theTone+1),
-                        filterEnvelopeTime3List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Time_4, theTone+1),
-                        filterEnvelopeTime4List->at(theTone)->value() );
-
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_1, theTone+1),
-                        filterEnvelopeLevel1List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_2, theTone+1),
-                        filterEnvelopeLevel2List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_3, theTone+1),
-                        filterEnvelopeLevel3List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Filter_Envelope_Level_4, theTone+1),
-                        filterEnvelopeLevel4List->at(theTone)->value() );
-    }
-
-    /*
-     * TVA
-     */
-    if( patchTone->function == PatchTone::Bias_Direction
-            || patchTone->function == PatchTone::Bias_Position
-            || patchTone->function == PatchTone::Bias_Level
-            || patchTone->function == PatchTone::Level_Envelope_Velocity_Curve
-            || patchTone->function == PatchTone::Level_Envelope_Velocity_Sens
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Bias_Direction, theTone+1),
-                        biasDirectionList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Bias_Position, theTone+1),
-                        biasPositionList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Bias_Level, theTone+1),
-                        biasLevelList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Curve, theTone+1),
-                        levelEnvelopeVelocityCurveList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Sens, theTone+1),
-                        levelEnvelopeVelocitySensList->at(theTone)->value() );
-    }
-
-    /*
-     * PAN Modulate
-     */
-    if( patchTone->function == PatchTone::Pan_Keyfollow
-            || patchTone->function == PatchTone::Random_Pan_Depth
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Pan_Keyfollow, theTone+1),
-                        panKeyfollowList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Random_Pan_Depth, theTone+1),
-                        randomPanDepthList->at(theTone)->value());
-    }
-
-    /*
-     * TVA TIME ENVELOPE
-     */
-    if( patchTone->function == PatchTone::Level_Envelope_Velocity_Time1
-            || patchTone->function == PatchTone::Level_Envelope_Velocity_Time4
-            || patchTone->function == PatchTone::Level_Envelope_Time_Keyfollow
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Time1, theTone+1),
-                        levelEnvelopeVelocityTime1List->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Velocity_Time4, theTone+1),
-                        levelEnvelopeVelocityTime4List->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_Keyfollow, theTone+1),
-                        levelEnvelopeTimeKeyfollowList->at(theTone)->currentIndex() );
-
-    }
-
-    /*
-     * TVA ENVELOPE
-     */
-    if(patchTone->function == PatchTone::Level_Envelope_Time_1
-            || patchTone->function == PatchTone::Level_Envelope_Time_2
-            || patchTone->function == PatchTone::Level_Envelope_Time_3
-            || patchTone->function == PatchTone::Level_Envelope_Time_4
-            || patchTone->function == PatchTone::Level_Envelope_Level_1
-            || patchTone->function == PatchTone::Level_Envelope_Level_2
-            || patchTone->function == PatchTone::Level_Envelope_Level_3
-            ){
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_1, theTone+1),
-                        levelEnvelopeTime1List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_2, theTone+1),
-                        levelEnvelopeTime2List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_3, theTone+1),
-                        levelEnvelopeTime3List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Time_4, theTone+1),
-                        levelEnvelopeTime4List->at(theTone)->value() );
-
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Level_1, theTone+1),
-                        levelEnvelopeLevel1List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Level_2, theTone+1),
-                        levelEnvelopeLevel2List->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Level_Envelope_Level_3, theTone+1),
-                        levelEnvelopeLevel3List->at(theTone)->value() );
-    }
-
-    /*
-     * EFFECTS/OUTPUT
-     */
-    if( patchTone->function == PatchTone::Output_Assign
-            || patchTone->function == PatchTone::MixEFX_Send_Level
-            || patchTone->function == PatchTone::Chorus_Send_Level
-            || patchTone->function == PatchTone::Reverb_Send_Level
-            )    {
-        enviarMensagem( new PatchTone(PatchTone::Output_Assign, theTone+1),
-                        outputAssignList->at(theTone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::MixEFX_Send_Level, theTone+1),
-                        mixEfxSendLevelList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Chorus_Send_Level, theTone+1),
-                        ChorusSendLevelList->at(theTone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::Reverb_Send_Level, theTone+1),
-                        ReverbSendLevelList->at(theTone)->value() );
-    }
-
+    enviarPacotesDS1(patchTone->whichTone-1);
 }
 
 void PatchUI::onPatchCommonEfx(int i){
-    //vou mandar a porra toda de uma vez por causa da merda dos bugs da Roland
-    enviarMensagem(new Patch(Patch::EFXOutputAssign),ui->perfOA->currentIndex() );
-    enviarMensagem(new Patch(Patch::EFXMixSendOutputLevel),ui->mixOutSendLevel->value() );
-    enviarMensagem(new Patch(Patch::EFXChorusSendLevel),ui->chorusSendLevel->value() );
-    enviarMensagem(new Patch(Patch::EFXReverbSendLevel),ui->reverbSendLevel->value() );
-
-    enviarMensagem(new Patch(Patch::EFXType),ui->perfEfeito->currentIndex() );
-    enviarMensagem(new Patch(Patch::EFXParam01),ui->perfParam1->value() );
-    enviarMensagem(new Patch(Patch::EFXParam02),ui->perfParam2->value() );
-    enviarMensagem(new Patch(Patch::EFXParam03),ui->perfParam3->value() );
-    enviarMensagem(new Patch(Patch::EFXParam04),ui->perfParam4->value() );
-    enviarMensagem(new Patch(Patch::EFXParam05),ui->perfParam5->value() );
-    enviarMensagem(new Patch(Patch::EFXParam06),ui->perfParam6->value() );
-    enviarMensagem(new Patch(Patch::EFXParam07),ui->perfParam7->value() );
-    enviarMensagem(new Patch(Patch::EFXParam08),ui->perfParam8->value() );
-    enviarMensagem(new Patch(Patch::EFXParam09),ui->perfParam9->value() );
-    enviarMensagem(new Patch(Patch::EFXParam10),ui->perfParam10->value() );
-    enviarMensagem(new Patch(Patch::EFXParam11),ui->perfParam11->value() );
-    enviarMensagem(new Patch(Patch::EFXParam12),ui->perfParam12->value() );
-
-    enviarMensagem(new Patch(Patch::EFXControlSource1),ui->perfCtrlSrc1->currentIndex() );
-    enviarMensagem(new Patch(Patch::EFXControlDepth1),ui->perfCtrlDepth1->value() );
-    enviarMensagem(new Patch(Patch::EFXControlSource2),ui->perfCtrlSrc2->currentIndex() );
-    enviarMensagem(new Patch(Patch::EFXControlDepth2),ui->perfCtrlDepth2->value() );
-
-    enviarMensagem(new Patch(Patch::ChorusLevel),ui->perfChorusLevel_3->value() );
-    enviarMensagem(new Patch(Patch::ChorusRate),ui->perfChorusRate->value() );
-    enviarMensagem(new Patch(Patch::ChorusDepth),ui->perfChorusDepth->value() );
-    enviarMensagem(new Patch(Patch::ChorusPreDelay),ui->perfChorusPreDelay_3->value() );
-    enviarMensagem(new Patch(Patch::ChorusFeedback),ui->perfChorusFeedback->value() );
-
-    enviarMensagem(new Patch(Patch::ChorusOutput),ui->perfChorusOut->currentIndex() );
-
-    enviarMensagem(new Patch(Patch::ReverbType),ui->perfReverbType->currentIndex() );
-    enviarMensagem(new Patch(Patch::ReverbLevel),ui->perfReverbLevel->value() );
-    enviarMensagem(new Patch(Patch::ReverbTime),ui->perfReverbTime->value() );
-    enviarMensagem(new Patch(Patch::ReverbHFDamp),ui->perfReverbHFDamp->currentIndex() );
-    enviarMensagem(new Patch(Patch::DelayFeedback),ui->perfReverbDelayFeedback->value() );
-
-
+    enviarPacotesDS1PatchCommon();
 }
 
-void PatchUI::enviarGrupoDeMensagens(PatchTone::Function function, int tone){
-
-    if(function == PatchTone::LFO1_Rate
-            || function == PatchTone::LFO1_Key_Sync
-            || function == PatchTone::LFO1_Offset
-            || function == PatchTone::LFO1_Waveform
-            || function == PatchTone::LFO1_Fade_Mode
-            || function == PatchTone::LFO1_Fade_Time
-            || function == PatchTone::LFO1_Delay_Time
-            || function == PatchTone::LFO1_External_Sync
-            ){
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Waveform, tone+1), lfo1WaveFormList->at(tone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Key_Sync, tone+1), lfo1KeySyncSwitchList->at(tone)->isChecked() ? 1 : 0 );
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Rate, tone+1), lfo1RateList->at(tone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Offset, tone+1), lfo1OffSetList->at(tone)->currentIndex() );
-
-        //desabilitar: algo sempre coloca essa opção em OFF
-        //        enviarMensagem( new PatchTone(PatchTone::LFO1_External_Sync, tone+1), lfo1ExternalSyncList->at(tone)->currentIndex() );
-
-
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Delay_Time, tone+1), lfo1DelayTimeList->at(tone)->value() );
-        /*
-         * MERDA DE BUG CIRCULAR:
-         * o Fade Mode zera o Fade Time e vice-versa.
-        */
-        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Time, tone+1), lfo1FadeTimeList->at(tone)->value() );
-        //        enviarMensagem( new PatchTone(PatchTone::LFO1_Fade_Mode, tone+1), lfo1FadeModeList->at(tone)->currentIndex() );
-
-    }
-
-
-    if(function == PatchTone::LFO2_Rate
-            || function == PatchTone::LFO2_Key_Sync
-            || function == PatchTone::LFO2_Offset
-            || function == PatchTone::LFO2_Waveform
-            || function == PatchTone::LFO2_Fade_Mode
-            || function == PatchTone::LFO2_Fade_Time
-            || function == PatchTone::LFO2_Delay_Time
-            || function == PatchTone::LFO2_External_Sync
-            ){
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Waveform, tone+1), lfo2WaveFormList->at(tone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Key_Sync, tone+1), lfo2KeySyncSwitchList->at(tone)->isChecked() ? 1 : 0 );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Rate, tone+1), lfo2RateList->at(tone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Offset, tone+1), lfo2OffSetList->at(tone)->currentIndex() );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Delay_Time, tone+1), lfo2DelayTimeList->at(tone)->value() );
-        enviarMensagem( new PatchTone(PatchTone::LFO2_Fade_Time, tone+1), lfo2FadeTimeList->at(tone)->value() );
-    }
+void PatchUI::onPatchCommonEfx(){
+    enviarPacotesDS1PatchCommon();
 }
+
+
 
 /**
  * @brief Adiciona widgets na tela e seta valores default
@@ -2031,186 +1778,6 @@ void PatchUI::drawPatchTone(){
 }
 
 
-
-void PatchUI::on_name_editingFinished()
-{
-    QString name = ui->name->text();
-    for(int i=name.length() ; i<12; i++){
-        name.append(" ");
-    }
-    Patch::Function nomes[12] = {
-        Patch::Name01,
-        Patch::Name02,
-        Patch::Name03,
-        Patch::Name04,
-        Patch::Name05,
-        Patch::Name06,
-        Patch::Name07,
-        Patch::Name08,
-        Patch::Name09,
-        Patch::Name10,
-        Patch::Name11,
-        Patch::Name12
-    };
-
-    for(int i=0; i<12; i++)
-        enviarMensagem(new Patch(nomes[i]), name.toUtf8().data()[i]);
-}
-
-void PatchUI::on_tempo_editingFinished()
-{
-    enviarMensagem(new Patch(Patch::PatchTempo), ui->tempo->value());
-}
-
-void PatchUI::on_patchCategory_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::PatchCategory), ui->patchCategory->currentIndex());
-}
-
-void PatchUI::on_analogFeel_valueChanged(int value)
-{
-    enviarMensagem(new Patch(Patch::AnalogFeel), ui->analogFeel->value());
-}
-
-void PatchUI::on_patchPan_valueChanged(int value)
-{
-    enviarMensagem(new Patch(Patch::PatchPan), ui->patchPan->value());
-    enviarMensagem(new Patch(Patch::AnalogFeel), ui->analogFeel->value());
-}
-
-void PatchUI::on_patchLevel_valueChanged(int value)
-{
-    enviarMensagem(new Patch(Patch::PatchLevel), ui->patchLevel->value());
-    enviarMensagem(new Patch(Patch::PatchPan), ui->patchPan->value());
-    enviarMensagem(new Patch(Patch::AnalogFeel), ui->analogFeel->value());
-}
-
-void PatchUI::on_btnKeyAssignMode_clicked()
-{
-    enviarMensagem(new Patch(Patch::KeyAssignMode), ui->btnKeyAssignMode->isChecked()? 1 : 0);
-    enviarMensagem(new Patch(Patch::SoloLegato), ui->btnSoloLegato->isChecked()? 1 : 0);
-}
-
-void PatchUI::on_btnSoloLegato_clicked()
-{
-    enviarMensagem(new Patch(Patch::SoloLegato), ui->btnSoloLegato->isChecked()? 1 : 0);
-}
-
-void PatchUI::on_bendMin_valueChanged(int arg1)
-{
-    enviarMensagem(new Patch(Patch::BendRangeDown), ui->bendMin->value()*-1);
-}
-
-void PatchUI::on_bendMax_valueChanged(int arg1)
-{
-    enviarMensagem(new Patch(Patch::BendRangeUp), ui->bendMax->value());
-    enviarMensagem(new Patch(Patch::BendRangeDown), ui->bendMin->value()*-1);
-}
-
-void PatchUI::on_btnPortamentoSwitch_clicked()
-{
-    enviarMensagem(new Patch(Patch::PortamentoSwitch), ui->btnPortamentoSwitch->isChecked()? 1 : 0);
-}
-
-void PatchUI::on_btnPortamentoMode_clicked()
-{
-    enviarMensagem(new Patch(Patch::PortamentoMode), ui->btnPortamentoMode->isChecked()? 1 : 0);
-    enviarMensagem(new Patch(Patch::PortamentoType), ui->portamentoType->currentIndex());
-    enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
-}
-
-void PatchUI::on_portamentoTime_valueChanged(int value)
-{
-    enviarMensagem(new Patch(Patch::PortamentoTime), ui->portamentoTime->value());
-}
-
-void PatchUI::on_portamentoType_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::PortamentoType), ui->portamentoType->currentIndex());
-    enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
-}
-
-void PatchUI::on_portamentoStart_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::PortamentoStart), ui->portamentoStart->currentIndex());
-}
-
-void PatchUI::on_efxControl_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::EFXControlHoldPeak), ui->efxControl->currentIndex());
-    enviarMensagem(new Patch(Patch::Control_1_HoldPeak), ui->control1->currentIndex());
-    enviarMensagem(new Patch(Patch::Control_2_HoldPeak), ui->control2->currentIndex());
-    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
-}
-
-void PatchUI::on_control1_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::Control_1_HoldPeak), ui->control1->currentIndex());
-    enviarMensagem(new Patch(Patch::Control_2_HoldPeak), ui->control2->currentIndex());
-    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
-}
-
-void PatchUI::on_control2_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::Control_2_HoldPeak), ui->control2->currentIndex());
-    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
-}
-
-void PatchUI::on_control3_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::Control_3_HoldPeak), ui->control3->currentIndex());
-}
-
-void PatchUI::on_octave_valueChanged(int arg1)
-{
-    enviarMensagem(new Patch(Patch::OctaveShift), ui->octave->value()+3);
-    enviarMensagem(new Patch(Patch::StretchTuneDepth), ui->stretchTuneDepth->value());
-}
-
-void PatchUI::on_stretchTuneDepth_valueChanged(int arg1)
-{
-    enviarMensagem(new Patch(Patch::StretchTuneDepth), ui->stretchTuneDepth->value());
-    enviarMensagem(new Patch(Patch::VoicePriority), ui->voicePriority->currentIndex());
-}
-
-void PatchUI::on_voicePriority_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::VoicePriority), ui->voicePriority->currentIndex());
-}
-
-void PatchUI::on_btnVelocityRangeSwitch_clicked()
-{
-    enviarMensagem(new Patch(Patch::VelocityRangeSwitch), ui->btnVelocityRangeSwitch->isChecked()? 1 : 0);
-    enviarMensagem(new Patch(Patch::OctaveShift), ui->octave->value()+3);
-    enviarMensagem(new Patch(Patch::StretchTuneDepth), ui->stretchTuneDepth->value());
-    enviarMensagem(new Patch(Patch::VoicePriority), ui->voicePriority->currentIndex());
-}
-
-void PatchUI::on_structure12_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::StructyreType12), ui->structure12->currentIndex());
-    enviarMensagem(new Patch(Patch::Booster12), ui->booster12->currentIndex());
-    enviarMensagem(new Patch(Patch::StructyreType34), ui->structure34->currentIndex());
-    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
-}
-
-void PatchUI::on_booster12_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::Booster12), ui->booster12->currentIndex());
-    enviarMensagem(new Patch(Patch::StructyreType34), ui->structure34->currentIndex());
-    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
-}
-
-void PatchUI::on_structure34_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::StructyreType34), ui->structure34->currentIndex());
-    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
-}
-
-void PatchUI::on_booster34_currentIndexChanged(int index)
-{
-    enviarMensagem(new Patch(Patch::Booster34), ui->booster34->currentIndex());
-}
 
 void PatchUI::on_perfEfeito_currentIndexChanged(int index)
 {

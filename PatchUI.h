@@ -41,12 +41,13 @@ private:
     Ui::PatchUI *ui;
 
     void enviarPacotesDS1(int tone);
-    void enviarMensagem(PatchTone *patchTone, int data);
-    void enviarMensagem(Patch *patch, int data);
+    void enviarPacotesDS1PatchCommon();
+//    void enviarMensagem(PatchTone *patchTone, int data);
+//    void enviarMensagem(Patch *patch, int data);
     void conectarWidgets();
     void desconectarWidgets();
     void setupProperties();
-    void enviarGrupoDeMensagens(PatchTone::Function function, int tone);
+//    void enviarGrupoDeMensagens(PatchTone::Function function, int tone);
     void carregarFiltroCategorias(QString categ);
 
 
@@ -196,35 +197,10 @@ private slots:
     void onPatchToneChanged();
     void onPatchToneChanged(int i);
     void onPatchCommonEfx(int i);
+    void onPatchCommonEfx();
 
 
-    void on_name_editingFinished();
-    void on_tempo_editingFinished();
-    void on_patchCategory_currentIndexChanged(int index);
-    void on_analogFeel_valueChanged(int value);
-    void on_patchPan_valueChanged(int value);
-    void on_patchLevel_valueChanged(int value);
-    void on_btnKeyAssignMode_clicked();
-    void on_btnSoloLegato_clicked();
-    void on_bendMin_valueChanged(int arg1);
-    void on_bendMax_valueChanged(int arg1);
-    void on_btnPortamentoSwitch_clicked();
-    void on_btnPortamentoMode_clicked();
-    void on_portamentoTime_valueChanged(int value);
-    void on_portamentoType_currentIndexChanged(int index);
-    void on_portamentoStart_currentIndexChanged(int index);
-    void on_efxControl_currentIndexChanged(int index);
-    void on_control1_currentIndexChanged(int index);
-    void on_control2_currentIndexChanged(int index);
-    void on_control3_currentIndexChanged(int index);
-    void on_octave_valueChanged(int arg1);
-    void on_stretchTuneDepth_valueChanged(int arg1);
-    void on_voicePriority_currentIndexChanged(int index);
-    void on_btnVelocityRangeSwitch_clicked();
-    void on_structure12_currentIndexChanged(int index);
-    void on_booster12_currentIndexChanged(int index);
-    void on_structure34_currentIndexChanged(int index);
-    void on_booster34_currentIndexChanged(int index);
+
     void on_perfEfeito_currentIndexChanged(int index);
     void on_pushButton_clicked();
 

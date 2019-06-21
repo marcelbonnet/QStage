@@ -27,6 +27,7 @@
 #include "Controller.h"
 #include <QAction>
 #include <QColorDialog>
+#include <QStylePainter>
 
 #include "PatchUI.h"
 #include "QHBoxLayout"
@@ -181,6 +182,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
 
 void MainWindow::setTema(QAction * action){
     QString css = action->data().toString();

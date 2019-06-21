@@ -91,5 +91,6 @@
         <file>icones/patchtone/tvf/v-curve-5.png</file>
         <file>icones/patchtone/tvf/v-curve-6.png</file>
         <file>icones/patchtone/tvf/v-curve-7.png</file>
+        <file>icones/btn-bg-checked-green.png</file>
     </qresource>
 </RCC>

@@ -424,6 +424,9 @@
                </item>
                <item row="5" column="2" rowspan="5">
                 <widget class="QDial" name="perfMSL">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(0, 85, 0);</string>
+                 </property>
                  <property name="maximum">
                   <number>127</number>
                  </property>
@@ -933,6 +936,9 @@
                  <layout class="QVBoxLayout" name="verticalLayout_8">
                   <item>
                    <widget class="QPushButton" name="btnFilterEnvelope">
+                    <property name="accessibleName">
+                     <string>toggle-btn</string>
+                    </property>
                     <property name="text">
                      <string>Filter/Env</string>
                     </property>
@@ -946,6 +952,9 @@
                   </item>
                   <item>
                    <widget class="QPushButton" name="btnLevel">
+                    <property name="accessibleName">
+                     <string>toggle-btn</string>
+                    </property>
                     <property name="text">
                      <string>Level</string>
                     </property>
@@ -956,6 +965,9 @@
                   </item>
                   <item>
                    <widget class="QPushButton" name="btnController">
+                    <property name="accessibleName">
+                     <string>toggle-btn</string>
+                    </property>
                     <property name="text">
                      <string>Controller</string>
                     </property>
@@ -1083,6 +1095,9 @@
               <layout class="QGridLayout" name="gridLayout_13">
                <item row="0" column="0">
                 <widget class="QPushButton" name="sysBtnTranspose">
+                 <property name="accessibleName">
+                  <string>toggle-btn</string>
+                 </property>
                  <property name="text">
                   <string>TRANSPOSE</string>
                  </property>
@@ -1183,6 +1198,9 @@
                </item>
                <item row="0" column="7">
                 <widget class="QPushButton" name="perfIntervaloNotas">
+                 <property name="accessibleName">
+                  <string>toggle-btn</string>
+                 </property>
                  <property name="text">
                   <string>COM REGIÕES</string>
                  </property>
@@ -1196,6 +1214,9 @@
                </item>
                <item row="0" column="8">
                 <widget class="QPushButton" name="perfBtnEnviar">
+                 <property name="accessibleName">
+                  <string>toggle-btn</string>
+                 </property>
                  <property name="text">
                   <string>ENVIAR</string>
                  </property>

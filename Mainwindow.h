@@ -162,7 +162,6 @@ private:
 
     QList<SysExMessage*> *mensagens = new QList<SysExMessage*>();
 
-
 };
 
 #endif // MAINWINDOW_H
