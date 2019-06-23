@@ -156,7 +156,7 @@ public:
             nome+=QString("%1 %2 ").arg(getNumber()+1, 3, 10, QChar('0')).arg(_categ[categId]);
 
         } else {
-            nome+=QString("%1 %2 ").arg(getNumber(), 4, 10, QChar('0')).arg(_categ[categId]);
+            nome+=QString("%1 %2 ").arg(this->id, 4, 10, QChar('0')).arg(_categ[categId]);
         }
         nome+=getNome();
         return nome;
@@ -189,6 +189,8 @@ private:
         "TEK","PLS","SFX","SYN","BPD","SPD","VOX", "PLK",
         "ETH","FRT","PRC","FX","BTS","DRM","CMB"
     };
+
+
 
 };
 

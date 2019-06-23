@@ -228,9 +228,10 @@ QList<Patch*>* Controller::queryPatches(bool r) noexcept(false){
     return lista;
 }
 
-int Controller::insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0, QString tone1, QString tone2, QString tone3) noexcept(false)  {
+int Controller::insertPatch(int groupType, int groupId, int number, QString name, QString common
+                            , QString tone0, QString tone1, QString tone2, QString tone3, int categoria) noexcept(false)  {
     SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
-    SQLite::Statement   query(db, "INSERT INTO patches ( patchGroupType, patchGroupId, patchNumber,  name, common, tone0, tone1, tone2, tone3  ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )  ");
+    SQLite::Statement   query(db, "INSERT INTO patches ( patchGroupType, patchGroupId, patchNumber,  name, common, tone0, tone1, tone2, tone3, categoria  ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )  ");
 
     try {
         query.bind(1, groupType );
@@ -242,6 +243,7 @@ int Controller::insertPatch(int groupType, int groupId, int number, QString name
         query.bind(7, tone1.toUtf8().data());
         query.bind(8, tone2.toUtf8().data());
         query.bind(9, tone3.toUtf8().data());
+        query.bind(10, categoria);
         query.exec();
         return getLastInsertRowid();
     } catch (SQLite::Exception &e) {
@@ -250,9 +252,10 @@ int Controller::insertPatch(int groupType, int groupId, int number, QString name
 
 }
 
-int Controller::updatePatch(int id, int groupType, int groupId, int number, QString name, QString common, QString tone0, QString tone1, QString tone2, QString tone3) noexcept(false)  {
+int Controller::updatePatch(int id, int groupType, int groupId, int number, QString name, QString common
+                            , QString tone0, QString tone1, QString tone2, QString tone3, int categoria) noexcept(false)  {
     SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
-    SQLite::Statement   query(db, "UPDATE patches SET patchGroupType = ?, patchGroupId = ?, patchNumber = ?,  name = ?, common = ?, tone0 = ?, tone1 = ?, tone2 = ?, tone3 = ? WHERE patch_id = ? ");
+    SQLite::Statement   query(db, "UPDATE patches SET patchGroupType = ?, patchGroupId = ?, patchNumber = ?,  name = ?, common = ?, tone0 = ?, tone1 = ?, tone2 = ?, tone3 = ?, categoria = ? WHERE roland=0 AND patch_id = ? ");
 
     try {
         query.bind(1, groupType );
@@ -264,7 +267,8 @@ int Controller::updatePatch(int id, int groupType, int groupId, int number, QStr
         query.bind(7, tone1.toUtf8().data());
         query.bind(8, tone2.toUtf8().data());
         query.bind(9, tone3.toUtf8().data());
-        query.bind(10, id);
+        query.bind(10, categoria);
+        query.bind(11, id);
         query.exec();
         return getLastInsertRowid();
     } catch (SQLite::Exception &e) {
@@ -283,6 +287,19 @@ int Controller::getLastInsertRowid()  {
             id = query.getColumn(0);
         }
         return id;
+    } catch (SQLite::Exception &e) {
+        throw e;
+    }
+
+}
+
+void Controller::removePatch(int id)  {
+    SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
+    SQLite::Statement   query(db, "DELETE FROM patches WHERE roland=0 AND patch_id = ?");
+
+    try {
+        query.bind(1, id);
+        query.exec();
     } catch (SQLite::Exception &e) {
         throw e;
     }

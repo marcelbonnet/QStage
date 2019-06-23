@@ -10,7 +10,7 @@
 #include "defaults.h"
 #include "PatchUI.h"
 #include "ui_PatchUI.h"
-#include "Waveform.h"
+
 #include "Controller.h"
 
 
@@ -36,7 +36,8 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     }
 
     //Categorias
-    ui->filtroCategoria->addItem("Todos os patches");//exibirá todos os patches se selecionado
+    ui->filtroCategoria->addItem("Todos os Patches");//exibirá todos os patches se selecionado
+    ui->filtroCategoria->addItem(LABEL_APENAS_MEUS_PATCHES);//exibirá somente patches com roland=0
     for(int i=0; i<=38; i++){
         ui->patchCategory->addItem(categorias[i]);
         ui->filtroCategoria->addItem(categorias[i]);
@@ -110,13 +111,14 @@ void PatchUI::processaracaoDoMenu(QAction *action){
         try {
             int novaId = Controller::insertPatch(-1,-1,-1,nome,
                                     commonStr, t0Str, t1Str, t2Str, t3Str
-                                    );
+                                    , ui->patchCategory->currentIndex() );
 
             //recarrega e seleciona o patch salvo
             carregarFiltroCategorias(NULL);
             desconectarWidgets();
+            ui->filtroCategoria->setCurrentIndex(0);
             for(int i=0; i<ui->patch->count(); i++){
-                Patch *p = ui->patch->currentData().value<Patch*>();
+                Patch *p = ui->patch->itemData(i).value<Patch*>();
                 if(p->id == novaId){
                     ui->patch->setCurrentIndex(i);
                     break;
@@ -152,13 +154,14 @@ void PatchUI::processaracaoDoMenu(QAction *action){
         try {
             Controller::updatePatch( patch->id ,-1,-1,-1,nome,
                                     commonStr, t0Str, t1Str, t2Str, t3Str
-                                    );
+                                    , ui->patchCategory->currentIndex() );
 
             //recarrega e seleciona o patch salvo
             carregarFiltroCategorias(NULL);
             desconectarWidgets();
+            ui->filtroCategoria->setCurrentIndex(0);
             for(int i=0; i<ui->patch->count(); i++){
-                Patch *p = ui->patch->currentData().value<Patch*>();
+                Patch *p = ui->patch->itemData(i).value<Patch*>();
                 if(p->id == patch->id){
                     ui->patch->setCurrentIndex(i);
                     break;
@@ -168,6 +171,37 @@ void PatchUI::processaracaoDoMenu(QAction *action){
 
         } catch (SQLite::Exception &e) {
             QMessageBox::critical(this, "Erro ao Atualizar Patch", e.what());
+        }
+
+    }
+
+    /*
+     * REMOVE PATCH
+     * */
+    if(action->data().value<QString>().compare("patchRemove") == 0){
+        Patch *patch = ui->patch->currentData().value<Patch*>();
+
+        if(patch->roland){
+            QMessageBox::critical(this, "Erro ao Remover Patch", "Esse patch não pode ser removido porque é de Fábrica da Roland ou do banco de USER da época em que fiz o dump para SQLIte.");
+            return;
+        }
+
+        QMessageBox::StandardButton question = QMessageBox::question(this,
+                                                                     "Remover Patch",
+                                                                     "Remover o patch\t\"" + ui->patch->currentText() +"\" ?",
+                                                                     QMessageBox::Yes | QMessageBox::No);
+
+        if(question != QMessageBox::Yes )
+            return;
+
+
+        try {
+            Controller::removePatch( patch->id);
+
+            //recarrega e seleciona o patch salvo
+            carregarFiltroCategorias(NULL);
+        } catch (SQLite::Exception &e) {
+            QMessageBox::critical(this, "Erro ao Remover Patch", e.what());
         }
 
     }
@@ -189,6 +223,13 @@ void PatchUI::onPatchSelected(int i){
 
     //tem que enviar tudo numa porrada só
     desconectarWidgets();
+
+    //se o filtro de waveform foi usado é preciso limpar e recarregar
+    for(int i=0; i<4; i++){
+        toneUIFiltroWaveform->at(i)->clear();
+        foreach (Waveform *w, Controller::queryWaveforms())
+            waveIdList->at(i)->addItem(formatarNomeWaveform(w), QVariant::fromValue(w));
+    }
 
 
     ui->name->setText(patch->at(5));
@@ -430,6 +471,9 @@ void PatchUI::carregarFiltroCategorias(QString categ){
     ui->patch->clear();
     for(Patch* p : *Controller::queryPatches() ){
         if(categ == NULL || categorias[p->categId].compare(categ) == 0)
+            ui->patch->addItem(p->getFullName(), QVariant::fromValue(p));
+        //somente os meus patches:
+        if(LABEL_APENAS_MEUS_PATCHES.compare(categ) == 0 && !p->isRoland() )
             ui->patch->addItem(p->getFullName(), QVariant::fromValue(p));
     }
     conectarWidgets();
@@ -712,13 +756,10 @@ void PatchUI::enviarMensagem(Patch *patch, int data){
 */
 void PatchUI::conectarWidgets()
 {
-    //deve ser foreach QWidget, lista
-    //teste
-    //    for(int i=0; i<toneSwitchList->count(); i++)
-    //        connect(toneSwitchList->at(i),SIGNAL( clicked()), this, SLOT(onPatchToneChanged()));
-
     connect(ui->filtroCategoria, SIGNAL(currentIndexChanged(int)), this, SLOT(onFiltrarCategoria(int)));
     connect(ui->patch, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchSelected(int)));
+
+    for(int i=0; i<toneUIFiltroWaveform->count(); i++) connect(toneUIFiltroWaveform->at(i), SIGNAL(editingFinished()), this, SLOT(onFiltroWaveformTextChanged()));
 
     for(int i=0; i<CutoffKeyfollowList->count(); i++) connect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasDirectionList->count(); i++) connect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
@@ -899,6 +940,9 @@ void PatchUI::desconectarWidgets(){
     disconnect(ui->filtroCategoria, SIGNAL(currentIndexChanged(int)), this, SLOT(onFiltrarCategoria(int)));
     disconnect(ui->patch, SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchSelected(int)));
 
+    for(int i=0; i<toneUIFiltroWaveform->count(); i++) disconnect(toneUIFiltroWaveform->at(i), SIGNAL(editingFinished()), this, SLOT(onFiltroWaveformTextChanged()));
+
+
     for(int i=0; i<CutoffKeyfollowList->count(); i++) disconnect(CutoffKeyfollowList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasDirectionList->count(); i++) disconnect(biasDirectionList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
     for(int i=0; i<biasLevelList->count(); i++) disconnect(biasLevelList->at(i),SIGNAL( currentIndexChanged(int) ), this, SLOT(onPatchToneChanged(int)));
@@ -1074,15 +1118,14 @@ void PatchUI::desconectarWidgets(){
 }
 
 void PatchUI::setupProperties(){
-    /*
-     * Falta:
-     * - waveId
-     */
+    //campos de UI
+    for(int i=0; i<toneUIFiltroWaveform->count(); i++) toneUIFiltroWaveform->at(i)->setProperty("tone", i) ;
+
+    //campos do XP-30
+
     for(int i=0; i<waveIdList->count(); i++) waveIdList->at(i)->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Wave_Number, i+1)));
 
     //controllers: dest e depth
-
-
     int indexDestination = 0;
     for(int tone=1; tone<=4; tone++){
         for(int i=1; i<=12; i++){
@@ -1263,10 +1306,6 @@ void PatchUI::onPatchToneChanged(int i){
     QObject* o = QObject::sender();
     PatchTone *patchTone = o->property("function").value<PatchTone*>();
 
-
-
-
-//    int offset = 0;
     int theTone = patchTone->whichTone-1;
 
     /*
@@ -1277,61 +1316,6 @@ void PatchUI::onPatchToneChanged(int i){
 
     if(veocityRangeUpperList->at(theTone)->value() < veocityRangeLowerList->at(theTone)->value() )
         veocityRangeLowerList->at(theTone)->setValue(veocityRangeUpperList->at(theTone)->value());
-
-
-    /*
-     * Três envios quando selecionada a forma de onda:
-     */
-//    if(patchTone->function == PatchTone::Wave_Number){
-//        isTxDiferenciada = true;
-//        QComboBox *c = qobject_cast<QComboBox*>(o);
-//        Waveform *w =  c->currentData().value<Waveform*>();
-//        enviarMensagem( new PatchTone(PatchTone::Wave_Group_Type, patchTone->whichTone), w->groupType );
-//        enviarMensagem( new PatchTone(PatchTone::Wave_Group_ID, patchTone->whichTone), w->groupId );
-//        enviarMensagem( new PatchTone(PatchTone::Wave_Number, patchTone->whichTone), w->number );
-
-//        qDebug() <<"======================================";
-//        qDebug() << "WAVE GROUP TYPE: " << w->groupType ;
-//        qDebug() << "WAVE GROUP ID  : " << w->groupId;
-//        qDebug() << "WAVE NUMBER    # " << w->number ;
-//        qDebug() << "WAVE NOME      : " << w->nome ;
-//        qDebug() <<"======================================";
-//    }
-
-
-
-//        if(QString::compare(o->metaObject()->className(), "QComboBox") == 0){
-//            QComboBox *c = qobject_cast<QComboBox*>(o);
-//            enviarMensagem( patchTone, c->currentIndex() );
-//        }
-//        if(QString::compare(o->metaObject()->className(), "QSpinBox") == 0){
-//            QSpinBox *s = qobject_cast<QSpinBox*>(o);
-//            enviarMensagem( patchTone, s->value() + offset );
-//        }
-//        if(QString::compare(o->metaObject()->className(), "QSlider") == 0){
-//            QSlider *s = qobject_cast<QSlider*>(o);
-//            enviarMensagem( patchTone, s->value() + offset );
-//        }
-
-
-
-//    if(enviarControlesDestDepth){
-//        int icontrole =0;
-//        for(int i=1; i<=12; i++){
-//            enviarMensagem(
-//                        new PatchTone(controles[icontrole], theTone+1),
-//                        controlerDestinationList->at( (i + (theTone)*12)-1 )->currentIndex()
-//                        );
-//            enviarMensagem(
-//                        new PatchTone(controles[icontrole+1], theTone+1),
-//                    controlerDepthList->at( (i + (theTone)*12)-1 )->value()
-//                    );
-
-//            icontrole+=2;
-//        }
-//    }
-    // =========================================
-
 
     enviarPacotesDS1(patchTone->whichTone-1);
 }
@@ -1371,7 +1355,8 @@ void PatchUI::drawPatchTone(){
     for(int toneid=1; toneid<5; toneid++){
         QPushButton *toneSwitch = new QPushButton(QString("%1").arg(toneid));
         toneSwitch->setCheckable(true);
-        //        toneSwitch->setProperty("function", QVariant::fromValue(new PatchTone(PatchTone::Tone_Switch, toneid)));
+
+        QLineEdit *lineEditFiltroWaveform = new QLineEdit();
 
         QComboBox *waveId = new QComboBox();
 
@@ -1434,6 +1419,7 @@ void PatchUI::drawPatchTone(){
 
         toneSwitchList->append(toneSwitch);
         waveIdList->append(waveId);
+        toneUIFiltroWaveform->append(lineEditFiltroWaveform);
         waveGainList->append(waveGain);
         fxmSwitchList->append(fxmSwitch);
         fxmColorList->append(fxmColor);
@@ -1453,6 +1439,7 @@ void PatchUI::drawPatchTone(){
 
         int r=0;
         grid->addWidget(toneSwitch, r++, toneid, 1, 1, Qt::AlignTop);
+        grid->addWidget(lineEditFiltroWaveform, r++, toneid, 1, 1, Qt::AlignTop);
         grid->addWidget(waveId, r++, toneid, 1, 1, Qt::AlignTop);
         grid->addWidget(waveGain, r++, toneid, 1, 1, Qt::AlignTop);
         grid->addWidget(fxmSwitch, r++, toneid, 1, 1, Qt::AlignTop);
@@ -1868,13 +1855,7 @@ void PatchUI::drawPatchTone(){
 
         try {
             foreach (Waveform *w, Controller::queryWaveforms()) {
-                QString nome = QString("%3 [%1 %2] %4")
-                        .arg(w->waveGroup)
-                        .arg(QString::number(w->number))
-                        .arg(w->nome)
-                        .arg((w->oneShot == 1? "*" : ""))
-                        ;
-                waveId->addItem(nome, QVariant::fromValue(w));
+                waveId->addItem(formatarNomeWaveform(w), QVariant::fromValue(w));
             }
             waveId->setMaximumWidth(120);
         } catch (std::exception& e)
@@ -2019,23 +2000,23 @@ void PatchUI::on_pushButton_clicked(){
             t3Str = t3Str.trimmed();
 
 
-            try {
-                Controller::insertPatch(
-                            0,
-                            0,
-                            0,
-                            nome,
-                            commonStr,
-                            t0Str, t1Str, t2Str, t3Str
-                            );
-                patch.clear();
-                tone0.clear();
-                tone1.clear();
-                tone2.clear();
-                tone3.clear();
-            } catch (SQLite::Exception &e) {
-                qDebug() << e.what();
-            }
+//            try {
+//                Controller::insertPatch(
+//                            0,
+//                            0,
+//                            0,
+//                            nome,
+//                            commonStr,
+//                            t0Str, t1Str, t2Str, t3Str
+//                            );
+//                patch.clear();
+//                tone0.clear();
+//                tone1.clear();
+//                tone2.clear();
+//                tone3.clear();
+//            } catch (SQLite::Exception &e) {
+//                qDebug() << e.what();
+//            }
             msg=0;
         }
     }//fim for
@@ -2329,8 +2310,43 @@ void PatchUI::on_pushButton_clicked(){
 }
 */
 
-void PatchUI::onSysExRequestFinished(){
-//a cada loop recebo: common, depois tone 0, 1, 2 e 3
-//    qDebug() << "Fim da RQ. total# " << jack->sysxin->length();
-//    jack->sysxin->clear();
+
+QString PatchUI::formatarNomeWaveform(Waveform *w){
+    QString nome = QString("%3 [%1 %2] %4")
+            .arg(w->waveGroup)
+            .arg(QString::number(w->number))
+            .arg(w->nome)
+            .arg((w->oneShot == 1? "*" : ""))
+            ;
+    return nome;
+}
+
+
+void PatchUI::onFiltroWaveformTextChanged(){
+    QLineEdit *widget = qobject_cast<QLineEdit*>(sender());
+    int tone = widget->property("tone").value<int>();
+
+    try {
+        desconectarWidgets();
+        waveIdList->at(tone)->clear();
+
+        //sem filtro, carrega todas as waveforms
+        if(widget->text().length() == 0){
+            foreach (Waveform *w, Controller::queryWaveforms()) {
+                waveIdList->at(tone)->addItem(formatarNomeWaveform(w), QVariant::fromValue(w));
+            }
+            return;
+        }
+
+        //carrega waveforms que tenham correspondência com o filtro digitado
+        foreach (Waveform *w, Controller::queryWaveforms()) {
+            if(formatarNomeWaveform(w).contains(widget->text(), Qt::CaseInsensitive))
+                waveIdList->at(tone)->addItem(formatarNomeWaveform(w), QVariant::fromValue(w));
+        }
+        conectarWidgets();
+
+    } catch (std::exception& e)
+    {
+        QMessageBox::warning(this, "Erro ao filtrar nomes de Waveforms", e.what());
+    }
 }

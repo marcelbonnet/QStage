@@ -19,6 +19,7 @@
 #include "SysExMessage.h"
 #include "patch.h"
 #include "Efeito.h"
+#include "Waveform.h"
 
 #include "WorkerSysExRequest.h"
 
@@ -35,6 +36,7 @@ public:
     explicit PatchUI(MidiControl *jack, QWidget *parent = 0);
     ~PatchUI();
 
+    const QString LABEL_APENAS_MEUS_PATCHES = "Apenas os Meus Patches";
     /**
      * @brief recebe uma QAction do menu da janela principal e executa
      * algo com base no QAction->data
@@ -77,6 +79,7 @@ private:
 //    void enviarGrupoDeMensagens(PatchTone::Function function, int tone);
     void carregarFiltroCategorias(QString categ);
 
+    QString formatarNomeWaveform(Waveform *w);
 
     QGridLayout *grid;
     QScrollArea *scrollArea;
@@ -113,6 +116,10 @@ private:
     /*
      * Patch Tone
      * */
+    //campos apenas de UI
+    QList<QLineEdit*> *toneUIFiltroWaveform = new QList<QLineEdit*>();
+
+   //campos do XP30
     QList<QPushButton*> *toneSwitchList = new QList<QPushButton*>();
     QList<QComboBox*> *waveIdList = new QList<QComboBox*>();
     QList<QComboBox*> *waveGainList = new QList<QComboBox*>();
@@ -221,17 +228,15 @@ private:
     void drawPatchTone();
 
 private slots:
+    void onFiltroWaveformTextChanged();
     void onPatchToneChanged();
     void onPatchToneChanged(int i);
     void onPatchCommonEfx(int i);
     void onPatchCommonEfx();
 
-
-
     void on_perfEfeito_currentIndexChanged(int index);
     void on_pushButton_clicked();
 
-    void onSysExRequestFinished();
 
     /**
      * @brief slot chamado quando o combo de categorias é acionado para filtrar os patches por categoria

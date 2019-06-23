@@ -91,6 +91,8 @@ MainWindow::MainWindow(QWidget *parent) :
         actPatchInsert->setData("patchInsert");
         QAction *actPatchUpdate = menuPatch->addAction("Atualizar Patch...");
         actPatchUpdate->setData("patchUpdate");
+        QAction *actPatchRemove = menuPatch->addAction("Remover Patch...");
+        actPatchRemove->setData("patchRemove");
 
         //CONECTANDO MENUS
         connect(menuVisual, SIGNAL(triggered(QAction*)), this, SLOT(setTema(QAction*)));

@@ -18,6 +18,7 @@ QString notas[12] = {
 const int PATCH_TONE_LABELS_COUNT = 127;
 QString PATCH_TONE_LABELS[PATCH_TONE_LABELS_COUNT] = {
     "ON/OFF",
+    "Wave/Filtro",
     "Wave",
     "Gain",
     "FXM",

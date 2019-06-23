@@ -70,10 +70,10 @@ public:
      * @param tone3
      */
     static int insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0
-                           , QString tone1 , QString tone2, QString tone3) noexcept(false);
+                           , QString tone1 , QString tone2, QString tone3, int categoria) noexcept(false);
 
     /**
-     * @brief update Patch no SQLite e retorna a ID
+     * @brief update Patch no SQLite e retorna a ID . Garante que só atualiza se coluna roland=0 .
      * @param id
      * @param groupType
      * @param groupId
@@ -86,7 +86,13 @@ public:
      * @param tone3
      */
     static int updatePatch(int id, int groupType, int groupId, int number, QString name, QString common, QString tone0
-                            , QString tone1 , QString tone2, QString tone3) noexcept(false);
+                            , QString tone1 , QString tone2, QString tone3, int categoria) noexcept(false);
+
+    /**
+     * @brief remove o Patch do SQLite e garante que não remova se ele coluna roland=1
+     * @param id
+     */
+    static void removePatch(int id);
 
 private:
     static int getLastInsertRowid();
