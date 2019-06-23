@@ -29,7 +29,7 @@
 #include <QColorDialog>
 #include <QStylePainter>
 
-#include "PatchUI.h"
+
 #include "QHBoxLayout"
 
 #include "QStageException.h"
@@ -68,7 +68,9 @@ MainWindow::MainWindow(QWidget *parent) :
      */
     try {
         QMenu *menuVisual = menuBar()->addMenu("Visual");
+        QMenu *menuPatch = menuBar()->addMenu("Patch");
 
+        //MENU VISUAL/TEMAS
         QMap<QString, QString> temas = Controller::queryTemasUI();
         for(int i=0; i < temas.count(); i++){
 
@@ -84,7 +86,15 @@ MainWindow::MainWindow(QWidget *parent) :
         actDialogTemaEditor->setStatusTip("Editar temas");
         actDialogTemaEditor->setData("editarTema");
 
+        //MENU PATCH
+        QAction *actPatchInsert = menuPatch->addAction("Salvar Patch");
+        actPatchInsert->setData("patchInsert");
+        QAction *actPatchUpdate = menuPatch->addAction("Atualizar Patch...");
+        actPatchUpdate->setData("patchUpdate");
+
+        //CONECTANDO MENUS
         connect(menuVisual, SIGNAL(triggered(QAction*)), this, SLOT(setTema(QAction*)));
+        connect(menuPatch, SIGNAL(triggered(QAction*)), this, SLOT(onMenuPatchClicked(QAction*)));
 
 
     } catch (std::exception &e) {
@@ -126,9 +136,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->perfReverbHFDamp->setCurrentIndex(17);//seleciona "BYPASS"
 
     QHBoxLayout *patchLayout = new QHBoxLayout();
-    PatchUI *patchui  = new PatchUI(jack);
-    patchui->setLayout(patchLayout);
-    ui->tabWidget->addTab(patchui, "Patch");
+    patchUI  = new PatchUI(jack);
+    patchUI->setLayout(patchLayout);
+    ui->tabWidget->addTab(patchUI, "Patch");
 
 
     /*
@@ -183,7 +193,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+void MainWindow::onMenuPatchClicked(QAction *action){
+    patchUI->processaracaoDoMenu(action);
+}
 
 void MainWindow::setTema(QAction * action){
     QString css = action->data().toString();

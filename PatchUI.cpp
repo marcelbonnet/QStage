@@ -70,6 +70,108 @@ PatchUI::~PatchUI()
     delete ui;
 }
 
+void PatchUI::processaracaoDoMenu(QAction *action){
+    /*
+     * Recupera os dados de Patch Common e Tones de 0 a 3
+     */
+    QString nome = ui->name->text();
+    for(int i=nome.length(); i<12; i++)
+        nome.append(" ");
+
+    QList<int>* patch = montarListaDadosPatchCommon();
+    QList<int>* tone0 = montarListaDadosTone(0);
+    QList<int>* tone1 = montarListaDadosTone(1);
+    QList<int>* tone2 = montarListaDadosTone(2);
+    QList<int>* tone3 = montarListaDadosTone(3);
+
+    QString commonStr, t0Str, t1Str, t2Str, t3Str;
+    for(int h : *patch)
+        commonStr+=QString("%1 ").arg(h);
+    commonStr = commonStr.trimmed();
+    for(int h : *tone0)
+        t0Str+=QString("%1 ").arg(h);
+    t0Str = t0Str.trimmed();
+    for(int h : *tone1)
+        t1Str+=QString("%1 ").arg(h);
+    t1Str = t1Str.trimmed();
+    for(int h : *tone2)
+        t2Str+=QString("%1 ").arg(h);
+    t2Str = t2Str.trimmed();
+    for(int h : *tone3)
+        t3Str+=QString("%1 ").arg(h);
+    t3Str = t3Str.trimmed();
+    //==========================================================
+
+    /*
+     * INSERT PATCH
+     * */
+
+    if(action->data().value<QString>().compare("patchInsert") == 0){
+        try {
+            int novaId = Controller::insertPatch(-1,-1,-1,nome,
+                                    commonStr, t0Str, t1Str, t2Str, t3Str
+                                    );
+
+            //recarrega e seleciona o patch salvo
+            carregarFiltroCategorias(NULL);
+            desconectarWidgets();
+            for(int i=0; i<ui->patch->count(); i++){
+                Patch *p = ui->patch->currentData().value<Patch*>();
+                if(p->id == novaId){
+                    ui->patch->setCurrentIndex(i);
+                    break;
+                }
+            }
+            conectarWidgets();
+        } catch (SQLite::Exception &e) {
+            QMessageBox::critical(this, "Erro ao Salvar Patch", e.what());
+        }
+
+    }
+
+    /*
+     * UPDATE PATCH
+     * */
+    if(action->data().value<QString>().compare("patchUpdate") == 0){
+        Patch *patch = ui->patch->currentData().value<Patch*>();
+
+        if(patch->roland){
+            QMessageBox::critical(this, "Erro ao Atualizar Patch", "Esse patch não pode ser atualizado porque é de Fábrica da Roland ou do banco de USER da época em que fiz o dump para SQLIte.");
+            return;
+        }
+
+        QMessageBox::StandardButton question = QMessageBox::question(this,
+                                                                     "Atualizar Patch",
+                                                                     "Atualizar o patch\t\"" + ui->patch->currentText() +"\" ?",
+                                                                     QMessageBox::Yes | QMessageBox::No);
+
+        if(question != QMessageBox::Yes )
+            return;
+
+
+        try {
+            Controller::updatePatch( patch->id ,-1,-1,-1,nome,
+                                    commonStr, t0Str, t1Str, t2Str, t3Str
+                                    );
+
+            //recarrega e seleciona o patch salvo
+            carregarFiltroCategorias(NULL);
+            desconectarWidgets();
+            for(int i=0; i<ui->patch->count(); i++){
+                Patch *p = ui->patch->currentData().value<Patch*>();
+                if(p->id == patch->id){
+                    ui->patch->setCurrentIndex(i);
+                    break;
+                }
+            }
+            conectarWidgets();
+
+        } catch (SQLite::Exception &e) {
+            QMessageBox::critical(this, "Erro ao Atualizar Patch", e.what());
+        }
+
+    }
+}
 
 void PatchUI::onPatchSelected(int i){
     QList<QString>* patch;
@@ -341,13 +443,26 @@ void PatchUI::onFiltrarCategoria(int i){
 }
 
 void PatchUI::enviarPacotesDS1(int tone){
-    QList<int> *dados = new QList<int>();
+    QList<int> *dados = montarListaDadosTone(tone);
 //    int tone = 0; //de 0 a 3
     int offset = 0x1000; //tone 0
     if(tone == 1) offset = 0x1200;
     if(tone == 2) offset = 0x1400;
     if(tone == 3) offset = 0x1600;
     int addr = 0x03000000 + offset; //patch temporary + patch common|tone
+
+    dados->removeLast();
+    jack->txPacoteDataSet(addr, dados);
+    //próxima mensagem:
+    QList<int> *reverb = montarListaDadosTone(tone);
+    for(int i=0; i<dados->length()-1; i++)
+        reverb->removeAt(i);
+    jack->txPacoteDataSet(addr, reverb);
+
+}
+
+QList<int>* PatchUI::montarListaDadosTone(int tone){
+    QList<int> *dados = new QList<int>();
 
     Waveform *w = waveIdList->at(tone)->currentData().value<Waveform*>();
     int waveNumber2 = w->number & 0xF;
@@ -473,18 +588,12 @@ void PatchUI::enviarPacotesDS1(int tone){
     dados->append(outputAssignList ->at(tone)->currentIndex());
     dados->append(mixEfxSendLevelList ->at(tone)->value());
     dados->append(ChorusSendLevelList ->at(tone)->value());
-
-    jack->txPacoteDataSet(addr, dados);
-    //próxima mensagem:
     dados->append(ReverbSendLevelList ->at(tone)->value());
-    jack->txPacoteDataSet(addr, dados);
-
-
+    return dados;
 }
 
-void PatchUI::enviarPacotesDS1PatchCommon(){
+QList<int>* PatchUI::montarListaDadosPatchCommon(){
     QList<int> *dados = new QList<int>();
-    int addr = 0x03000000;
 
     QString nome = ui->name->text();
     for(int i=nome.length(); i<12; i++)
@@ -535,7 +644,6 @@ void PatchUI::enviarPacotesDS1PatchCommon(){
 
     dados->append(tempo1);
     dados->append(tempo2);
-qDebug() << "TEMPO" << tempo << tempo1 << tempo2;
 
     dados->append(ui->patchLevel  ->value());
     dados->append(ui->patchPan    ->value());
@@ -565,6 +673,13 @@ qDebug() << "TEMPO" << tempo << tempo1 << tempo2;
     dados->append(ui->booster34->currentIndex());
     dados->append(ui->clockSource   ->isChecked() ? 1 : 0);
     dados->append(ui->patchCategory->currentIndex());
+
+    return dados;
+}
+
+void PatchUI::enviarPacotesDS1PatchCommon(){
+    QList<int> *dados = montarListaDadosPatchCommon();
+    int addr = 0x03000000;
 
     jack->txPacoteDataSet(addr, dados);
 

@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QThread>
+#include <QAction>
 
 #include "MidiControl.h"
 #include "PatchTone.h"
@@ -34,13 +35,39 @@ public:
     explicit PatchUI(MidiControl *jack, QWidget *parent = 0);
     ~PatchUI();
 
+    /**
+     * @brief recebe uma QAction do menu da janela principal e executa
+     * algo com base no QAction->data
+     * @param action
+     */
+    void processaracaoDoMenu(QAction *action);
+
 protected:
     MidiControl *jack;
 
 private:
     Ui::PatchUI *ui;
 
+    /**
+     * @brief monta a lista de dados de Patch Common para enviar DataSet ou persistir os dados no SQLite
+     * @return
+     */
+    QList<int>* montarListaDadosPatchCommon();
+    /**
+     * @brief monta a lista de dados de Patch Tone para enviar DataSet ou persistir os dados no SQLite
+     * @param tone de 0 a 3
+     * @return
+     */
+    QList<int>* montarListaDadosTone(int tone);
+
+    /**
+     * @brief enviar Pacotes DataSet1 de PatchTone
+     * @param tone de 0 a 3
+     */
     void enviarPacotesDS1(int tone);
+    /**
+     * @brief enviar Pacotes DataSet1 de PatchCommon
+     */
     void enviarPacotesDS1PatchCommon();
 //    void enviarMensagem(PatchTone *patchTone, int data);
 //    void enviarMensagem(Patch *patch, int data);

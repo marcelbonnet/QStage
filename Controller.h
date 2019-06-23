@@ -57,9 +57,39 @@ public:
      */
     static QList<Patch*>* queryPatches(bool roland) noexcept(false);
 
-    static void insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0
+    /**
+     * @brief Persiste um Patch no SQLite e retorna ID
+     * @param groupType
+     * @param groupId
+     * @param number
+     * @param name
+     * @param common
+     * @param tone0
+     * @param tone1
+     * @param tone2
+     * @param tone3
+     */
+    static int insertPatch(int groupType, int groupId, int number, QString name, QString common, QString tone0
                            , QString tone1 , QString tone2, QString tone3) noexcept(false);
 
+    /**
+     * @brief update Patch no SQLite e retorna a ID
+     * @param id
+     * @param groupType
+     * @param groupId
+     * @param number
+     * @param name
+     * @param common
+     * @param tone0
+     * @param tone1
+     * @param tone2
+     * @param tone3
+     */
+    static int updatePatch(int id, int groupType, int groupId, int number, QString name, QString common, QString tone0
+                            , QString tone1 , QString tone2, QString tone3) noexcept(false);
+
+private:
+    static int getLastInsertRowid();
 
 };
 

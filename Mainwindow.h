@@ -16,6 +16,7 @@
 #include <QList>
 #include "SysExMessage.h"
 #include "FormSerialMidi.h"
+#include "PatchUI.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +40,13 @@ public:
     QString getConfig(QString key);
 
 private slots:
+
+    /**
+     * @brief menu bar de Patch clicado
+     * @param action
+     */
+    void onMenuPatchClicked(QAction * action);
+
     void on_listWidget_itemSelectionChanged();
 
     void on_perfBtnEnviar_clicked();
@@ -154,6 +162,7 @@ private:
                             //TODO Receive Switch
     QSpinBox *partMidiCh[16]; //MIDI CHANNEL
 
+    PatchUI *patchUI;
 
  protected:
     MidiControl *jack = NULL;

@@ -167,20 +167,20 @@ public:
 
 
     //private:
-    QString nome;
-    QString categoria;
-    QString categoriaPai;
-    int groupType;
-    int groupId;
-    int number;
-    bool roland;
+    QString nome;//nome do patch
+    QString categoria;//categoria por extenso
+    QString categoriaPai;//categoria pai que existe apenas nos botões de 1 a 0 do Roland: categ pai "PIANO" contém EL e AC PNO , e assim por diante
+    int groupType;//waveform grouptype
+    int groupId; //waveform group id
+    int number; //waveform number
+    bool roland;//true se o patch era de fábrica do Roland ou do banco de USER no momento do backup para SQLite
     int categId;//0 - 38
-    int id;
+    int id;// id no SQLite
 
 private:
     QMap<Function,QString> functionMap;
 
-    //a implementação usa a categorias de defaults.h
+    //tem algum parte do programa QStage que inclui defaults.h, que contém esse arrei com outro nome.
     const QString _categ[39] = {
         "---",
         "PNO","EP","KEY","BELL","MLT","ORG","ACD","HRM",
