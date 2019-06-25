@@ -8,7 +8,7 @@
 #include "SysExMessage.h"
 #include "PerformancePart.h"
 #include "baseaddress.h"
-//#include "defaults.h" //reclama de multiple def de categorias
+#include "defaults.h"
 
 PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     QWidget(parent),
@@ -20,13 +20,13 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     this->parte = parte;
 //    tempoUltimoEnvio = QDateTime::currentDateTime();
 
-    QString notas[12] = {
-        "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
-    };
+//    QString notas[12] = {
+//        "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
+//    };
     int oitava = -1;
     int nota=0;
     for(int i=0; i<=127; i++){
-        QString notaOit = QString("%1 %2").arg(notas[nota]).arg(oitava) ;
+        QString notaOit = QString("%1 %2").arg(Defaults::notas()[nota]).arg(oitava) ;
         ui->minimo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
         ui->maximo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
         nota++;
@@ -79,23 +79,23 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
 }
 void PartTab::carregarPatches(QString categoria){
     QComboBox *patch = ui->patch;
-    //Patch * p[1406];
+
     disconnect(patch,SIGNAL(currentIndexChanged(int)), this
                , SLOT(on_patch_currentIndexChanged(int)));
     patch->clear();
+//    for(Patch* patch : *Controller::queryPatches()){
+//        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0
+//                || QString::compare(categoria, patch->categoria, Qt::CaseInsensitive ) == 0 ){
+//            patch->addItem(patches[i], QVariant::fromValue(patchObjects[i]));
+
+//        }
+//    }
+
     for(int i=0; i < 1406; i++ ){
-//        patchObjects[i] = new Patch();
-//        QRegularExpression re("\t");
-//        patchObjects[i]->nome = patches[i].replace(re," ");
-//        patchObjects[i]->categoria = categorias[i];
-//        patchObjects[i]->categoriaPai = categoriasPai[i];
-//        patchObjects[i]->groupType = groupType[i];
-//        patchObjects[i]->groupId = groupId[i];
-//        patchObjects[i]->number = number[i];
 
         if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0 || QString::compare(categoria, patchObjects[i]->categoria, Qt::CaseInsensitive ) == 0 ){
             patch->addItem(patches[i], QVariant::fromValue(patchObjects[i]));
-            //qDebug() << patches[i];
+
         }
     }
     connect(patch,SIGNAL(currentIndexChanged(int)), this

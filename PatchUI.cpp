@@ -39,8 +39,8 @@ PatchUI::PatchUI(MidiControl *jack, QWidget *parent) :
     ui->filtroCategoria->addItem("Todos os Patches");//exibirá todos os patches se selecionado
     ui->filtroCategoria->addItem(LABEL_APENAS_MEUS_PATCHES);//exibirá somente patches com roland=0
     for(int i=0; i<=38; i++){
-        ui->patchCategory->addItem(categorias[i]);
-        ui->filtroCategoria->addItem(categorias[i]);
+        ui->patchCategory->addItem(Defaults::getCategorias().at(i));
+        ui->filtroCategoria->addItem(Defaults::getCategorias().at(i));
     }
 
     //combo de Efeitos
@@ -470,7 +470,7 @@ void PatchUI::carregarFiltroCategorias(QString categ){
     desconectarWidgets();
     ui->patch->clear();
     for(Patch* p : *Controller::queryPatches() ){
-        if(categ == NULL || categorias[p->categId].compare(categ) == 0)
+        if(categ == NULL || Defaults::getCategorias()[p->categId].compare(categ) == 0)
             ui->patch->addItem(p->getFullName(), QVariant::fromValue(p));
         //somente os meus patches:
         if(LABEL_APENAS_MEUS_PATCHES.compare(categ) == 0 && !p->isRoland() )
@@ -1346,8 +1346,8 @@ void PatchUI::drawPatchTone(){
      * adiciona QLabels para os strips de widgets
      * */
     int lr=0;
-    for(int i=0; i<PATCH_TONE_LABELS_COUNT; i++)
-        grid->addWidget(new QLabel(PATCH_TONE_LABELS[i]), lr++, 0, 1, 1, Qt::AlignTop);
+    for(int i=0; i<Defaults::getPatchToneLabelsCount(); i++)
+        grid->addWidget(new QLabel(Defaults::getPatchToneLabels().at(i)), lr++, 0, 1, 1, Qt::AlignTop);
 
     /*
      * adiciona widgets interativos
@@ -1369,10 +1369,10 @@ void PatchUI::drawPatchTone(){
         fxmSwitch->setCheckable(true);
 
         QSpinBox *fxmColor = new QSpinBox();
-        setSpinRange(fxmColor, 1, 4);
+        Defaults::setSpinRange(fxmColor, 1, 4);
 
         QSpinBox *fxmDepth = new QSpinBox();
-        setSpinRange(fxmDepth,1,16);
+        Defaults::setSpinRange(fxmDepth,1,16);
 
         QComboBox *toneDelayMode = new QComboBox();
         toneDelayMode->addItem("NORMAL");        toneDelayMode->addItem("HOLD");
@@ -1382,24 +1382,24 @@ void PatchUI::drawPatchTone(){
         toneDelayMode->setCurrentIndex(0);
 
         QSpinBox *toneDelayTime = new QSpinBox();
-        setSpinRange(toneDelayTime,0,127);
+        Defaults::setSpinRange(toneDelayTime,0,127);
         toneDelayTime->setValue(0);
 
         QSpinBox *veocityRangeCrossFade = new QSpinBox();
-        setSpinRange(veocityRangeCrossFade,0,127);
+        Defaults::setSpinRange(veocityRangeCrossFade,0,127);
 
         QSpinBox *veocityRangeLower = new QSpinBox();
-        setSpinRange(veocityRangeLower,1,127);
+        Defaults::setSpinRange(veocityRangeLower,1,127);
 
         QSpinBox *veocityRangeUpper = new QSpinBox();
-        setSpinRange(veocityRangeUpper,1,127);
+        Defaults::setSpinRange(veocityRangeUpper,1,127);
 
         QComboBox *keyboardRangeLower = new QComboBox();
-        addNotas(keyboardRangeLower);
+        Defaults::addNotas(keyboardRangeLower);
         keyboardRangeLower->setCurrentIndex(0);
 
         QComboBox *keyboardRangeUpper = new QComboBox();
-        addNotas(keyboardRangeUpper);
+        Defaults::addNotas(keyboardRangeUpper);
         keyboardRangeUpper->setCurrentIndex(keyboardRangeUpper->count()-1);
 
         QPushButton *redamperControlSwitch = new QPushButton("ON");
@@ -1463,10 +1463,10 @@ void PatchUI::drawPatchTone(){
          * */
         for(int j=1; j<=12; j++){
             QComboBox *controlerDestination = new QComboBox();
-            addPatchToneControllerDestinations(controlerDestination);
+            Defaults::addPatchToneControllerDestinations(controlerDestination);
             controlerDestination->setMaximumSize(QSize(120,60));
             QSpinBox *controlerDepth = new QSpinBox();
-            setSpinRange(controlerDepth,0,126);
+            Defaults::setSpinRange(controlerDepth,0,126);
             controlerDepth->setValue(63);
 
             controlerDestinationList->append(controlerDestination);
@@ -1738,119 +1738,119 @@ void PatchUI::drawPatchTone(){
         ReverbSendLevelList->append(ReverbSendLevel );
         grid->addWidget(ReverbSendLevel , r++, toneid, 1, 1, Qt::AlignTop);
 
-        setLfoWaveform(lfo1WaveForm);
-        setLfoWaveform(lfo2WaveForm);
+        Defaults::setLfoWaveform(lfo1WaveForm);
+        Defaults::setLfoWaveform(lfo2WaveForm);
         lfo1KeySyncSwitch->setCheckable(true);
         lfo1KeySyncSwitch->setText("ON");
         lfo2KeySyncSwitch->setCheckable(true);
         lfo2KeySyncSwitch->setText("ON");
-        setSliderRange(lfo1Rate, 0, 127);
-        setSliderRange(lfo2Rate, 0, 127);
-        setLfoOffset(lfo1OffSet);
-        setLfoOffset(lfo2OffSet);
+        Defaults::setSliderRange(lfo1Rate, 0, 127);
+        Defaults::setSliderRange(lfo2Rate, 0, 127);
+        Defaults::setLfoOffset(lfo1OffSet);
+        Defaults::setLfoOffset(lfo2OffSet);
         lfo1OffSet->setCurrentIndex(2);
         lfo2OffSet->setCurrentIndex(2);
-        setSliderRange(lfo1DelayTime, 0, 127);
-        setSliderRange(lfo2DelayTime, 0, 127);
-        setLfoFadeMode(lfo1FadeMode);
-        setLfoFadeMode(lfo2FadeMode);
-        setSliderRange(lfo1FadeTime, 0, 127);
-        setSliderRange(lfo2FadeTime, 0, 127);
-        setExternalSync(lfo1ExternalSync);
-        setExternalSync(lfo2ExternalSync);
-        setSpinRange(coarseTune,-48, 48);
+        Defaults::setSliderRange(lfo1DelayTime, 0, 127);
+        Defaults::setSliderRange(lfo2DelayTime, 0, 127);
+        Defaults::setLfoFadeMode(lfo1FadeMode);
+        Defaults::setLfoFadeMode(lfo2FadeMode);
+        Defaults::setSliderRange(lfo1FadeTime, 0, 127);
+        Defaults::setSliderRange(lfo2FadeTime, 0, 127);
+        Defaults::setExternalSync(lfo1ExternalSync);
+        Defaults::setExternalSync(lfo2ExternalSync);
+        Defaults::setSpinRange(coarseTune,-48, 48);
         coarseTune->setValue(0);
-        setSpinRange(fineTune, -50, 50);
+        Defaults::setSpinRange(fineTune, -50, 50);
         fineTune->setValue(0);
-        setRandomPitchDepth(randomPitchDepth);
-        setKeyfollow15(pitchKeyfollow);
+        Defaults::setRandomPitchDepth(randomPitchDepth);
+        Defaults::setKeyfollow15(pitchKeyfollow);
         pitchKeyfollow->setCurrentIndex(5);
-        setSpinRange(pitchEnvelopeDepth,-12,12);
+        Defaults::setSpinRange(pitchEnvelopeDepth,-12,12);
         pitchEnvelopeDepth->setValue(0);
-        setSliderRange(pitchEnvelopeVelocitySens,0,125);
-        setTime17(pitchEnvelopeVelocityTime1);
+        Defaults::setSliderRange(pitchEnvelopeVelocitySens,0,125);
+        Defaults::setTime17(pitchEnvelopeVelocityTime1);
         pitchEnvelopeVelocityTime1->setCurrentIndex(7);
-        setTime17(pitchEnvelopeVelocityTime4);
+        Defaults::setTime17(pitchEnvelopeVelocityTime4);
         pitchEnvelopeVelocityTime4->setCurrentIndex(7);
-        setTime17(pitchEnvelopeTimeKeyfollow);
+        Defaults::setTime17(pitchEnvelopeTimeKeyfollow);
         pitchEnvelopeTimeKeyfollow->setCurrentIndex(7);
-        setSliderRange(pitchEnvelopeTime1,0,127);
-        setSliderRange(pitchEnvelopeTime2,0,127);
-        setSliderRange(pitchEnvelopeTime3,0,127);
-        setSliderRange(pitchEnvelopeTime4,0,127);
-        setSliderRange(pitchEnvelopeLevel1,0,126);
-        setSliderRange(pitchEnvelopeLevel2,0,126);
-        setSliderRange(pitchEnvelopeLevel3,0,126);
-        setSliderRange(pitchEnvelopeLevel4,0,126);
+        Defaults::setSliderRange(pitchEnvelopeTime1,0,127);
+        Defaults::setSliderRange(pitchEnvelopeTime2,0,127);
+        Defaults::setSliderRange(pitchEnvelopeTime3,0,127);
+        Defaults::setSliderRange(pitchEnvelopeTime4,0,127);
+        Defaults::setSliderRange(pitchEnvelopeLevel1,0,126);
+        Defaults::setSliderRange(pitchEnvelopeLevel2,0,126);
+        Defaults::setSliderRange(pitchEnvelopeLevel3,0,126);
+        Defaults::setSliderRange(pitchEnvelopeLevel4,0,126);
         pitchEnvelopeLevel1->setValue(63);
         pitchEnvelopeLevel2->setValue(63);
         pitchEnvelopeLevel3->setValue(63);
         pitchEnvelopeLevel4->setValue(63);
-        setSliderRange(pitchLfo1Depth,0,126);
-        setSliderRange(pitchLfo2Depth,0,126);
+        Defaults::setSliderRange(pitchLfo1Depth,0,126);
+        Defaults::setSliderRange(pitchLfo2Depth,0,126);
         pitchLfo1Depth->setValue(63);
         pitchLfo2Depth->setValue(63);
-        setFilterType18(filterType);
-        setSliderRange(CutoffFrequency,0,127);
-        setKeyfollow15(CutoffKeyfollow);
-        setSliderRange(resonance,0,127);
-        setSliderRange(resonanceVelocitySens,0,125);
-        setSliderRange(filterEnvelopeDepth, 0,126);
+        Defaults::setFilterType18(filterType);
+        Defaults::setSliderRange(CutoffFrequency,0,127);
+        Defaults::setKeyfollow15(CutoffKeyfollow);
+        Defaults::setSliderRange(resonance,0,127);
+        Defaults::setSliderRange(resonanceVelocitySens,0,125);
+        Defaults::setSliderRange(filterEnvelopeDepth, 0,126);
         filterEnvelopeDepth->setValue(63);
-        setVelocityCurves(filterEnvelopeVelocityCurve);
-        setSliderRange(filterEnvelopeVelocitySens,0,125);
-        setTime17(filterEnvelopeVelocityTime1);
-        setTime17(filterEnvelopeVelocityTime4);
-        setTime17(filterEnvelopeTimeKeyfollow);
-        setSliderRange(filterEnvelopeTime1,0,127);
-        setSliderRange(filterEnvelopeTime2,0,127);
-        setSliderRange(filterEnvelopeTime3,0,127);
-        setSliderRange(filterEnvelopeTime4,0,127);
-        setSliderRange(filterEnvelopeLevel1,0,127);
-        setSliderRange(filterEnvelopeLevel2,0,127);
-        setSliderRange(filterEnvelopeLevel3,0,127);
-        setSliderRange(filterEnvelopeLevel4,0,127);
-        setSliderRange(filterLfo1Depth,0,126);
+        Defaults::setVelocityCurves(filterEnvelopeVelocityCurve);
+        Defaults::setSliderRange(filterEnvelopeVelocitySens,0,125);
+        Defaults::setTime17(filterEnvelopeVelocityTime1);
+        Defaults::setTime17(filterEnvelopeVelocityTime4);
+        Defaults::setTime17(filterEnvelopeTimeKeyfollow);
+        Defaults::setSliderRange(filterEnvelopeTime1,0,127);
+        Defaults::setSliderRange(filterEnvelopeTime2,0,127);
+        Defaults::setSliderRange(filterEnvelopeTime3,0,127);
+        Defaults::setSliderRange(filterEnvelopeTime4,0,127);
+        Defaults::setSliderRange(filterEnvelopeLevel1,0,127);
+        Defaults::setSliderRange(filterEnvelopeLevel2,0,127);
+        Defaults::setSliderRange(filterEnvelopeLevel3,0,127);
+        Defaults::setSliderRange(filterEnvelopeLevel4,0,127);
+        Defaults::setSliderRange(filterLfo1Depth,0,126);
         filterLfo1Depth->setValue(63);
-        setSliderRange(filterLfo2Depth,0,126);
+        Defaults::setSliderRange(filterLfo2Depth,0,126);
         filterLfo2Depth->setValue(63);
-        setSliderRange(toneLevel,0,127);
+        Defaults::setSliderRange(toneLevel,0,127);
         toneLevel->setValue(100);
-        setPatchTone19(biasDirection);
-        addNotas(biasPosition);
-        setTime17(biasLevel);
+        Defaults::setPatchTone19(biasDirection);
+        Defaults::addNotas(biasPosition);
+        Defaults::setTime17(biasLevel);
         biasLevel->setCurrentIndex(7);
-        setVelocityCurves(levelEnvelopeVelocityCurve);
-        setSliderRange(levelEnvelopeVelocitySens,0,125);
-        setTime17(levelEnvelopeVelocityTime1);
-        setTime17(levelEnvelopeVelocityTime4);
-        setTime17(levelEnvelopeTimeKeyfollow);
-        setSliderRange(levelEnvelopeTime1,0,127);
-        setSliderRange(levelEnvelopeTime2,0,127);
-        setSliderRange(levelEnvelopeTime3,0,127);
-        setSliderRange(levelEnvelopeTime4,0,127);
-        setSliderRange(levelEnvelopeLevel1,0,127);
-        setSliderRange(levelEnvelopeLevel2,0,127);
-        setSliderRange(levelEnvelopeLevel3,0,127);
-        setSliderRange(levelLfo1Depth,0,126);
+        Defaults::setVelocityCurves(levelEnvelopeVelocityCurve);
+        Defaults::setSliderRange(levelEnvelopeVelocitySens,0,125);
+        Defaults::setTime17(levelEnvelopeVelocityTime1);
+        Defaults::setTime17(levelEnvelopeVelocityTime4);
+        Defaults::setTime17(levelEnvelopeTimeKeyfollow);
+        Defaults::setSliderRange(levelEnvelopeTime1,0,127);
+        Defaults::setSliderRange(levelEnvelopeTime2,0,127);
+        Defaults::setSliderRange(levelEnvelopeTime3,0,127);
+        Defaults::setSliderRange(levelEnvelopeTime4,0,127);
+        Defaults::setSliderRange(levelEnvelopeLevel1,0,127);
+        Defaults::setSliderRange(levelEnvelopeLevel2,0,127);
+        Defaults::setSliderRange(levelEnvelopeLevel3,0,127);
+        Defaults::setSliderRange(levelLfo1Depth,0,126);
         levelLfo1Depth->setValue(63);
-        setSliderRange(levelLfo2Depth,0,126);
+        Defaults::setSliderRange(levelLfo2Depth,0,126);
         levelLfo2Depth->setValue(63);
-        setSliderRange(tonePan,0,127);
+        Defaults::setSliderRange(tonePan,0,127);
         tonePan->setValue(63);
-        setTime17(panKeyfollow);
+        Defaults::setTime17(panKeyfollow);
         panKeyfollow->setCurrentIndex(7);
-        setSliderRange(randomPanDepth,0,63);
-        setSliderRange(alternatePanDepth,1,127);
+        Defaults::setSliderRange(randomPanDepth,0,63);
+        Defaults::setSliderRange(alternatePanDepth,1,127);
         alternatePanDepth->setValue(63);
-        setOutputAssign(outputAssign);
-        setSliderRange(mixEfxSendLevel,0,127);
-        setSliderRange(ChorusSendLevel,0,127);
-        setSliderRange(ReverbSendLevel,0,127);
+        Defaults::setOutputAssign(outputAssign);
+        Defaults::setSliderRange(mixEfxSendLevel,0,127);
+        Defaults::setSliderRange(ChorusSendLevel,0,127);
+        Defaults::setSliderRange(ReverbSendLevel,0,127);
 
-        setSliderRange(panLfo1Depth,0,126);
+        Defaults::setSliderRange(panLfo1Depth,0,126);
         panLfo1Depth->setValue(63);
-        setSliderRange(panLfo2Depth,0,126);
+        Defaults::setSliderRange(panLfo2Depth,0,126);
         panLfo2Depth->setValue(63);
 
         try {

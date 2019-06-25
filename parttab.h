@@ -7,6 +7,7 @@
 #include <QDateTime>
 #include "patch.h"
 #include "PerformancePart.h"
+#include "Controller.h"
 
 namespace Ui {
 class PartTab;

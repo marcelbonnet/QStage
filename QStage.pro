@@ -68,7 +68,8 @@ SOURCES += main.cpp\
     DialogTemaEditor.cpp \
     DataRequest.cpp \
     DataSysExType.cpp \
-    WorkerSysExRequest.cpp
+    WorkerSysExRequest.cpp \
+    defaults.cpp
 
 
 HEADERS  += Mainwindow.h \
