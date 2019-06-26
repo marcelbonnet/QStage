@@ -9,6 +9,7 @@
 #include "PerformancePart.h"
 #include "baseaddress.h"
 #include "defaults.h"
+#include "QStageException.h"
 
 PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     QWidget(parent),
@@ -18,11 +19,7 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
 
     this->jack = jack;
     this->parte = parte;
-//    tempoUltimoEnvio = QDateTime::currentDateTime();
 
-//    QString notas[12] = {
-//        "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
-//    };
     int oitava = -1;
     int nota=0;
     for(int i=0; i<=127; i++){
@@ -32,42 +29,13 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
         nota++;
         if(nota>11) {nota=0; oitava++;}
     }
-    /*
-    QString notas[12] = {
-        "C","C#","D","D#","E","F","F#","G","G#","A","A#","B"
-    };
 
-
-    for(int oitava=-1; oitava<=9; oitava++){
-        for(int nota=0; nota<12 && nota*oitava <= 127  ; nota++){
-            QString notaOit = QString("%1 %2").arg(notas[nota]).arg(oitava) ;
-            ui->minimo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
-            ui->maximo->addItem(notaOit, QVariant::fromValue(nota*oitava) );
-        }
-    }
-    ui->maximo->removeItem(131);
-    ui->maximo->removeItem(130);
-    ui->maximo->removeItem(129);
-    ui->maximo->removeItem(128);
-*/
 
 
     ui->minimo->setCurrentIndex(0);
     ui->maximo->setCurrentIndex(127);
 
-    /*
-     * PATCHES
-     */
-    for(int i=0; i < 1406; i++ ){
-        patchObjects[i] = new Patch();
-        QRegularExpression re("\t");
-        patchObjects[i]->nome = patches[i].replace(re," ");
-        patchObjects[i]->categoria = categorias[i];
-        patchObjects[i]->categoriaPai = categoriasPai[i];
-        patchObjects[i]->groupType = groupType[i];
-        patchObjects[i]->groupId = groupId[i];
-        patchObjects[i]->number = number[i];
-    }
+
     this->carregarPatches();
 
     //Utils: copiar esta part para outra, exceto part 10 (RHYTHM)
@@ -78,27 +46,20 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
 
 }
 void PartTab::carregarPatches(QString categoria){
-    QComboBox *patch = ui->patch;
+    QComboBox *patchui = ui->patch;
 
-    disconnect(patch,SIGNAL(currentIndexChanged(int)), this
+    disconnect(patchui,SIGNAL(currentIndexChanged(int)), this
                , SLOT(on_patch_currentIndexChanged(int)));
-    patch->clear();
-//    for(Patch* patch : *Controller::queryPatches()){
-//        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0
-//                || QString::compare(categoria, patch->categoria, Qt::CaseInsensitive ) == 0 ){
-//            patch->addItem(patches[i], QVariant::fromValue(patchObjects[i]));
-
-//        }
-//    }
-
-    for(int i=0; i < 1406; i++ ){
-
-        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0 || QString::compare(categoria, patchObjects[i]->categoria, Qt::CaseInsensitive ) == 0 ){
-            patch->addItem(patches[i], QVariant::fromValue(patchObjects[i]));
+    patchui->clear();
+    for(Patch* patch : *Controller::queryPatches()){
+        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0
+                || QString::compare(categoria, patch->categoria, Qt::CaseInsensitive ) == 0 ){
+            patchui->addItem(patch->getFullName(), QVariant::fromValue(patch));
 
         }
     }
-    connect(patch,SIGNAL(currentIndexChanged(int)), this
+
+    connect(patchui,SIGNAL(currentIndexChanged(int)), this
                , SLOT(on_patch_currentIndexChanged(int)));
 }
 
@@ -107,14 +68,27 @@ PartTab::~PartTab()
     delete ui;
 }
 
-int PartTab::getIndexFromPatches(QString nome){
-    for(int i=0; i<1406; i++){
-        if( QString::compare(patches[i], nome) == 0 ){
-            return i;
+void PartTab::setPatchSelected(int patchId) noexcept(false){
+    QComboBox *patchui = ui->patch;
+
+    disconnect(patchui,SIGNAL(currentIndexChanged(int)), this
+               , SLOT(on_patch_currentIndexChanged(int)));
+
+    bool achou = false;
+    for(int i=0; i<patchui->count(); i++){
+        Patch *patch = patchui->itemData(i).value<Patch*>();
+        if(patchId == patch->id ){
+            patchui->setCurrentIndex(i);
+            achou = true;
+            break;
         }
     }
-    qDebug() << "Nao achei o nome na lista de patches: " << nome;
-    return -1;
+
+    connect(patchui,SIGNAL(currentIndexChanged(int)), this
+               , SLOT(on_patch_currentIndexChanged(int)));
+
+    if(!achou)
+        throw new QStageException(QString("Patch ID \"%1\" não existe na lista.").arg(patchId));
 }
 
 void PartTab::enviarMensagem(PerformancePart::Function function, int data){
@@ -266,9 +240,7 @@ void PartTab::setPatch(Patch *p){
     }
 }
 */
-void PartTab::setPatch(int i){
-    ui->patch->setCurrentIndex(i);
-}
+
 
 void PartTab::setRegiaoMin(int i){
     ui->minimo->setCurrentIndex(i);

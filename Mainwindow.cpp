@@ -423,7 +423,7 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
             PartTab *tab = tabParts[i];
             conf->beginGroup(QString("Parte%1").arg(i));
 
-            conf->setValue("nome", tab->getPatch()->getNome() );
+            conf->setValue("patchID", tab->getPatch()->id );
             conf->setValue("categoria", tab->getPatch()->getCategoria() );
             conf->setValue("categoriaPai", tab->getPatch()->getCategoriaPai() );
             conf->setValue("groupId", tab->getPatch()->getGroupId() );
@@ -593,17 +593,12 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         PartTab *tab = tabParts[i];
         conf->beginGroup(QString("Parte%1").arg(i));
 
-
-        //        //usleep(50000);//evitar sobrecarregar o ringbuffer
         tab->setLocalOn(conf->value("localOn").toInt());
 
-        QString nomePatch = conf->value("nome").toString();
-        if(QString::compare(nomePatch,"") != 0){
-            tab->carregarPatches();
-            tab->setPatch(tab->getIndexFromPatches(nomePatch));
-            //tab->enviar(); //usleep(20000);
-            //            //usleep(50000);
-        }
+        int patchId = conf->value("patchID").toInt();
+
+        tab->carregarPatches();
+        tab->setPatchSelected(patchId);
 
         tab->setAfinacaoBruta(conf->value("afinacaoBruta").toInt());//tab->enviar(); //usleep(20000);
         tab->setAfinacaoFina(conf->value("afinacaoFina").toInt());//tab->enviar(); //usleep(20000);
@@ -611,9 +606,7 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         tab->setChorusLevel(conf->value("chorusLevel").toInt());//tab->enviar(); //usleep(20000);
         tab->setMixEfxLevel(conf->value("mixEfxSendLevel").toInt());//tab->enviar(); //usleep(20000);
         tab->setOitava(conf->value("oitava").toInt());//tab->enviar(); //usleep(20000);
-        //envio fracionado e com intervalos de tempo. foi assim que funcionou. as combos estavam ficando perdidas nos envios de SYSEX sem isso.
-        //        //tab->enviar();
-        //        //usleep(50000);
+
         tab->setPan(conf->value("pan").toInt());//tab->enviar(); //usleep(20000);
         tab->setRegiaoMax(conf->value("regiaoMax").toInt());//tab->enviar(); //usleep(20000);
         tab->setRegiaoMin(conf->value("regiaoMin").toInt());//tab->enviar(); //usleep(20000);
@@ -1510,9 +1503,7 @@ void MainWindow::partUtilsCopiarPerformancePartParaPart(int parteOrigem, int par
     PartTab *o = tabParts[parteOrigem - 1];
     PartTab *d = tabParts[parteDestino - 1];
 
-//    qDebug() << "Copiar performance part " << parteOrigem << " para " << parteDestino;
-
-    d->setPatch(o->getPatchIndex());
+    d->setPatchSelected(o->getPatch()->id);
     d->setRegiaoMin(o->getRegiaoMin());
     d->setRegiaoMax(o->getRegiaoMax());
     d->setOitava(o->getOitava());
