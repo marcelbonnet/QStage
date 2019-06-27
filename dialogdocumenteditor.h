@@ -42,6 +42,10 @@ private slots:
 
     void on_buttonBox_accepted();
 
+    void on_textEdit_cursorPositionChanged();
+
+    void on_btnSmall_clicked();
+
 private:
     Ui::DialogDocumentEditor *ui;
 

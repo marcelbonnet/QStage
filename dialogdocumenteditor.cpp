@@ -160,3 +160,42 @@ void DialogDocumentEditor::on_buttonBox_accepted()
     emit edicaoHTMLTerminada(musicaId, getHtml());
     hide();
 }
+
+void DialogDocumentEditor::on_textEdit_cursorPositionChanged()
+{
+//    QTextCursor cursor = ui->textEdit->textCursor();
+//    if(!cursor.hasSelection())
+//        return;
+
+//    QTextCharFormat fmt;
+    //tentar detectar o estilo e selecionar a combo, desligar e ligar o connect
+}
+
+void DialogDocumentEditor::on_btnSmall_clicked()
+{
+    QTextCursor cursor = ui->textEdit->textCursor();
+    if(!cursor.hasSelection())
+        cursor.select(QTextCursor::WordUnderCursor);
+
+    QString texto = cursor.selectedText();
+
+    QTextCharFormat fmt;
+    //usar sempre ou usar uma seleção de propriedades conforme a TAG/Estilo aplicado
+    fmt.setFontWeight(cursor.charFormat().fontWeight());
+    fmt.setFontItalic(cursor.charFormat().fontItalic());
+    fmt.setFontUnderline(cursor.charFormat().fontUnderline());
+    fmt.setForeground(cursor.charFormat().foreground());
+    fmt.setBackground(cursor.charFormat().background());
+
+    cursor.removeSelectedText();
+    QString novoHtml = "<small>"
+            + texto
+            + "</small>";
+
+    int inicio = cursor.position();
+    int final = novoHtml.length() - inicio;
+    cursor.insertHtml(novoHtml);
+
+    cursor.setPosition(inicio, QTextCursor::KeepAnchor);
+    cursor.mergeCharFormat(fmt);
+}

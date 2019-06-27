@@ -69,6 +69,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="btnSmall">
+            <property name="text">
+             <string>small</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="btnCor">
             <property name="text">
              <string>Cor Texto</string>
