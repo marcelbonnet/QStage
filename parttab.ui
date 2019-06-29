@@ -103,7 +103,7 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>230</x>
       <y>40</y>
       <width>41</width>
       <height>16</height>
@@ -116,7 +116,7 @@
    <widget class="QSpinBox" name="oitava">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>290</x>
       <y>40</y>
       <width>48</width>
       <height>23</height>
@@ -1086,9 +1086,9 @@
   <widget class="QGroupBox" name="groupBox_12">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>370</x>
      <y>170</y>
-     <width>191</width>
+     <width>211</width>
      <height>251</height>
     </rect>
    </property>
@@ -1098,8 +1098,8 @@
    <widget class="QSpinBox" name="afinacaoBruta">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>190</y>
+      <x>150</x>
+      <y>160</y>
       <width>48</width>
       <height>23</height>
      </rect>
@@ -1118,8 +1118,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>190</y>
-      <width>91</width>
+      <y>160</y>
+      <width>111</width>
       <height>16</height>
      </rect>
     </property>
@@ -1130,8 +1130,8 @@
    <widget class="QSpinBox" name="afinacaoFina">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>220</y>
+      <x>150</x>
+      <y>190</y>
       <width>48</width>
       <height>23</height>
      </rect>
@@ -1150,8 +1150,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>220</y>
-      <width>91</width>
+      <y>190</y>
+      <width>101</width>
       <height>16</height>
      </rect>
     </property>
@@ -1175,7 +1175,7 @@
    <widget class="QSpinBox" name="canal">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>150</x>
       <y>30</y>
       <width>48</width>
       <height>23</height>
@@ -1191,7 +1191,7 @@
    <widget class="QComboBox" name="saida">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>100</x>
       <y>70</y>
       <width>101</width>
       <height>22</height>
@@ -1234,6 +1234,32 @@
     </property>
     <property name="text">
      <string>Saída</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Voice Reserve</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="voiceReserve">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>220</y>
+      <width>46</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>64</number>
     </property>
    </widget>
   </widget>

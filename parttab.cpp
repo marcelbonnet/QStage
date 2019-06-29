@@ -45,11 +45,115 @@ PartTab::PartTab(int parte, MidiControl *jack, QWidget *parent) :
     }
 
 }
+
+void PartTab::conectarWidgets(){
+    connect(ui->patch,SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchChanged(int)));
+    connect(ui->oitava,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->minimo,SIGNAL(currentIndexChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->maximo,SIGNAL(currentIndexChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->canal,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->afinacaoFina,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->afinacaoBruta,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->level,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->pan,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->reverb,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->chorus,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->sendLevel,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->saida,SIGNAL(currentIndexChanged(int)), this, SLOT(onPartChanged(int)));
+    connect(ui->btnLocal,SIGNAL(clicked()), this, SLOT(onPartChanged()));
+
+}
+
+void PartTab::desconectarWidgets(){
+    disconnect(ui->patch,SIGNAL(currentIndexChanged(int)), this, SLOT(onPatchChanged(int)));
+    disconnect(ui->oitava,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->minimo,SIGNAL(currentIndexChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->maximo,SIGNAL(currentIndexChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->canal,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->afinacaoFina,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->afinacaoBruta,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->level,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->pan,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->reverb,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->chorus,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->sendLevel,SIGNAL(valueChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->saida,SIGNAL(currentIndexChanged(int)), this, SLOT(onPartChanged(int)));
+    disconnect(ui->btnLocal,SIGNAL(clicked()), this, SLOT(onPartChanged()));
+}
+
+void PartTab::enviarPacote(){
+    QList<int> *dados = new QList<int>();
+    int part0 = parte - 1;
+    Patch *patch = ui->patch->currentData().value<Patch*>();
+
+    int num2 = patch->getNumber() & 0xF;
+    int num1 = (patch->getNumber() >> 4) & 0xF;
+
+    //se o Patche foi feito no QStage, é preciso salvá-lo no Patch::USER primeiro
+    if(!patch->isRoland()){
+        //carregar o patch e salvar entre USER:112 e USER:128 (inclusive)
+        try {
+            QList<QString>* patchData = Controller::getPatch(patch->id);
+
+            int addr = 0x10000000 + (( (112 + part0) << 16));
+            qDebug() << "PATCH QStage" << QString("%1 %2").arg(addr, 0, 16).arg(addr + 0x00001000, 0, 16);
+            jack->txPacoteDataSetString(addr + 0x00001000, patchData->at(1));
+            jack->txPacoteDataSetString(addr + 0x00001200, patchData->at(2));
+            jack->txPacoteDataSetString(addr + 0x00001400, patchData->at(3));
+            jack->txPacoteDataSetString(addr + 0x00001600, patchData->at(4));
+            jack->txPacoteDataSetString(addr, patchData->at(0));//common
+        } catch (SQLite::Exception &e) {
+            qDebug() << e.what();
+        }
+        //aguardar um tempo para o XP-30 processar ?
+        usleep(100000);
+    }
+
+    //conferir os bytes hardcoded com os da versão anterior que envia byte a byte
+    qDebug() << "ENVIO DO PERFORMANCE PART #" << parte << QString("%1").arg(0x02000000 + ((part0 << 8) | 0x1000),0,16);
+    dados->append(1);//Receive Switch
+    dados->append(ui->canal->value()-1);
+    dados->append(patch->getGroupType());
+    dados->append(patch->getGroupId());
+    dados->append(num1);
+    dados->append(num2);
+
+    dados->append(ui->level->value());
+    dados->append(ui->pan->value());
+    dados->append(ui->afinacaoBruta->value()+48);
+    dados->append(ui->afinacaoFina->value()+50);
+    dados->append(ui->saida->currentIndex());
+    dados->append(ui->sendLevel->value());
+    dados->append(ui->chorus->value());
+    dados->append(ui->reverb->value());
+    dados->append(0);//Receive program change
+    dados->append(1);//Receive volume switch
+    dados->append(1);//Receive hold-1 switch
+    dados->append(ui->minimo->currentIndex());
+    dados->append(ui->maximo->currentIndex());
+    dados->append(ui->oitava->value()+3);
+    dados->append(ui->btnLocal->isChecked()? 1 : 0);
+    dados->append(1);//Transmit switch
+    dados->append(0);//Transmit bank select group
+    dados->append(8);//Transmit volume (2 bytes)
+    dados->append(0);//Transmit volume (2 bytes)
+
+    jack->txPacoteDataSet(0x01000000 + ((part0 << 8) | 0x1000), dados );
+}
+
+void PartTab::onPartChanged(){
+    enviarPacote();
+}
+
+void PartTab::onPartChanged(int i){
+    enviarPacote();
+}
+
+
 void PartTab::carregarPatches(QString categoria){
     QComboBox *patchui = ui->patch;
 
-    disconnect(patchui,SIGNAL(currentIndexChanged(int)), this
-               , SLOT(on_patch_currentIndexChanged(int)));
+    desconectarWidgets();
     patchui->clear();
     for(Patch* patch : *Controller::queryPatches()){
         if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0
@@ -58,9 +162,7 @@ void PartTab::carregarPatches(QString categoria){
 
         }
     }
-
-    connect(patchui,SIGNAL(currentIndexChanged(int)), this
-               , SLOT(on_patch_currentIndexChanged(int)));
+    conectarWidgets();
 }
 
 PartTab::~PartTab()
@@ -70,10 +172,7 @@ PartTab::~PartTab()
 
 void PartTab::setPatchSelected(int patchId) noexcept(false){
     QComboBox *patchui = ui->patch;
-
-    disconnect(patchui,SIGNAL(currentIndexChanged(int)), this
-               , SLOT(on_patch_currentIndexChanged(int)));
-
+    desconectarWidgets();
     bool achou = false;
     for(int i=0; i<patchui->count(); i++){
         Patch *patch = patchui->itemData(i).value<Patch*>();
@@ -83,88 +182,17 @@ void PartTab::setPatchSelected(int patchId) noexcept(false){
             break;
         }
     }
-
-    connect(patchui,SIGNAL(currentIndexChanged(int)), this
-               , SLOT(on_patch_currentIndexChanged(int)));
-
+    conectarWidgets();
     if(!achou)
         throw new QStageException(QString("Patch ID \"%1\" não existe na lista.").arg(patchId));
 }
 
-void PartTab::enviarMensagem(PerformancePart::Function function, int data){
-    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-    PerformancePart pp = PerformancePart(function, parte);
-    dados->append(
-                new SysExMessage(
-                    BaseAddress(BaseAddress::TempPerformance),
-                    pp,
-                    data));
-//    qDebug() << QString("Enviando Parte %1 -> %2 = %3").arg(parte).arg(pp.functionName).arg(QString::number(data,16));
-    jack->tx(dados);
-}
 
-void PartTab::enviar(){
-
-//    qDebug() << QString("====> Enviando todas as mensagens de Performance Part #%1").arg(parte);
-
-
-    QList<SysExMessage*> *dados = new QList<SysExMessage*>();
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MIDIChannel, parte),ui->canal->value() -1 ));
-
-    Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
-    if(ui->patch->currentIndex() > -1){
-//        qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
-        dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchGroupType, parte),patch->groupType));
-        dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchGroupID, parte),patch->groupId));
-        dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PatchNumber, parte),patch->number));
-    }
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartLevel, parte),ui->level->value()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartPan, parte),ui->pan->value()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartCoarseTune, parte),ui->afinacaoBruta->value() +48));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::PartFineTune, parte),ui->afinacaoFina->value() +50));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::OutputAssign, parte),ui->saida->currentIndex()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::MixEFXSendLevel, parte),ui->sendLevel->value()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ChorusSendLevel, parte),ui->chorus->value()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReverbSendLevel, parte),ui->reverb->value()));
-
-    //receive midis:
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReceiveProgramChangeSwitch, parte),1));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReceiveVolumeSwitch, parte),1));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::ReceiveHold1Switch, parte),1));
-
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::KeyboardRangeLower, parte),ui->minimo->currentIndex()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::KeyboardRangeUpper, parte),ui->maximo->currentIndex()));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::OctaveShift, parte),ui->oitava->value() + 3));
-    dados->append(new SysExMessage( BaseAddress(BaseAddress::TempPerformance), PerformancePart(PerformancePart::LocalSwitch, parte),ui->btnLocal->isChecked()? 1 : 0));
-
-    jack->tx(dados);
-
-
-//    tempoUltimoEnvio = QDateTime::currentDateTime();
-}
-
-void PartTab::on_patch_currentIndexChanged(int index)
-{
-	Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
-    if(ui->patch->currentIndex() > -1){
-//       qDebug() << "enviando PATCH" << QString::number(patch->groupType,16) << QString::number(patch->groupId, 16) << QString::number(patch->number,16);
-       enviarMensagem( PerformancePart::PatchGroupType, patch->groupType);
-       enviarMensagem( PerformancePart::PatchGroupID, patch->groupId);
-       enviarMensagem( PerformancePart::PatchNumber, patch->number);
-    }
+void PartTab::onPatchChanged(int index){
+    enviarPacote();
 }
 
 
-
-void PartTab::on_btnLocal_clicked()
-{
-//    if(ui->btnLocal->isChecked())
-//        ui->btnLocal->setText("LIGADO");
-//    else
-//        ui->btnLocal->setText("DESLIGADO");
-
-	enviarMensagem(PerformancePart::LocalSwitch, ui->btnLocal->isChecked()? 1 : 0 );
-}
 
 Patch *PartTab::getPatch(){
     Patch *patch = ui->patch->itemData(ui->patch->currentIndex()).value<Patch*>();
@@ -241,6 +269,14 @@ void PartTab::setPatch(Patch *p){
 }
 */
 
+int PartTab::getVoiceReserve(){
+    return ui->voiceReserve->value();
+}
+
+void PartTab::setVoiceReserve(int i){
+    ui->voiceReserve->setValue(i);
+}
+
 
 void PartTab::setRegiaoMin(int i){
     ui->minimo->setCurrentIndex(i);
@@ -282,85 +318,7 @@ void PartTab::setLocalOn(int i){
     ui->btnLocal->setChecked( i == 1 ? true : false);
 }
 
-void PartTab::on_level_valueChanged()
-{
-    enviarMensagem(PerformancePart::PartLevel, ui->level->value() );
-    //issue #18
-    on_pan_valueChanged();
-}
 
-void PartTab::on_sendLevel_valueChanged()
-{
-    enviarMensagem(PerformancePart::MixEFXSendLevel, ui->sendLevel->value() );
-    //issue #18
-    on_chorus_valueChanged();
-}
-
-void PartTab::on_reverb_valueChanged()
-{
-    enviarMensagem(PerformancePart::ReverbSendLevel, ui->reverb->value() );
-}
-
-void PartTab::on_chorus_valueChanged()
-{
-    enviarMensagem(PerformancePart::ChorusSendLevel, ui->chorus->value() );
-    //issue #18
-    on_reverb_valueChanged();
-}
-
-void PartTab::on_pan_valueChanged()
-{
-    enviarMensagem(PerformancePart::PartPan, ui->pan->value() );
-    //issue #18
-    on_afinacaoBruta_valueChanged();
-}
-
-void PartTab::on_canal_valueChanged(int arg1)
-{
-    enviarMensagem(PerformancePart::MIDIChannel, ui->canal->value()-1 );
-}
-
-void PartTab::on_minimo_currentIndexChanged(int index)
-{
-    enviarMensagem(PerformancePart::KeyboardRangeLower, ui->minimo->currentIndex() );
-    //issue #18
-    on_maximo_currentIndexChanged(ui->maximo->currentIndex());
-
-}
-
-void PartTab::on_maximo_currentIndexChanged(int index)
-{
-    enviarMensagem(PerformancePart::KeyboardRangeUpper, ui->maximo->currentIndex() );
-    //issue #18
-    on_oitava_valueChanged();
-
-}
-
-void PartTab::on_oitava_valueChanged()
-{
-    enviarMensagem(PerformancePart::OctaveShift, ui->oitava->value() + 3);
-    //issue #18
-    on_btnLocal_clicked();
-}
-
-void PartTab::on_afinacaoBruta_valueChanged()
-{
-    enviarMensagem(PerformancePart::PartCoarseTune, ui->afinacaoBruta->value() +48 );
-    //issue #18
-    on_afinacaoFina_valueChanged();
-}
-
-void PartTab::on_afinacaoFina_valueChanged()
-{
-    enviarMensagem(PerformancePart::PartFineTune, ui->afinacaoFina->value() +50 );
-}
-
-void PartTab::on_saida_currentIndexChanged(int index)
-{
-    enviarMensagem(PerformancePart::OutputAssign, ui->saida->currentIndex() );
-    //issue #18
-    on_sendLevel_valueChanged();
-}
 
 void PartTab::on_btn_clicked()
 {

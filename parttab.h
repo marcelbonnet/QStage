@@ -18,11 +18,20 @@ class PartTab : public QWidget
     Q_OBJECT
 
 public:
+    /**
+     * @brief PartTab
+     * @param parte de recebe de 1 a 16
+     * @param jack
+     * @param parent
+     */
     explicit PartTab(int parte, MidiControl *jack, QWidget *parent = 0);
     ~PartTab();
 
-    void enviarMensagem(enum PerformancePart::Function func, int data);
-    void enviar();
+
+    void conectarWidgets();
+    void desconectarWidgets();
+    void enviarPacote();
+
     void carregarPatches(QString categoria="");
     void setPatchSelected(int patchId) noexcept(false);
 
@@ -41,6 +50,7 @@ public:
     int getChorusLevel();
     int getReverbLevel();
     int isLocalOn();
+    int getVoiceReserve();
 
     //void     setPatch(Patch *p);
     void     setPatch(int i);
@@ -57,40 +67,28 @@ public:
     void     setChorusLevel(int i);
     void     setReverbLevel(int i);
     void     setLocalOn(int i);
-
+    void     setVoiceReserve(int i);
 
 
 private slots:
-    void on_patch_currentIndexChanged(int index);
-
-    void on_btnLocal_clicked();
-
-    void on_level_valueChanged();
-
-    void on_sendLevel_valueChanged();
-
-    void on_reverb_valueChanged();
-
-    void on_chorus_valueChanged();
-
-    void on_pan_valueChanged();
-
-    void on_canal_valueChanged(int arg1);
-
-    void on_minimo_currentIndexChanged(int index);
-
-    void on_maximo_currentIndexChanged(int index);
-
-    void on_oitava_valueChanged();
-
-    void on_afinacaoBruta_valueChanged();
-
-    void on_afinacaoFina_valueChanged();
-
-    void on_saida_currentIndexChanged(int index);
+    /**
+     * @brief quando há uma mudança na configuração da parte que deve ser transmitida ao XP-30
+     */
+    void onPartChanged();
+    /**
+     * @brief quando há uma mudança na configuração da parte que deve ser transmitida ao XP-30
+     */
+    void onPartChanged(int);
+    /**
+     * @brief disparado quando o patch da combo box é alterado
+     * @param index
+     */
+    void onPatchChanged(int index);
 
 
-
+/*
+ * Botões de filtrar categoria de patches
+ * */
     void on_btn_clicked();
 
     void on_btn_2_clicked();
@@ -167,6 +165,7 @@ private slots:
 
     void on_btn_38_clicked();
 
+    //copia os valores desta Part para outra (aba)
     void on_partUtilDestinoBtn_clicked();
 
 signals:

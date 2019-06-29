@@ -92,7 +92,7 @@
           <widget class="QWidget" name="scrollAreaWidgetContents">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>-78</x>
              <y>0</y>
              <width>1126</width>
              <height>835</height>
@@ -1128,11 +1128,32 @@
                <string>Common</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_14">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_55">
+               <item row="0" column="8">
+                <widget class="QLabel" name="label_58">
                  <property name="text">
-                  <string>Nome</string>
+                  <string>Regiões de Notas</string>
                  </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QLabel" name="label_56">
+                 <property name="text">
+                  <string>Tempo</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="7">
+                <widget class="QComboBox" name="perfMode">
+                 <item>
+                  <property name="text">
+                   <string>Layer</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Single</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item row="0" column="1">
@@ -1145,14 +1166,21 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <widget class="QLabel" name="label_56">
+               <item row="0" column="6">
+                <widget class="QLabel" name="label_57">
                  <property name="text">
-                  <string>Tempo</string>
+                  <string>Modo</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="3">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_55">
+                 <property name="text">
+                  <string>Nome</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="5">
                 <widget class="QSpinBox" name="perfTempo">
                  <property name="minimum">
                   <number>20</number>
@@ -1168,35 +1196,17 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="4">
-                <widget class="QLabel" name="label_57">
+               <item row="0" column="10">
+                <widget class="QPushButton" name="perfBtnEnviar">
+                 <property name="accessibleName">
+                  <string>toggle-btn</string>
+                 </property>
                  <property name="text">
-                  <string>Modo</string>
+                  <string>ENVIAR</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="5">
-                <widget class="QComboBox" name="perfMode">
-                 <item>
-                  <property name="text">
-                   <string>Layer</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Single</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="0" column="6">
-                <widget class="QLabel" name="label_58">
-                 <property name="text">
-                  <string>Regiões de Notas</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="7">
+               <item row="0" column="9">
                 <widget class="QPushButton" name="perfIntervaloNotas">
                  <property name="accessibleName">
                   <string>toggle-btn</string>
@@ -1212,13 +1222,20 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="8">
-                <widget class="QPushButton" name="perfBtnEnviar">
-                 <property name="accessibleName">
-                  <string>toggle-btn</string>
-                 </property>
+               <item row="0" column="2">
+                <widget class="QLabel" name="label">
                  <property name="text">
-                  <string>ENVIAR</string>
+                  <string>Clock</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QPushButton" name="btnClock">
+                 <property name="text">
+                  <string>PERFORMANCE</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>

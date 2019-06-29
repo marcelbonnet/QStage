@@ -344,7 +344,7 @@ void MidiControl::queue_new_message(int b0, int b1, int b2)
     }
 
     ev.time = jack_frame_time(jack_client);
-    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
+//    printf("%X %X %X\n", ev.data[0], ev.data[1], ev.data[2]);
     queue_message(&ev);
 
 }
@@ -402,13 +402,15 @@ void MidiControl::txPacoteDataSetString(int addr, QString lista){
     for(QString c : lista.split(" ") )
         data->append( c.toInt() );
 
-    if(addr >= 0x03001000 && addr <= 0x03001600){
+    //Endereços de Patch Tone: envio do byte 129 num pacote separado
+    if((addr >= 0x03001000 && addr <= 0x03001600) || addr >= 0x10000000){
         QList<int> *data2 = new QList<int>();
         data2->append(data->last());
-        txPacoteDataSet(addr + 0x00000100, data2);
+        txPacoteDataSet(addr + 0x00000100, data2);//byte 129
         data->removeLast();
     }
 
+    //faz o envio de 128 bytes
     txPacoteDataSet(addr, data);
 }
 
@@ -418,28 +420,29 @@ void MidiControl::txPacoteDataSet(int addr, QList<int> *data){
     int a2 = addr >> 16 & 0xFF;
     int a1 = addr >> 24 & 0xFF;
 
-
-
     //início da mensagem DS
     queue_new_message(0xF0, 0x41, 0x10 );
     queue_new_message(0x6A, 0x12,  a1);
     queue_new_message(a2, a3, a4 );
 
-
-    for (int i=0; i<data->length(); i+=3) {
+    bool msgEncerrada = false;
+    for(int i=0; i<data->length(); i+=3){
         if(i+2 < data->length()){
             queue_new_message(data->at(i), data->at(i+1), data->at(i+2));
         } else {
             if(i+1 >= data->length()){
-                queue_new_message(data->at(i), -1, -1);
+                queue_new_message(data->at(i), calcularChecksum(addr, data), 0xf7);
+                msgEncerrada = true;
             } else {
-                queue_new_message(data->at(i), data->at(i+1), -1);
+                queue_new_message(data->at(i), data->at(i+1), calcularChecksum(addr, data) );
+                queue_new_message(0xf7, -1, -1);
+                msgEncerrada = true;
             }
-
         }
     }
 
-    queue_new_message(calcularChecksum(addr, data), 0xf7, -1);
+    if(!msgEncerrada)
+        queue_new_message(calcularChecksum(addr, data), 0xf7, -1);
     data->clear();
 }
 
