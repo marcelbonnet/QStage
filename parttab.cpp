@@ -84,10 +84,11 @@ void PartTab::desconectarWidgets(){
 void PartTab::enviarPacote(){
     QList<int> *dados = new QList<int>();
     int part0 = parte - 1;
+    int userNumber = 112 + part0;
     Patch *patch = ui->patch->currentData().value<Patch*>();
 
-    int num2 = patch->getNumber() & 0xF;
-    int num1 = (patch->getNumber() >> 4) & 0xF;
+    int num2 = patch->isRoland()? patch->getNumber() & 0xF : userNumber & 0xF;
+    int num1 = patch->isRoland()? (patch->getNumber() >> 4) & 0xF : (userNumber >> 4) & 0xF;
 
     //se o Patche foi feito no QStage, é preciso salvá-lo no Patch::USER primeiro
     if(!patch->isRoland()){
@@ -95,7 +96,7 @@ void PartTab::enviarPacote(){
         try {
             QList<QString>* patchData = Controller::getPatch(patch->id);
 
-            int addr = 0x10000000 + (( (112 + part0) << 16));
+            int addr = 0x11000000 + (( (userNumber) << 16));
             qDebug() << "PATCH QStage" << QString("%1 %2").arg(addr, 0, 16).arg(addr + 0x00001000, 0, 16);
             jack->txPacoteDataSetString(addr + 0x00001000, patchData->at(1));
             jack->txPacoteDataSetString(addr + 0x00001200, patchData->at(2));
@@ -113,8 +114,8 @@ void PartTab::enviarPacote(){
     qDebug() << "ENVIO DO PERFORMANCE PART #" << parte << QString("%1").arg(0x02000000 + ((part0 << 8) | 0x1000),0,16);
     dados->append(1);//Receive Switch
     dados->append(ui->canal->value()-1);
-    dados->append(patch->getGroupType());
-    dados->append(patch->getGroupId());
+    dados->append(patch->isRoland() ? patch->getGroupType() : 0);
+    dados->append(patch->isRoland() ? patch->getGroupId() : 1);
     dados->append(num1);
     dados->append(num2);
 
