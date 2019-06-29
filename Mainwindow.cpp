@@ -584,7 +584,7 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
     }
     conf->endGroup();
 
-//    on_perfBtnEnviar_clicked();
+    on_perfBtnEnviar_clicked();
 
 
     for(int i=0 ; i<=15; i++){
