@@ -116,10 +116,6 @@ public:
     void queue_message(struct MidiControl::MidiMessage *ev);
     void queue_new_message(int b0, int b1, int b2);
 
-
-
-    void transmitir();//envia as mensagens da QList para queue_new_message. Esvazia a QList no final
-
     void tx(QList<SysExMessage*> *sxs);
     int calcularChecksum(int endereco, QList<int> *data);
     int calcularChecksum(int endereco, int dado);

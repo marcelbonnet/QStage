@@ -6,7 +6,6 @@
 #include <QException>
 #include <QList>
 #include "SysExMessage.h"
-#include "PerformancePart.h"
 #include "baseaddress.h"
 #include "defaults.h"
 #include "QStageException.h"
@@ -90,7 +89,7 @@ void PartTab::enviarPacote(){
     int num2 = patch->isRoland()? patch->getNumber() & 0xF : userNumber & 0xF;
     int num1 = patch->isRoland()? (patch->getNumber() >> 4) & 0xF : (userNumber >> 4) & 0xF;
 
-    //se o Patche foi feito no QStage, é preciso salvá-lo no Patch::USER primeiro
+    //se o Patch foi feito no QStage, é preciso salvá-lo no Patch::USER primeiro
     if(!patch->isRoland()){
         //carregar o patch e salvar entre USER:112 e USER:128 (inclusive)
         try {

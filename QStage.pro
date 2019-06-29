@@ -53,11 +53,8 @@ SOURCES += main.cpp\
     dialogdocumenteditor.cpp \
     Controller.cpp \
     SysExMessage.cpp \
-    DataSet1.cpp \
     baseaddress.cpp \
     SystemCommon.cpp \
-    PerformanceCommon.cpp \
-    PerformancePart.cpp \
     PatchUI.cpp \
     MainWindow2.cpp \
     Waveform.cpp \
@@ -66,7 +63,6 @@ SOURCES += main.cpp\
     FormSerialMidi.cpp \
     QStageException.cpp \
     DialogTemaEditor.cpp \
-    DataRequest.cpp \
     DataSysExType.cpp \
     WorkerSysExRequest.cpp \
     defaults.cpp
@@ -87,11 +83,8 @@ HEADERS  += Mainwindow.h \
     dialogdocumenteditor.h \
     Controller.h \
     SysExMessage.h \
-    DataSet1.h \
     baseaddress.h \
     SystemCommon.h \
-    PerformanceCommon.h \
-    PerformancePart.h \
     PatchUI.h \
     defaults.h \
     MainWindow2.h \
@@ -101,7 +94,6 @@ HEADERS  += Mainwindow.h \
     FormSerialMidi.h \
     QStageException.h \
     DialogTemaEditor.h \
-    DataRequest.h \
     DataSysExType.h \
     WorkerSysExRequest.h
 
