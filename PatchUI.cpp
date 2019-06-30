@@ -1909,23 +1909,11 @@ void PatchUI::on_perfEfeito_currentIndexChanged(int index)
 
 void PatchUI::on_pushButton_clicked(){
 
-//FUNCIONA:
-
-    try {
-        QList<QString>* patch = Controller::getPatch(ui->spinBox->value());
-
-        jack->txPacoteDataSetString(0x03001000, patch->at(1));
-        jack->txPacoteDataSetString(0x03001200, patch->at(2));
-        jack->txPacoteDataSetString(0x03001400, patch->at(3));
-        jack->txPacoteDataSetString(0x03001600, patch->at(4));
-        jack->txPacoteDataSetString(0x03000000, patch->at(0));//common
-    } catch (SQLite::Exception &e) {
-        qDebug() << e.what();
-    }
-
-
-    qDebug() << "FIM TESTE";
-    return;
+    /*
+     * VOU DEIXAR ESSE CÓDIGO AQUI ATÉ TER CERTEZA SE PRECISO FAZER
+     * OUTRO DUMP DO TECLADO (DOS PERFORM:USER)
+     *
+     **/
 
     int msg = 0;
     //cada grupo de pacotes para compor o dump de um patch

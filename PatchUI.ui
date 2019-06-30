@@ -39,7 +39,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-29</y>
+            <y>0</y>
             <width>1284</width>
             <height>1208</height>
            </rect>
@@ -795,7 +795,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-183</y>
+            <y>0</y>
             <width>1284</width>
             <height>667</height>
            </rect>
@@ -1592,78 +1592,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>Page</string>
-      </attribute>
-      <widget class="QPushButton" name="pushButton">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>40</y>
-         <width>97</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>PushButton</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="dataSize">
-       <property name="geometry">
-        <rect>
-         <x>380</x>
-         <y>40</y>
-         <width>131</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="maximum">
-        <number>127000</number>
-       </property>
-       <property name="value">
-        <number>127</number>
-       </property>
-       <property name="displayIntegerBase">
-        <number>16</number>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="startAddr">
-       <property name="geometry">
-        <rect>
-         <x>220</x>
-         <y>40</y>
-         <width>131</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="maximum">
-        <number>911127000</number>
-       </property>
-       <property name="value">
-        <number>127</number>
-       </property>
-       <property name="displayIntegerBase">
-        <number>16</number>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="spinBox">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>40</y>
-         <width>46</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>9999</number>
-       </property>
-      </widget>
      </widget>
     </widget>
    </item>

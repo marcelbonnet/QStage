@@ -1523,7 +1523,7 @@ void MainWindow::on_actionUSB_Serial_MIDI_triggered()
 {
     try {
         smidi->inicializarCliente();
-        smidi->conectar(getConfig("port")); //auto conexão na porta preferncial configurada
+        smidi->conectar(getConfig("default-midi-device-input")); //auto conexão na porta preferncial configurada
         jack->startSerialMidi(smidi);
     } catch (QStageException *e) {
         QMessageBox msg;
