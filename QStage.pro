@@ -56,7 +56,6 @@ SOURCES += main.cpp\
     baseaddress.cpp \
     SystemCommon.cpp \
     PatchUI.cpp \
-    MainWindow2.cpp \
     Waveform.cpp \
     PatchTone.cpp \
     WorkerSerialMidi.cpp \
@@ -87,7 +86,6 @@ HEADERS  += Mainwindow.h \
     SystemCommon.h \
     PatchUI.h \
     defaults.h \
-    MainWindow2.h \
     Waveform.h \
     PatchTone.h \
     WorkerSerialMidi.h \
@@ -106,7 +104,6 @@ FORMS    += Mainwindow.ui \
     dialogmusicaexistente.ui \
     dialogdocumenteditor.ui \
     PatchUI.ui \
-    MainWindow2.ui \
     FormSerialMidi.ui \
     DialogTemaEditor.ui
 
