@@ -17,6 +17,7 @@
 #include "SysExMessage.h"
 #include "FormSerialMidi.h"
 #include "PatchUI.h"
+#include "FormQStudio.h"
 
 namespace Ui {
 class MainWindow;
@@ -133,6 +134,7 @@ private:
     QString configMusicasDir;
     QString configSysExDir;
     FormSerialMidi *smidi;
+    FormQStudio *qst;
 
     /**
      * @brief carregarHTML carrega o HTML no Widget

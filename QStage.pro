@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     DialogTemaEditor.cpp \
     DataSysExType.cpp \
     WorkerSysExRequest.cpp \
-    defaults.cpp
+    defaults.cpp \
+    FormQStudio.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -93,7 +94,8 @@ HEADERS  += Mainwindow.h \
     QStageException.h \
     DialogTemaEditor.h \
     DataSysExType.h \
-    WorkerSysExRequest.h
+    WorkerSysExRequest.h \
+    FormQStudio.h
 
 
 FORMS    += Mainwindow.ui \
@@ -105,7 +107,8 @@ FORMS    += Mainwindow.ui \
     dialogdocumenteditor.ui \
     PatchUI.ui \
     FormSerialMidi.ui \
-    DialogTemaEditor.ui
+    DialogTemaEditor.ui \
+    FormQStudio.ui
 
 
 DISTFILES += \

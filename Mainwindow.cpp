@@ -170,6 +170,9 @@ MainWindow::MainWindow(QWidget *parent) :
     smidi = new FormSerialMidi(this);
     tab->addTab(smidi, "PEDAL");
 
+    qst = new FormQStudio(this);
+    tab->addTab(qst, "QStudio");
+
     //carrega playlists e a primeira lista de músicas da playlist
     this->playlistRecarregar();
 

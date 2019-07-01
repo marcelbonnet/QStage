@@ -2,8 +2,6 @@
 #include <QApplication>
 #include <QSplashScreen>
 
-//#include <smf.h>
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -18,5 +16,4 @@ int main(int argc, char *argv[])
     splash.finish(&window);
     return app.exec();
 
-    //smf_load("/studio/OLD/Estudo/Paul\ McCartney\ MIDIs/LondonTown.mid");
 }
