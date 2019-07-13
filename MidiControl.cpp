@@ -533,3 +533,5 @@ void MidiControl::startSerialMidi(FormSerialMidi *smidi){
     QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 }
+
+

@@ -15,7 +15,6 @@ TEMPLATE = app
 #CONFIG += debug_and_release
 CONFIG += release
 
-
 QMAKE_CXXFLAGS += `pkgconf -cflags jack`
 #QMAKE_CXXFLAGS += `pkgconf --cflags glib-2.0`
 #QMAKE_LFLAGS += `pkgconf -libs jack` -l/usr/local/lib/libjackcpp.a
@@ -65,7 +64,9 @@ SOURCES += main.cpp\
     DataSysExType.cpp \
     WorkerSysExRequest.cpp \
     defaults.cpp \
-    FormQStudio.cpp
+    FormQStudio.cpp \
+    Cliente.cpp \
+    ClientePorta.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -95,7 +96,9 @@ HEADERS  += Mainwindow.h \
     DialogTemaEditor.h \
     DataSysExType.h \
     WorkerSysExRequest.h \
-    FormQStudio.h
+    FormQStudio.h \
+    Cliente.h \
+    ClientePorta.h
 
 
 FORMS    += Mainwindow.ui \
