@@ -330,6 +330,7 @@ void PatchUI::onPatchSelected(int i){
         Waveform *w = waveIdList->at(toneLoop)->itemData(k).value<Waveform*>();
         if(w->groupType == wgt && w->groupId == wgid && w->number == wnum){
             waveIdList->at(toneLoop)->setCurrentIndex(k);
+            waveIdList->at(toneLoop)->setToolTip(waveIdList->at(toneLoop)->currentText());
             break;
         }
     }
@@ -382,7 +383,7 @@ void PatchUI::onPatchSelected(int i){
     fineTuneList->at(toneLoop)->setValue(t.at(62).toInt()-50);
     randomPitchDepthList->at(toneLoop)->setCurrentIndex(t.at(63).toInt());
     pitchKeyfollowList->at(toneLoop)->setCurrentIndex(t.at(64).toInt());
-    pitchEnvelopeDepthList->at(toneLoop)->setValue(t.at(65).toInt());
+    pitchEnvelopeDepthList->at(toneLoop)->setValue(t.at(65).toInt()-12);//issue #25
     pitchEnvelopeVelocitySensList->at(toneLoop)->setValue(t.at(66).toInt());
     pitchEnvelopeVelocityTime1List->at(toneLoop)->setCurrentIndex(t.at(67).toInt());
     pitchEnvelopeVelocityTime4List->at(toneLoop)->setCurrentIndex(t.at(68).toInt());
@@ -2302,7 +2303,7 @@ void PatchUI::on_pushButton_clicked(){
 QString PatchUI::formatarNomeWaveform(Waveform *w){
     QString nome = QString("%3 [%1 %2] %4")
             .arg(w->waveGroup)
-            .arg(QString::number(w->number))
+            .arg(QString::number(w->number+1))//issue #25 , na VIEW deve ser Indexado em 1. No Banco é INDEXADO em ZERO.
             .arg(w->nome)
             .arg((w->oneShot == 1? "*" : ""))
             ;
