@@ -150,17 +150,31 @@ void PartTab::onPartChanged(int i){
 }
 
 
-void PartTab::carregarPatches(QString categoria){
+void PartTab::carregarPatches(int categoria){
     QComboBox *patchui = ui->patch;
 
     desconectarWidgets();
     patchui->clear();
-    for(Patch* patch : *Controller::queryPatches()){
-        if(QString::compare(categoria, QString(""), Qt::CaseInsensitive) == 0
-                || QString::compare(categoria, patch->categoria, Qt::CaseInsensitive ) == 0 ){
-            patchui->addItem(patch->getFullName(), QVariant::fromValue(patch));
+    QList<Patch*>*  lista;
 
-        }
+    switch (categoria) {
+    case -1:
+        lista = Controller::queryPatches();
+        break;
+    case -2:
+        lista = Controller::queryPatches(false);
+        break;
+    case -3:
+        lista = Controller::queryPatches(true);
+        break;
+    default:
+        lista = Controller::queryPatches(categoria);
+    }
+
+
+
+    for(Patch* patch : *lista){
+        patchui->addItem(patch->getFullName(), QVariant::fromValue(patch));
     }
     conectarWidgets();
 }
@@ -322,192 +336,192 @@ void PartTab::setLocalOn(int i){
 
 void PartTab::on_btn_clicked()
 {
-    carregarPatches("PNO");
+    carregarPatches(Defaults::getCategorias().indexOf("AC PNO"));
 }
 
 void PartTab::on_btn_2_clicked()
 {
-    carregarPatches("EP");
+    carregarPatches(Defaults::getCategorias().indexOf("E PNO"));
 }
 
 void PartTab::on_btn_3_clicked()
 {
-    carregarPatches("KEY");
+    carregarPatches(Defaults::getCategorias().indexOf("KEYBOARD"));
 }
 
 void PartTab::on_btn_4_clicked()
 {
-    carregarPatches("BELL");
+    carregarPatches(Defaults::getCategorias().indexOf("BELL"));
 }
 
 void PartTab::on_btn_5_clicked()
 {
-    carregarPatches("MLT");
+    carregarPatches(Defaults::getCategorias().indexOf("MALLET"));
 }
 
 void PartTab::on_btn_6_clicked()
 {
-    carregarPatches("ORG");
+    carregarPatches(Defaults::getCategorias().indexOf("ORGAN"));
 }
 
 void PartTab::on_btn_8_clicked()
 {
-    carregarPatches("ACD");
+    carregarPatches(Defaults::getCategorias().indexOf("ACCORDION"));
 }
 
 void PartTab::on_btn_7_clicked()
 {
-    carregarPatches("HRM");
+    carregarPatches(Defaults::getCategorias().indexOf("HARMONICA"));
 }
 
 void PartTab::on_btn_9_clicked()
 {
-    carregarPatches("AGT");
+    carregarPatches(Defaults::getCategorias().indexOf("AC GUITAR"));
 }
 
 void PartTab::on_btn_10_clicked()
 {
-    carregarPatches("EGT");
+    carregarPatches(Defaults::getCategorias().indexOf( "EL GUITAR" ));
 }
 
 void PartTab::on_btn_11_clicked()
 {
-    carregarPatches("DGT");
+    carregarPatches(Defaults::getCategorias().indexOf( "DIST GUITAR"));
 }
 
 void PartTab::on_btn_12_clicked()
 {
-    carregarPatches("BS");
+    carregarPatches(Defaults::getCategorias().indexOf( "BASS" ));
 }
 
 void PartTab::on_btn_13_clicked()
 {
-    carregarPatches("SBS");
+    carregarPatches(Defaults::getCategorias().indexOf( "SYNTH BASS" ));
 }
 
 void PartTab::on_btn_14_clicked()
 {
-    carregarPatches("STR");
+    carregarPatches(Defaults::getCategorias().indexOf( "STRINGS" ));
 }
 
 void PartTab::on_btn_15_clicked()
 {
-    carregarPatches("ORC");
+    carregarPatches(Defaults::getCategorias().indexOf("ORCHESTRA" ));
 }
 
 void PartTab::on_btn_16_clicked()
 {
-    carregarPatches("HIT");
+    carregarPatches(Defaults::getCategorias().indexOf( "HIT/STAB" ));
 }
 
 void PartTab::on_btn_17_clicked()
 {
-    carregarPatches("WND");
+    carregarPatches(Defaults::getCategorias().indexOf("WIND" ));
 }
 
 void PartTab::on_btn_19_clicked()
 {
-    carregarPatches("FLT");
+    carregarPatches(Defaults::getCategorias().indexOf("FLUTE" ));
 }
 
 void PartTab::on_btn_18_clicked()
 {
-    carregarPatches("BRS");
+    carregarPatches(Defaults::getCategorias().indexOf(  "AC BRASS"));
 }
 
 void PartTab::on_btn_20_clicked()
 {
-    carregarPatches("SBR");
+    carregarPatches(Defaults::getCategorias().indexOf( "SYNTH BRASS" ));
 }
 
 void PartTab::on_btn_21_clicked()
 {
-    carregarPatches("SAX");
+    carregarPatches(Defaults::getCategorias().indexOf( "SAX" ));
 }
 
 void PartTab::on_btn_22_clicked()
 {
-    carregarPatches("HLD");
+    carregarPatches(Defaults::getCategorias().indexOf( "HARD LEAD" ));
 }
 
 void PartTab::on_btn_23_clicked()
 {
-    carregarPatches("SLD");
+    carregarPatches(Defaults::getCategorias().indexOf( "SOFT LEAD" ));
 }
 
 void PartTab::on_btn_24_clicked()
 {
-    carregarPatches("TEK");
+    carregarPatches(Defaults::getCategorias().indexOf(  "TECHNO SYNTH"));
 }
 
 void PartTab::on_btn_25_clicked()
 {
-    carregarPatches("PLS");
+    carregarPatches(Defaults::getCategorias().indexOf( "PULSATING" ));
 }
 
 void PartTab::on_btn_27_clicked()
 {
-    carregarPatches("FX");
+    carregarPatches(Defaults::getCategorias().indexOf( "SYNTH EFX"));
 }
 
 void PartTab::on_btn_26_clicked()
 {
-    carregarPatches("SYN");
+    carregarPatches(Defaults::getCategorias().indexOf("OTHER SYNTH" ));
 }
 
 void PartTab::on_btn_28_clicked()
 {
-    carregarPatches("BPD");
+    carregarPatches(Defaults::getCategorias().indexOf( "BRIGHT PAD" ));
 }
 
 void PartTab::on_btn_29_clicked()
 {
-    carregarPatches("SPD");
+    carregarPatches(Defaults::getCategorias().indexOf( "SOFT PAD" ));
 }
 
 void PartTab::on_btn_30_clicked()
 {
-    carregarPatches("VOX");
+    carregarPatches(Defaults::getCategorias().indexOf("VOX" ));
 }
 
 void PartTab::on_btn_31_clicked()
 {
-    carregarPatches("PLK");
+    carregarPatches(Defaults::getCategorias().indexOf("PLUCKED" ));
 }
 
 void PartTab::on_btn_32_clicked()
 {
-    carregarPatches("ETH");
+    carregarPatches(Defaults::getCategorias().indexOf("ETHNIC" ));
 }
 
 void PartTab::on_btn_33_clicked()
 {
-    carregarPatches("FRT");
+    carregarPatches(Defaults::getCategorias().indexOf("FRETTED" ));
 }
 
 void PartTab::on_btn_34_clicked()
 {
-    carregarPatches("PRC");
+    carregarPatches(Defaults::getCategorias().indexOf( "PERCUSSION" ));
 }
 
 void PartTab::on_btn_35_clicked()
 {
-    carregarPatches("SFX");
+    carregarPatches(Defaults::getCategorias().indexOf("SOUND FX" ));
 }
 
 void PartTab::on_btn_36_clicked()
 {
-    carregarPatches("BTS");
+    carregarPatches(Defaults::getCategorias().indexOf( "BEAT/GROOVE" ));
 }
 
 void PartTab::on_btn_37_clicked()
 {
-    carregarPatches("DRM");
+    carregarPatches(Defaults::getCategorias().indexOf(  "DRUMS"));
 }
 
 void PartTab::on_btn_38_clicked()
 {
-    carregarPatches("CMB");
+    carregarPatches(Defaults::getCategorias().indexOf( "COMBINATION"));
 }
 
 void PartTab::on_partUtilDestinoBtn_clicked()
@@ -518,4 +532,19 @@ void PartTab::on_partUtilDestinoBtn_clicked()
                 //destino
                 ui->partUtilDestino->currentData().toInt()
                 );
+}
+
+void PartTab::on_btnQStage_clicked()
+{
+    carregarPatches(-2);
+}
+
+void PartTab::on_btnRoland_clicked()
+{
+    carregarPatches(-3);
+}
+
+void PartTab::on_btnTodos_clicked()
+{
+    carregarPatches(-1);
 }

@@ -228,6 +228,30 @@ QList<Patch*>* Controller::queryPatches(bool r) noexcept(false){
     return lista;
 }
 
+QList<Patch*>* Controller::queryPatches(int categoria) noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    SQLite::Statement   query(db, "SELECT patch_id, patchGroupType, patchGroupId, patchNumber, name, roland, categoria FROM patches WHERE categoria = ? ");
+
+    query.bind(1, categoria );
+
+    QList<Patch*>* lista = new QList<Patch*>();
+    while (query.executeStep())
+    {
+        int id = query.getColumn(0);
+        int gt = query.getColumn(1);
+        int gid = query.getColumn(2);
+        int number = query.getColumn(3);
+        const char* nome = query.getColumn(4);
+        int roland = query.getColumn(5);
+        int categid = query.getColumn(6);
+
+        Patch* p = new Patch(id, nome, gt, gid, number, (roland == 1), categid );
+        lista->append(p);
+
+    }
+    return lista;
+}
+
 int Controller::insertPatch(int groupType, int groupId, int number, QString name, QString common
                             , QString tone0, QString tone1, QString tone2, QString tone3, int categoria) noexcept(false)  {
     SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );

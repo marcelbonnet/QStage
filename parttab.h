@@ -31,7 +31,7 @@ public:
     void desconectarWidgets();
     void enviarPacote();
 
-    void carregarPatches(QString categoria="");
+    void carregarPatches(int categoria=-1);
     void setPatchSelected(int patchId) noexcept(false);
 
     Patch *getPatch();
@@ -166,6 +166,12 @@ private slots:
 
     //copia os valores desta Part para outra (aba)
     void on_partUtilDestinoBtn_clicked();
+
+    void on_btnQStage_clicked();
+
+    void on_btnRoland_clicked();
+
+    void on_btnTodos_clicked();
 
 signals:
     void partUtilsCopiarPerformancePart(int, int);

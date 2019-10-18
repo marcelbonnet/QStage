@@ -1305,11 +1305,11 @@
      <x>10</x>
      <y>10</y>
      <width>101</width>
-     <height>61</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="title">
-    <string>TODOS</string>
+    <string>PATCHES</string>
    </property>
    <widget class="QPushButton" name="btnRoland">
     <property name="geometry">
@@ -1347,6 +1347,19 @@
     </property>
     <property name="text">
      <string>Q</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnTodos">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>55</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TODOS</string>
     </property>
    </widget>
   </widget>

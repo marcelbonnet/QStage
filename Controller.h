@@ -57,6 +57,8 @@ public:
      */
     static QList<Patch*>* queryPatches(bool roland) noexcept(false);
 
+    static QList<Patch*>* queryPatches(int categoria) noexcept(false);
+
     /**
      * @brief Persiste um Patch no SQLite e retorna ID
      * @param groupType
