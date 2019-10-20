@@ -301,6 +301,72 @@ int Controller::updatePatch(int id, int groupType, int groupId, int number, QStr
 
 }
 
+QList<Arpeggio*>* Controller::queryArpeggioStyles() noexcept(false) {
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    //ORDER BY styleVal : ordenará os números como String . vou deixar na ordem da inserção dos dados
+    SQLite::Statement   query(db, "SELECT styleVal, style FROM roland_arpeggio ");
+
+    QList<Arpeggio*>* rs = new QList<Arpeggio*>();
+    while (query.executeStep())
+    {
+        int val             = QString(query.getColumn(0)).toInt();
+        const char* label   = query.getColumn(1);
+        Arpeggio *arp = new Arpeggio(val, label);
+        rs->append(arp);
+    }
+    return rs;
+}
+
+QList<Arpeggio*>* Controller::queryArpeggioMotif(QString styleName) noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    //ORDER BY styleVal : ordenará os números como String . vou deixar na ordem da inserção dos dados
+    SQLite::Statement   query(db, "SELECT motifVal, motif FROM roland_arpeggio WHERE style = ? ");
+
+    QList<Arpeggio*>* rs = new QList<Arpeggio*>();
+    query.bind (1, styleName.toUtf8().data());
+    while (query.executeStep())
+    {
+        const char* valueCsv  = query.getColumn(0);
+        const char* labelCsv  = query.getColumn(1);
+
+        QStringList values = QString(valueCsv).split(",");
+        QStringList labels = QString(labelCsv).split(",");
+        for(int i=0; i<values.size(); i++){
+            Arpeggio *arp = new Arpeggio();
+            arp->value = values.at(i).toInt();
+            arp->label = labels.at(i);
+            rs->append(arp);
+        }
+    }
+    return rs;
+}
+
+QList<Arpeggio*>* Controller::queryArpeggioBeatPattern(QString styleName) noexcept(false){
+    SQLite::Database db(getDbPath().toUtf8().data() );
+    //ORDER BY styleVal : ordenará os números como String . vou deixar na ordem da inserção dos dados
+    SQLite::Statement   query(db, "SELECT beatPatternVal, beatPattern FROM roland_arpeggio WHERE style = ? ");
+
+    QList<Arpeggio*>* rs = new QList<Arpeggio*>();
+    query.bind (1, styleName.toUtf8().data());
+
+    while (query.executeStep())
+    {
+        const char* valueCsv  = query.getColumn(0);
+        const char* labelCsv  = query.getColumn(1);
+
+        QStringList values = QString(valueCsv).split(",");
+        QStringList labels = QString(labelCsv).split(",");
+        for(int i=0; i<values.size(); i++){
+            Arpeggio *arp = new Arpeggio();
+            arp->value = values.at(i).toInt();
+            arp->label = labels.at(i);
+            rs->append(arp);
+        }
+    }
+
+    return rs;
+}
+
 int Controller::getLastInsertRowid()  {
     SQLite::Database db(getDbPath().toUtf8().data(), SQLite::OPEN_READWRITE );
     SQLite::Statement   query(db, "SELECT last_insert_rowid()");

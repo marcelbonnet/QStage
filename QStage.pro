@@ -65,7 +65,9 @@ SOURCES += main.cpp\
     DataSysExType.cpp \
     WorkerSysExRequest.cpp \
     defaults.cpp \
-    FormQStudio.cpp
+    FormQStudio.cpp \
+    ArpeggioUI.cpp \
+    Arpeggio.cpp
 
 
 HEADERS  += Mainwindow.h \
@@ -95,7 +97,9 @@ HEADERS  += Mainwindow.h \
     DialogTemaEditor.h \
     DataSysExType.h \
     WorkerSysExRequest.h \
-    FormQStudio.h
+    FormQStudio.h \
+    ArpeggioUI.h \
+    Arpeggio.h
 
 
 FORMS    += Mainwindow.ui \
@@ -108,7 +112,8 @@ FORMS    += Mainwindow.ui \
     PatchUI.ui \
     FormSerialMidi.ui \
     DialogTemaEditor.ui \
-    FormQStudio.ui
+    FormQStudio.ui \
+    ArpeggioUI.ui
 
 
 DISTFILES += \

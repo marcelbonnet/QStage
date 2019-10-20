@@ -18,6 +18,7 @@
 #include "FormSerialMidi.h"
 #include "PatchUI.h"
 #include "FormQStudio.h"
+#include "ArpeggioUI.h"
 
 namespace Ui {
 class MainWindow;
@@ -165,6 +166,8 @@ private:
     QSpinBox *partMidiCh[16]; //MIDI CHANNEL
 
     PatchUI *patchUI;
+
+    ArpeggioUI *arpeggioUI;
 
  protected:
     MidiControl *jack = NULL;

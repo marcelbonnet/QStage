@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     qstageDir = QString(getenv("XDG_CONFIG_HOME")) + "/QStage";
+    qDebug() << "#################################################";
+    qDebug() << "XDG_CONFIG_HOME=" << qstageDir;
+    qDebug() << "#################################################";
 
     /*
     *   *************************************
@@ -137,6 +140,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->perfReverbHFDamp->setCurrentIndex(17);//seleciona "BYPASS"
 
+    /*
+     * ARPEGGIO TAB
+     */
+    arpeggioUI = new ArpeggioUI(jack, ui->perfTempo);//precisa ler o Performance Tempo
+    ui->tabWidget->addTab(arpeggioUI, "Arpeggio");
+
+    /*
+     * PATCH TAB
+    */
     QHBoxLayout *patchLayout = new QHBoxLayout();
     patchUI  = new PatchUI(jack);
     patchUI->setLayout(patchLayout);

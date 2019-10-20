@@ -8,6 +8,7 @@
 
 #include "Waveform.h"
 #include "patch.h"
+#include "Arpeggio.h"
 
 class Controller
 {
@@ -95,6 +96,27 @@ public:
      * @param id
      */
     static void removePatch(int id);
+
+    /**
+     * @brief queryArpeggioStyles retorna os Style de Arpeggio
+     * @return
+     */
+    static QList<Arpeggio*>* queryArpeggioStyles() noexcept(false);
+
+    /**
+     * @brief queryArpeggioMotif retorna os Motif de Arpeggio para um determinado Style
+     * @param styleName nome do Style (1/4, SYNTH BASS, ...)
+     * @return
+     */
+    static QList<Arpeggio*>* queryArpeggioMotif(QString styleName) noexcept(false);
+
+    /**
+     * @brief queryArpeggioBeatPattern retorna os Beat Pattern de Arpeggio para um
+     *  determinado Style
+     * @param styleName nome do Style (1/4, SYNTH BASS, ...)
+     * @return
+     */
+    static QList<Arpeggio*>* queryArpeggioBeatPattern(QString styleName) noexcept(false);
 
 private:
     static int getLastInsertRowid();
