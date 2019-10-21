@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>301</width>
+     <width>381</width>
      <height>81</height>
     </rect>
    </property>
@@ -30,7 +30,7 @@
      <rect>
       <x>10</x>
       <y>40</y>
-      <width>121</width>
+      <width>71</width>
       <height>23</height>
      </rect>
     </property>
@@ -41,7 +41,7 @@
    <widget class="QSpinBox" name="part">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>170</x>
       <y>40</y>
       <width>91</width>
       <height>31</height>

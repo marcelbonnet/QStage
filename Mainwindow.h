@@ -41,6 +41,9 @@ public:
 
     QString getConfig(QString key);
 
+//signals:
+//    void performanceTempoChanged(int);
+
 private slots:
 
     /**
@@ -124,6 +127,10 @@ private slots:
     void partUtilsCopiarPerformancePartParaPart(int parteOrigem, int parteDestino);
 
     void on_actionUSB_Serial_MIDI_triggered();
+
+    void onOuvirArpeggioTempoChanged(int tempo);
+
+    void on_perfTempo_valueChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

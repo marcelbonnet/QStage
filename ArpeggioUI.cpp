@@ -17,6 +17,8 @@ ArpeggioUI::ArpeggioUI(MidiControl *jack, QSpinBox *performanceTempo, QWidget *p
         ui->style->addItem(arp->label, QVariant::fromValue(arp));
     }
     carregarMotifs(ui->style->currentText());
+    ui->tempo->setValue(performanceTempo->value());
+
     conectarWidgets();
 }
 
@@ -26,13 +28,17 @@ ArpeggioUI::~ArpeggioUI()
 }
 
 void ArpeggioUI::onArpeggioChanged(int i){
-    //nada para processar. Apenas envie o pacote para o Teclado
+    desconectarWidgets();
+    ui->tempo->setValue(performanceTempo->value());
+    conectarWidgets();
     enviarDataSet();
 }
 
 void ArpeggioUI::conectarWidgets(){
-    connect(ui->motif,  SIGNAL(currentIndexChanged(int)), this, SLOT(onArpeggioChanged(int)));
+    //se o tempo do Performance mudar:
+    connect(performanceTempo, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
 
+    connect(ui->motif,  SIGNAL(currentIndexChanged(int)), this, SLOT(onArpeggioChanged(int)));
     connect(ui->part, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
     connect(ui->style,  SIGNAL(currentIndexChanged(int)), this, SLOT(onArpeggioChanged(int)));
     connect(ui->octave, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
@@ -40,10 +46,13 @@ void ArpeggioUI::conectarWidgets(){
     connect(ui->accent, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
     connect(ui->shuffle, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
     connect(ui->velocity, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
+    connect(ui->tempo, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
 
 }
 
 void ArpeggioUI::desconectarWidgets(){
+    disconnect(performanceTempo, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
+
     disconnect(ui->part, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
     disconnect(ui->style, SIGNAL(currentIndexChanged(int)), this, SLOT(onArpeggioChanged(int)));
     disconnect(ui->octave, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
@@ -52,7 +61,7 @@ void ArpeggioUI::desconectarWidgets(){
     disconnect(ui->accent, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
     disconnect(ui->shuffle, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
     disconnect(ui->velocity, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
-
+    disconnect(ui->tempo, SIGNAL(valueChanged(int)), this, SLOT(onArpeggioChanged(int)));
 }
 
 void ArpeggioUI::carregarMotifs(QString styleName){
@@ -120,3 +129,38 @@ void ArpeggioUI::enviarDataSet(){
 
     jack->txPacoteDataSet(addr, dados);
 }
+
+void ArpeggioUI::on_tempo_valueChanged(int arg1)
+{
+    emit arpeggioTempoChanged(arg1);
+}
+
+void ArpeggioUI::setPart(int i){ ui->part->setValue(i); }
+void ArpeggioUI::setStyle(int index){
+    ui->style->setCurrentIndex(index);
+}
+
+void ArpeggioUI::setMotif(int index){
+    carregarMotifs(ui->style->currentText());
+    ui->motif->setCurrentIndex(index);
+}
+
+void ArpeggioUI::setBeatPattern(int index){
+    carregarBeatPatterns(ui->style->currentText());
+    ui->beatPattern->setCurrentIndex(index);
+}
+void ArpeggioUI::setOctave(int i){ui->octave->setValue(i); }
+void ArpeggioUI::setAccent(int i){ ui->accent->setValue(i);}
+void ArpeggioUI::setShuffle(int i){ui->shuffle->setValue(i); }
+void ArpeggioUI::setVelocity(int i){ui->velocity->setValue(i); }
+//void ArpeggioUI::setSwitch(bool b){ ui->btnSwitch->setChecked(b); }
+
+//bool ArpeggioUI::isSwitchOn(){ ui->btnSwitch->isChecked(); }
+int ArpeggioUI::getPart(){ return ui->part->value(); }
+int ArpeggioUI::getStyle(){return ui->style->currentIndex(); }
+int ArpeggioUI::getMotif(){return ui->motif->currentIndex(); }
+int ArpeggioUI::getBeatPattern(){return ui->beatPattern->currentIndex(); }
+int ArpeggioUI::getOctave(){return ui->octave->value(); }
+int ArpeggioUI::getAccent(){return ui->accent->value(); }
+int ArpeggioUI::getShuffle(){return ui->shuffle->value(); }
+int ArpeggioUI::getVelocity(){return ui->velocity->value(); }

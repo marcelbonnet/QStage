@@ -202,6 +202,8 @@ MainWindow::MainWindow(QWidget *parent) :
     dlgEditorHTML = new DialogDocumentEditor(this);
     connect(dlgEditorHTML, SIGNAL(edicaoHTMLTerminada(int,QString)), this, SLOT(onEdicaoHTMLEncerrada(int,QString)));
 
+    //verifica se o tempo do Arpeggio mudou e atualiza o do Performance
+    connect(arpeggioUI, SIGNAL(arpeggioTempoChanged(int)), this, SLOT(onOuvirArpeggioTempoChanged(int)) );
 
 }
 
@@ -212,6 +214,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::onMenuPatchClicked(QAction *action){
     patchUI->processaracaoDoMenu(action);
+}
+
+void MainWindow::onOuvirArpeggioTempoChanged(int tempo){
+    //ajusta o tempo do Performance para o mesmo do Arpeggio
+    ui->perfTempo->setValue(tempo);
 }
 
 void MainWindow::setTema(QAction * action){
@@ -485,6 +492,21 @@ void MainWindow::on_actionSalvar_SYSEX_triggered()
         }
         conf->endGroup();
 
+        /*
+         * ARPEGGIO
+         */
+        conf->beginGroup("Arpeggio");
+        conf->setValue("Part", arpeggioUI->getPart());
+        conf->setValue("Style", arpeggioUI->getStyle());
+        conf->setValue("Octave", arpeggioUI->getOctave());
+        conf->setValue("Motif", arpeggioUI->getMotif());
+        conf->setValue("BeatPattern", arpeggioUI->getBeatPattern());
+        conf->setValue("Accent", arpeggioUI->getAccent());
+        conf->setValue("Shuffle", arpeggioUI->getShuffle());
+        conf->setValue("Velocity", arpeggioUI->getVelocity());
+//        conf->setValue("Switch", arpeggioUI->isSwitchOn() ? 1 : 0);
+        conf->endGroup();
+
         conf->sync();
         arquivoTemporario.open(QFile::ReadOnly);//usar para QFile
         QTextStream entrada(&arquivoTemporario);  entrada.seek(0);
@@ -629,6 +651,22 @@ void MainWindow::on_actionAbrir_SYSEX_triggered()
         tab->enviarPacote();
         conf->endGroup();
     }
+
+    /*
+     * ARPEGGIO
+     */
+    conf->beginGroup("Arpeggio");
+//    arpeggioUI->setSwitch(conf->value("Switch").toInt() == 1);
+    arpeggioUI->setPart(conf->value("Part").toInt());
+    arpeggioUI->setStyle(conf->value("Style").toInt());//style deve carregar antes das outras combos
+    arpeggioUI->setAccent(conf->value("Accent").toInt());
+    arpeggioUI->setOctave(conf->value("Octave").toInt());
+    arpeggioUI->setShuffle(conf->value("Shuffle").toInt());
+    arpeggioUI->setVelocity(conf->value("Velocity").toInt());
+    arpeggioUI->setMotif(conf->value("Motif").toInt());
+    arpeggioUI->setBeatPattern(conf->value("BeatPattern").toInt());
+    conf->endGroup();
+    arpeggioUI->enviarDataSet();
 }
 
 void MainWindow::on_perfEfeito_currentIndexChanged(int index)
@@ -1545,4 +1583,10 @@ void MainWindow::on_actionUSB_Serial_MIDI_triggered()
         msg.setText(e->getMessage());
         msg.exec();
     }
+}
+
+void MainWindow::on_perfTempo_valueChanged(int arg1)
+{
+    //notifica a mudança de tempo para que o Arpeggio configure o System Tempo igual ao do Performance
+//    emit performanceTempoChanged(arg1);
 }
